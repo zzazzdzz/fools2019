@@ -80,7 +80,7 @@ function buildNavbar(){
             LOCATIONS[LOCATIONS.length - 1]['name'] = atob('TGFzdCBHb29kYnll');
         }
         if (x['logged_in']){
-            html += '<li><a href="/"><b>Leaderboard</b> (' + (x['points'] >= 0 ? (x['points'] + " points") : "hidden") + ')</a></li>';
+            html += '<li><a href="index.html"><b>Leaderboard</b> (' + (x['points'] >= 0 ? (x['points'] + " points") : "hidden") + ')</a></li>';
             html += '<li><a href="play.html"><b>Play</b> (in ' + entities(formatKingdom(x['cur_kingdom'])) + ')</a></li>';
             html += '<li><a href="augment.html"><b>Augment</b> (tokens: <span id="augment-tokens-count">' + entities(x['tokens']) + '</span>)</a></li>';
             html += '<li><a href="faq.html"><b>How to play</b></a></li>';
@@ -92,7 +92,7 @@ function buildNavbar(){
             html += '<li><a href="#" onclick="logout()"><span class="glyphicon glyphicon-log-in"></span> &nbsp;<b>Log out</b> (' + entities(x['username']) + ')</a></li>';
             html += '</ul>';
         }else{
-            html += '<li><a href="/"><b>Leaderboard</b></a></li>';
+            html += '<li><a href="index.html"><b>Leaderboard</b></a></li>';
             html += '<li><a href="register.html"><b>Register</b></a></li>';
             html += '<li><a href="faq.html"><b>How to play</b></a></li>';
             html += '</ul><ul class="nav navbar-nav navbar-right">';
