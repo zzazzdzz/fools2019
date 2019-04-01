@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+<title>TheZZAZZGlitch's April Fools Event 2019</title>
+<meta name="viewport" content="width=1200">
+
+<link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP" rel="stylesheet">
+
+<script src="bootstrap/jquery-3.1.0.min.js"></script>
+<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">
+<script src="bootstrap/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="pokesprite/pokesprite.min.css">
+<script src="pokesprite/pokesprite.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css">
+
+<link rel='stylesheet' href='style.css' type='text/css'>
+<script src='script.js'></script>
+
+<script>
+    function checkedUser(){
+        var cur = SESSION['username'];
+        var l = window.location.href;
+        if (l.indexOf("?") == -1) return cur;
+        l = l.substring(l.indexOf("?") + 1);
+        l = l.split("#")[0];
+        if (l == "") return cur;
+        return l;
+    }
+
+    window.onPingCompleted = function(session){
+        var req = $.post(API_SERVER + "/profile/", {
+            "user": checkedUser(),
+            "sessid": SESSION['sessid']
+        });
+        req.done(function(x){
+            if (x['success']){
+                $("#profile-username").text(x['username']);
+                if (x['username'] == SESSION['username']){
+                    $("#profile-settings-link").css("display", "inline");
+                }
+                $("#profile-score").text(x['score']);
+                $("#profile-kingdoms-visited").text(x['kingdoms_visited']);
+                $("#profile-tokens-spent").text(x['tokens_spent']);
+                $("#profile-highest-rank").text(formatPlace(x['highest_rank']));
+                for (i in x['achievements']){
+                    if (x['achievements'][i]){
+                        $("[data-achievement-id=" + i + "]").removeClass("f-achievement-incomplete").addClass("f-achievement-complete");
+                    }
+                }
+                if (x['admin']){
+                    $($(".f-category")[0]).append("<span> (<a href='#' onclick='modalMessage(ADM_INFO)'>administrative information</a>)</span>");
+                    ADM_INFO = x['admin'][0];
+                    ADM_INFO = ADM_INFO.replace("%1", entities(x['admin'][1]));
+                    ADM_INFO = ADM_INFO.replace("%2", entities(x['admin'][2]));
+                    ADM_INFO = ADM_INFO.replace("%3", entities(x['admin'][3]));
+                    ADM_INFO = ADM_INFO.replace("%4", entities(x['admin'][4]));
+                }
+                $(".f-container").css("display", "block");
+            }else{
+                modalMessageWithRedirect("An error occured: " + x['message'], "index.html");
+            }
+        });
+        req.fail(function(x){
+            modalMessageWithRedirect("Could not connect to the event server. Try again in a few minutes.", "index.html");
+        });
+    };
+</script>
+
+<div id='loader'><img src='img/loading.svg'></div>
+
+<nav class="navbar navbar-inverse navbar-static-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/"><noscript>Please enable JavaScript to play</noscript> Fools2019</a>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar"></div>
+    </div>
+</nav>
+<div class="navbar-spacing"></div>
+
+<div id="content">
+    <div class="f-container panel panel-default hide-by-default">
+        <div class="f-category">
+            Profile
+        </div>
+        <div class="f-inside-padded">
+            <h3 id="profile-username">bepis</h3>
+            <p>Score: <b id="profile-score">bepis</b><br>
+            Total augmentation tokens spent: <b id="profile-tokens-spent">bepis</b><br>
+            Kingdoms visited: <b id="profile-kingdoms-visited">bepis</b><br>
+            Highest rank achieved: <b id="profile-highest-rank">bepis</b>
+            <span id="profile-settings-link" style="display: none"><br>(<a href="settings.html">change your settings including your message here</a>)</span></p>
+        </div>
+    </div>
+    <div class="f-container panel panel-default hide-by-default">
+        <div class="f-category">
+            Achievements: Progression
+        </div>
+        <table class="table table-striped table-bordered table-condensed table-hover f-inside-table f-achievement-list">
+            <tr>
+                <td class='f-achievement-incomplete' data-achievement-id='attempt_was_made'>
+                    <b>There was an attempt</b><br>
+                    Finish Tutorial Kingdom.<br>
+                    <small>Reward: 20 points, 20 augmentation tokens</small>
+                </td>
+                <td class='f-achievement-incomplete' data-achievement-id='kingdoms_3'>
+                    <b>Halfway through!</b><br>
+                    Finish 3 different kingdoms.<br>
+                    <small>Reward: 40 points, 20 augmentation tokens</small>
+                </td>
+            </tr>
+            <tr>
+                <td class='f-achievement-incomplete' data-achievement-id='kingdoms_5'>
+                    <b>Almost there!</b><br>
+                    Finish 5 different kingdoms.<br>
+                    <small>Reward: 40 points, 20 augmentation tokens</small>
+                </td>
+                <td class='f-achievement-incomplete' data-achievement-id='the_finishist'>
+                    <b>The Finishist</b><br>
+                    Defeat Missingno. and bring peace to Glitch Islands.<br>
+                    <small>Reward: 50 points, 30 augmentation tokens</small>
+                </td>
+            </tr>
+            <tr>
+                <td class='f-achievement-incomplete' data-achievement-id='the_completionist'>
+                    <b>The Completionist</b><br>
+                    Visit the final, hidden kingdom.<br>
+                    <small>Reward: 60 points, 100 augmentation tokens</small>
+                </td>
+                <td class='f-achievement-incomplete' data-achievement-id='monster_coach'>
+                    <b>Monster Coach</b><br>
+                    Raise at least one Pokémon to level 40.<br>
+                    <small>Reward: 50 points, 20 augmentation tokens</small>
+                </td>
+            </tr>
+            <tr>
+                <td class='f-achievement-incomplete' data-achievement-id='squad_assembled'>
+                    <b>Squad assembled</b><br>
+                    Have a team of 3 Pokémon.<br>
+                    <small>Reward: 30 points, 20 augmentation tokens</small>
+                </td>
+                <td class='f-achievement-incomplete' data-achievement-id='illustrated_handbook'>
+                    <b>Illustrated Handbook</b><br>
+                    See at least 100 different Pokémon.<br>
+                    <small>Reward: 40 points, 30 augmentation tokens</small>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="f-container panel panel-default hide-by-default">
+        <div class="f-category">
+            Achievements: Exploration
+        </div>
+        <table class="table table-striped table-bordered table-condensed table-hover f-inside-table f-achievement-list">
+            <tr>
+                <td class='f-achievement-incomplete' data-achievement-id='ancient_puzzles'>
+                    <b>Hunter of Secrets</b><br>
+                    Solve all three ancient puzzles.<br>
+                    <small>Reward: 50 points, 40 augmentation tokens</small>
+                </td>
+                <td class='f-achievement-incomplete' data-achievement-id='lights_out'>
+                    <b>Lights Out</b><br>
+                    Get rid of corrupted tiles in Tutorial Kingdom.<br>
+                    <small>Reward: 30 points, 20 augmentation tokens</small>
+                </td>
+            </tr>
+            <tr>
+                <td class='f-achievement-incomplete' data-achievement-id='hooked_metapod'>
+                    <b>And I'm hooked</b><br>
+                    Show off your aquatic Metapod.<br>
+                    <small>Reward: 40 points, 20 augmentation tokens</small>
+                </td>
+                <td class='f-achievement-incomplete' data-achievement-id='delirious'>
+                    <b>Delirious</b><br>
+                    Find the secret town of Delirians.<br>
+                    <small>Reward: 40 points, 20 augmentation tokens</small>
+                </td>
+            </tr>
+            <tr>
+                <td class='f-achievement-incomplete' data-achievement-id='yahaha'>
+                    <b>Hide and seek, boing!</b><br>
+                    Find all five of the lost friends.<br>
+                    <small>Reward: 60 points, 40 augmentation tokens</small>
+                </td>
+                <td class='f-achievement-incomplete' data-achievement-id='laylah_blessing'>
+                    <b>Double Trouble</b><br>
+                    Acquire Laylah's Blessing.<br>
+                    <small>Reward: 50 points, 40 augmentation tokens</small>
+                </td>
+            </tr>
+            <tr>
+                <td class='f-achievement-incomplete' data-achievement-id='seaside_maze'>
+                    <b>A natural maze</b><br>
+                    Figure out the secret path in Seaside Kingdom.<br>
+                    <small>Reward: 50 points, 20 augmentation tokens</small>
+                </td>
+                <td class='f-achievement-incomplete' data-achievement-id='seaside_stocks'>
+                    <b>Wall Street Kid</b><br>
+                    Earn at least $10000 on the Stock Exchange in one session.<br>
+                    <small>Reward: 30 points, 20 augmentation tokens</small>
+                </td>
+            </tr>
+            <tr>
+                <td class='f-achievement-incomplete' data-achievement-id='joyful_rockets_defeated'>
+                    <b>The Missile Bombs Escapes</b><br>
+                    Defeat Team Rocket in Joyful Kingdom.<br>
+                    <small>Reward: 20 points, 10 augmentation tokens</small>
+                </td>
+                <td class='f-achievement-incomplete' data-achievement-id='joyful_pentakill'>
+                    <b>Pentakill</b><br>
+                    Get a five win streak at the Joyful Kingdom Battle House.<br>
+                    <small>Reward: 50 points, 30 augmentation tokens</small>
+                </td>
+            </tr>
+            <tr>
+                <td class='f-achievement-incomplete' data-achievement-id='throwback_flash'>
+                    <b>Flash is still useful</b><br>
+                    Who needs 5F when you have HM05?<br>
+                    <small>Reward: 30 points, 20 augmentation tokens</small>
+                </td>
+                <td class='f-achievement-incomplete' data-achievement-id='throwback_lost_item'>
+                    <b>Damn ice puzzles</b><br>
+                    Return the Lost Item.<br>
+                    <small>Reward: 40 points, 20 augmentation tokens</small>
+                </td>
+            </tr>
+            <tr>
+                <td class='f-achievement-incomplete' data-achievement-id='verdant_laptop'>
+                    <b>Lesser Laptop</b><br>
+                    Explore the weird music taste of glitch scientists.<br>
+                    <small>Reward: 30 points, 20 augmentation tokens</small>
+                </td>
+                <td class='f-achievement-incomplete' data-achievement-id='radio'>
+                    <b>Radio Connaisseur</b><br>
+                    Listen to all Glitch Islands radio broadcasts.<br>
+                    <small>Reward: 50 points, 30 augmentation tokens</small>
+                </td>
+            </tr>
+            <tr>
+                <td class='f-achievement-incomplete' data-achievement-id='itemballs'>
+                    <b>Collector of Balls</b><br>
+                    Collect every single item ball there is in the game.<br>
+                    <small>Reward: 60 points, 40 augmentation tokens</small>
+                </td>
+                <td class='f-achievement-incomplete' data-achievement-id='trainers'>
+                    <b>Ultimate Challenger</b><br>
+                    Defeat at least 30 trainers <i>(Battle House excluded)</i>.<br>
+                    <small>Reward: 40 points, 30 augmentation tokens</small>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="f-container panel panel-default hide-by-default">
+        <div class="f-category">
+            Achievements: Hacker's Delight
+        </div>
+        <table class="table table-striped table-bordered table-condensed table-hover f-inside-table f-achievement-list">
+            <tr>
+                <td class='f-achievement-incomplete' data-achievement-id='pwnage_1'>
+                    <b>Blue Sailors of Death</b><br>
+                    Complete the challenge of Pwnage Kingdom I.<br>
+                    <small>Reward: 50 points, 20 augmentation tokens</small>
+                </td>
+                <td class='f-achievement-incomplete' data-achievement-id='pwnage_2'>
+                    <b>The Unreferenced</b><br>
+                    Complete the challenge of Pwnage Kingdom II.<br>
+                    <small>Reward: 50 points, 20 augmentation tokens</small>
+                </td>
+            </tr>
+            <tr>
+                <td class='f-achievement-incomplete' data-achievement-id='pwnage_3'>
+                    <b>Encryptic</b><br>
+                    Complete the challenge of Pwnage Kingdom III.<br>
+                    <small>Reward: 100 points, 40 augmentation tokens</small>
+                </td>
+                <td class='f-achievement-incomplete' data-achievement-id='pwnage_4'>
+                    <b>Master of Saving</b><br>
+                    Complete the challenge of Pwnage Kingdom IV.<br>
+                    <small>Reward: 137 points, 100 augmentation tokens</small>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<br>&nbsp;

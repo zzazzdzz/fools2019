@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+<title>TheZZAZZGlitch's April Fools Event 2019</title>
+<meta name="viewport" content="width=1200">
+
+<link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP" rel="stylesheet">
+
+<script src="bootstrap/jquery-3.1.0.min.js"></script>
+<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">
+<script src="bootstrap/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="pokesprite/pokesprite.min.css">
+<script src="pokesprite/pokesprite.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css">
+
+<link rel='stylesheet' href='style.css' type='text/css'>
+<script src='script.js'></script>
+<script>
+    window.onPingCompleted = function(){
+        if (!SESSION['logged_in']){
+            window.location = "index.html";
+            return;
+        }
+        if (SESSION['cur_kingdom'] == "none"){
+            $(".not-in-kingdom").css("display", "block");
+            renderWorldMapLocations();
+        }else{
+            $(".current-kingdom-name").text(formatKingdom(SESSION['cur_kingdom']));
+            if (SESSION['save_uid'] != ""){
+                $(".currently-in-kingdom").css("display", "block");
+                visitTimerRefresh();
+                setInterval(visitTimerRefresh, 1000);
+            }else{
+                $(".kingdom-visit-queue").css("display", "block");
+                setTimeout("window.location.reload()", 10000);
+            }
+        }
+    };
+
+    function downloadSave(){
+        $("body").append($("<iframe class='f-file-download-frame' src='" + API_SERVER + "/save/" + localStorage['sessid'] + "'></iframe>"));
+    }
+
+    function leaveWithoutSavingModal(){
+        modalYesNo("Are you sure you want to leave without saving?", "leaveWithoutSaving()");
+    }
+
+    function leaveWithoutSaving(){
+        $(".f-modal-window").html("Leaving...<br><br><img src='img/loading.svg' style='width: 50px'>");
+        var req = $.post(API_SERVER + "/leave_no_save/", {
+            "sessid": localStorage['sessid'],
+        });
+        req.fail(function(){
+            modalMessage("Could not connect to the event server. Try again in a few minutes.");
+            loaderFinish();
+        });
+        req.done(function(x){
+            if (x['success']){
+                window.location = "play.html";
+            }else{
+                modalMessage("An error occured: " + x['message']);
+                loaderFinish();
+            }
+        });
+    }
+
+    function queueGiveUp(e){
+        e.disabled = true;
+        var req = $.post(API_SERVER + "/queue_give_up/", {
+            "sessid": localStorage['sessid']
+        });
+        req.fail(function(){
+            modalMessage("Could not connect to the event server. Try again in a few minutes.");
+            loaderFinish();
+        });
+        req.done(function(x){
+            if (x['success']){
+                window.location = "play.html";
+            }else{
+                modalMessage("An error occured: " + x['message']);
+                loaderFinish();
+            }
+        });
+    }
+
+    function uploadSaveData(e){
+        loaderStart(e, $(".btn"));
+        
+        if (typeof window.FileReader !== 'function'){
+            modalMessage("Your browser does not support the FileReader API. Try playing fools2019 in a modern browser.");
+            return;
+        }
+
+        var file_input = $("#save-file-input")[0];
+        if (!file_input.files[0]) return;
+
+        var rd = new FileReader();
+        rd.onload = function(){
+            var req = $.post(API_SERVER + "/finish/", {
+                "sessid": SESSION['sessid'],
+                "save": rd.result
+            });
+            req.fail(function(xhr){
+                if (xhr.status == 413) modalMessage("The file you tried to upload is too large.");
+                else modalMessage("Could not connect to the event server. Try again in a few minutes.");
+                $("#save-file-input-form")[0].reset();
+                loaderFinish();
+            });
+            req.done(function(x){
+                if (x['success']){
+                    loaderFinish();
+                    if (x['good_work']) modalMessageWithRedirect(x['good_work'], "play.html");
+                    else modalMessageWithRedirect("Your game progress was successfully updated.", "play.html");
+                }else{
+                    modalMessage("An error occured: " + x['message']);
+                    $("#save-file-input-form")[0].reset();
+                    loaderFinish();
+                }
+            });
+        };
+        rd.readAsDataURL(file_input.files[0]);
+    }
+</script>
+
+<div id='loader'><img src='img/loading.svg'></div>
+
+<nav class="navbar navbar-inverse navbar-static-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/"><noscript>Please enable JavaScript to play</noscript> Fools2019</a>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar"></div>
+    </div>
+</nav>
+<div class="navbar-spacing"></div>
+
+<div id="content">
+    <div class="f-container panel panel-default f-map-sizing hide-by-default not-in-kingdom">
+        <div class="f-category">
+            Select your destination...
+        </div>
+        <div class="f-inside-padded f-inside-map">
+            <div id="world_map">
+            </div>
+        </div>
+    </div>
+    
+    <div class="f-container panel panel-default f-map-sizing hide-by-default currently-in-kingdom">
+        <div class="f-category">
+            You are visiting a kingdom
+        </div>
+        <div class="f-inside-padded f-inside-map">
+            <h3>You are currently visiting <span class="current-kingdom-name">bepis</span>.</h3>
+            <div class='f-visit-duration-counter'>Visiting for: <span id="kingdom-visit-counter">00:00</span></div>
+            Your brand new adventure is about to start. Download the save file and load it with a clean Pok&eacute;mon Crystal v1.0 ROM!<br>
+            Play offline with your favorite emulator, or use the <a href='online.html'>online client</a> to play in your modern HTML5 compatible browser. It's even possible to play on real hardware if you're so inclined! You can also leave this kingdom whenever you want, and potentially visit a different one. Note: You can only visit one kingdom every 5 minutes.<br>
+            <span class='f-save-file-upload-desc'>Problems loading the save file? Visit the <a href='faq.html'>troubleshooting page</a>.</span>
+            <br><br>
+            <button class="btn btn-success" onclick="downloadSave()">
+                <b>Download the SAV file</b>
+            </button> &nbsp;
+            <button class="btn btn-primary" onclick="window.location='online.html'">
+                Launch online client
+            </button> &nbsp;
+            <button class="btn btn-danger" onclick="leaveWithoutSavingModal()">
+                Leave kingdom without saving
+            </button>
+            <br><br>
+            Once you're done, save the game using the SAVE option, then upload the resulting save file below.<br>
+            <span class='f-save-file-upload-desc'>Only SAV files allowed. Max 100KB. Only one upload per 30 seconds.</span>
+            <br><br>
+            <form id='save-file-input-form'>
+                <input type='file' id='save-file-input' onchange='uploadSaveData(this)'>
+                <label class='f-save-file-input' for='save-file-input'>Click here to upload</label>
+            </form>
+        </div>
+    </div>
+
+    <div class="f-container panel panel-default f-map-sizing hide-by-default kingdom-visit-queue">
+        <div class="f-category">
+            You are visiting a kingdom
+        </div>
+        <div class="f-inside-padded f-inside-map">
+            <h3>You are currently visiting <span class="current-kingdom-name">bepis</span>.</h3>
+            We are receiving an unusually large amount of PU grid transfers.<br>
+            To ensure our servers won't spontaneously combust, we must ask you to wait for a little bit.<br><br>
+            <img src='img/loading.svg' style='width: 100px'>
+            <br><br>
+            This can take up to a couple minutes. <a href='#' onclick='queueGiveUp(this)'>Give up and leave the kingdom?</a>
+            <br>&nbsp;
+        </div>
+    </div>
+</div>

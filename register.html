@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+<title>TheZZAZZGlitch's April Fools Event 2019</title>
+<meta name="viewport" content="width=1200">
+
+<link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP" rel="stylesheet">
+
+<script src="bootstrap/jquery-3.1.0.min.js"></script>
+<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">
+<script src="bootstrap/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="pokesprite/pokesprite.min.css">
+<script src="pokesprite/pokesprite.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css">
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+<link rel='stylesheet' href='style.css' type='text/css'>
+<script src='script.js'></script>
+<script>
+    function starterChoice(e){
+        $('.f-starter-choice').removeClass('f-starter-choice-selected');
+        $(e).addClass('f-starter-choice-selected');
+    }
+
+    function register(e){
+        loaderStart(e, []);
+        var req = $.post(API_SERVER + "/register/", {
+            "username": $("#username").val(),
+            "password": $("#pass1").val(),
+            "password2": $("#pass2").val(),
+            "message": $("#message").val(),
+            "starter": $(".f-starter-choice-selected").attr("data-mon").toUpperCase(),
+            "recaptcha": grecaptcha.getResponse()
+        });
+        req.fail(function(){
+            modalMessage("Could not connect to the event server. Try again in a few minutes.");
+            loaderFinish();
+        });
+        req.done(function(x){
+            if (x['success']){
+                modalMessageWithRedirect("Registration was successful. You can log in now.", "login.html");
+            }else{
+                modalMessage("An error occured: " + x['message']);
+                loaderFinish();
+            }
+        });
+    }
+
+    $(document).ready(function(){
+        PkSpr.process_dom();
+    });
+</script>
+
+<div id='loader'><img src='img/loading.svg'></div>
+
+<nav class="navbar navbar-inverse navbar-static-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/"><noscript>Please enable JavaScript to play</noscript> Fools2019</a>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar"></div>
+    </div>
+</nav>
+<div class="navbar-spacing"></div>
+
+<div id="content">
+    <div class="f-container panel panel-default">
+        <div class="f-category">
+            Create a new account
+        </div>
+        <div class="f-inside-padded">
+            <p>So you're up to the challenge? Choose your username and set your password. Make sure you remember it, passwords cannot be reset or changed.</p>
+            <input type='text' class='form-control f-form-field' placeholder='Your username (max 20 characters)' maxlength="20" id='username'>
+            <input type='password' class='form-control f-form-field' placeholder='Your password' id='pass1'>
+            <input type='password' class='form-control f-form-field' placeholder='Repeat your password' id='pass2'>
+            <p>Like every year, the best scores will have a chance to appear in a <a href='https://www.youtube.com/watch?v=ro9sH2qHyD8'>result video similar to this one</a>, along with a custom message. You can enter the message here!</p>
+            <input type='text' class='form-control f-form-field' placeholder='Your message (max 150 characters). You can change this later!' maxlength="150" id='message'>
+            <p>Final step: Choose a Pokémon you wish to start the game with.</p>
+            <div class='f-starter-choice f-starter-choice-selected' data-mon='cyndaquil' onclick='starterChoice(this)'>
+                <span class="pkspr pkmn-cyndaquil"></span>
+            </div>
+            <div class='f-starter-choice' data-mon='totodile' onclick='starterChoice(this)'>
+                <span class="pkspr pkmn-totodile"></span>
+            </div>
+            <div class='f-starter-choice' data-mon='chikorita' onclick='starterChoice(this)'>
+                <span class="pkspr pkmn-chikorita"></span>
+            </div>
+            <br><br>
+            <div class='register-notes'>
+                <p>&bull; We reserve the right to remove your account and all of its associated records at any time, for any reason. We probably won't, but we might.</p>
+                <p>&bull; The game contains user-provided content. We are not responsible for any content provided by the players. We might remove any politically extreme, pornographic, illegal or otherwise unethical content at our discretion. We probably won't, but we might.</p>
+                <p>&bull; The game contains several optional hacking challenges. However, hacking the event site and server themselves are not part of the challenge. Any uncreative hacking attempts that purely aim to ruin the fun for everyone (denial of service attacks, erasing scores of other people, stealing user data, etc.) will result in account termination, permanent blocking of associated IP addresses, or in extreme cases - legal action.</p>
+                <p>&bull; The only real rule is: don't be a douche. Respect that, and you're good to go!</p>
+            </div>
+            <center><div class="g-recaptcha" data-sitekey="6LcD3ZIUAAAAAGTtdV4FlUb_Ihb10YwKWr9ihDLT"></div></center>
+            <button class="btn btn-success" onclick="register(this)">
+                Register
+            </button>
+        </div>
+    </div>
+</div>
