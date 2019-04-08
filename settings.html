@@ -128,10 +128,12 @@
             Like every year, the best scores will have a chance to appear in a <a href='https://www.youtube.com/watch?v=ro9sH2qHyD8'>result video similar to this one</a>, along with a custom message.<br>
             You can set this message here, or modify your previous one.
             <br><br>
-            <input type='text' class='form-control f-form-field' placeholder='Your message (max 150 characters). You can change this later!' maxlength="150" id='message' style='text-align: center'>
+            The event has ended, and messages can no longer be changed. <i>(before you point out, they can be changed if you hit up the API directly - but they're not gonna show up in the video, so it's pointless)</i>
+            <br><br>
+            <input type='text' disabled class='form-control f-form-field' placeholder='Your message (max 150 characters). You can change this later!' maxlength="150" id='message' style='text-align: center'>
             <br>
-            <button class="btn btn-primary" onclick="sendMessageSettings(this)">
-                Change your message
+            <button class="btn btn-primary" onclick="sendMessageSettings(this)" disabled>
+                Message cannot be changed anymore
             </button>
         </div>
     </div>
