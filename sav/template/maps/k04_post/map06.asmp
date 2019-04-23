@@ -151,7 +151,7 @@ Map06_BuyStock:
     ld c, l
     farcall CompareMoney
     jr c, .notEnough
-	pop af
+    pop af
     push hl
     ld h, $c9
     ld l, a
@@ -346,7 +346,7 @@ Map06_CheckStocksInPortfolio:
     ld b, b
     ld b, 1 ; SET_FLAG
     ld de, EVENT_K4_STOCK_MARKET_PROFIT
-	jp EventFlagAction
+    jp EventFlagAction
 .threshold
     db $00, $27, $10
 
@@ -368,13 +368,13 @@ Map06_WaitingComputer:
     iftrue_rel .nope
     closetext
     special FadeBlackQuickly
-	special ReloadSpritesNoPalettes
-	special HealParty
-	playmusic 0
+    special ReloadSpritesNoPalettes
+    special HealParty
+    playmusic 0
     playsound SFX_SING
-	pause 120
-	special RestartMapMusic
-	special FadeInQuickly
+    pause 120
+    special RestartMapMusic
+    special FadeInQuickly
     callasm SwitchToSRA3
     callasm Map06_ChangeStockPrices
     callasm SwitchToSRA2

@@ -91,7 +91,7 @@ Map07_Shad:
     iftrue_rel .after
     writetext_vwf Map07_ShadBeforeText
     buttonsound
-	verbosegiveitem $f3
+    verbosegiveitem $f3
     setevent EVENT_RECEIVED_CUT
 .after
     writetext_vwf Map07_ShadAfterText
@@ -151,16 +151,16 @@ Map07_Trash:
 Map07_Radio:
     rel_base Map07_Radio
     opentext
-	writetext_vwf Map07_RadioText
+    writetext_vwf Map07_RadioText
     callasm GenericYesNoTextbox
     iftrue_rel .turnOff
-	closetext
+    closetext
     return
 .turnOff
     setevent EVENT_K2_LAPTOP
     callasm_rel .speedUp
     waitbutton
-	closetext
+    closetext
     return
 .speedUp
     ld de, MUSIC_GAME_CORNER

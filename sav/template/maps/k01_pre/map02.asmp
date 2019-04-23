@@ -163,13 +163,13 @@ Map02_GuideScript:
     rel_base Map02_GuideScript
     checkevent EVENT_MEET_GUIDE
     iftrue_rel .end
-	showemote 0, OBJ_4, 15
+    showemote 0, OBJ_4, 15
     applymovement_rel OBJ_4, .movement
     applymovement_rel OBJ_PLAYER, .movement2
     opentext
-	writetext_vwf Map02_GuideText
-	waitbutton
-	closetext
+    writetext_vwf Map02_GuideText
+    waitbutton
+    closetext
 .end
     return
 .movement
@@ -186,9 +186,9 @@ Map02_JumpOnGuideScript:
     return
 .jumpedOnGuide
     opentext
-	writetext_vwf Map02_JumpOnGuideText
-	waitbutton
-	closetext
+    writetext_vwf Map02_JumpOnGuideText
+    waitbutton
+    closetext
     applymovement_rel OBJ_PLAYER, .movement
     return
 .movement

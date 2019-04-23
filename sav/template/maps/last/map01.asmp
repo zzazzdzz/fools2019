@@ -114,16 +114,16 @@ Map01_Delirian2:
     appear OBJ_8
     end
 .spinMovement
-	turn_head DOWN
-	turn_head LEFT
-	turn_head UP
-	turn_head RIGHT
-	turn_head DOWN
-	turn_head LEFT
-	turn_head UP
-	turn_head RIGHT
-	turn_head DOWN
-	step_end
+    turn_head DOWN
+    turn_head LEFT
+    turn_head UP
+    turn_head RIGHT
+    turn_head DOWN
+    turn_head LEFT
+    turn_head UP
+    turn_head RIGHT
+    turn_head DOWN
+    step_end
 
 Map01_Delirian2Text:
     tx_deliria

@@ -44,12 +44,12 @@ Map04_MissingnoScript:
     callasm GenericYesNoTextbox
     iffalse_rel .nope
     closetext
-	setlasttalked 1
+    setlasttalked 1
     winlosstext MapWriteTextInSRAM, 0
     loadvar wTrainerCurrentTheme, MUSIC_CHAMPION_BATTLE
     loadvar $d080, $50
     callasm_rel .forceEnableAnimations
-	loadtrainer RED, 11
+    loadtrainer RED, 11
     startandwaitbattle
     setevent EVENT_MISSINGNO_DEFEATED
     pause 25
@@ -65,7 +65,7 @@ Map04_MissingnoScript:
     special FadeOutPalettes
     callasm SwitchToSRA3
     callasm StartCredits
-	end
+    end
 .nope
     closetext
     end

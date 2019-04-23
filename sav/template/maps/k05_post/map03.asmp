@@ -70,9 +70,9 @@ Map03_SecretSwitch:
     ld de, $c020
     jp CopyBytes
 .warpScript
-	closetext
+    closetext
     callasm CopyMapDataToRAM
-	warp MAP_04, 33, 36
+    warp MAP_04, 33, 36
     endall
 
 Map03_SecretSwitchText:

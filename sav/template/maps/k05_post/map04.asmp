@@ -88,16 +88,16 @@ Map01_Yahaha:
     closetext
     end
 .spinMovement
-	turn_head DOWN
-	turn_head LEFT
-	turn_head UP
-	turn_head RIGHT
-	turn_head DOWN
-	turn_head LEFT
-	turn_head UP
-	turn_head RIGHT
-	turn_head DOWN
-	step_end
+    turn_head DOWN
+    turn_head LEFT
+    turn_head UP
+    turn_head RIGHT
+    turn_head DOWN
+    turn_head LEFT
+    turn_head UP
+    turn_head RIGHT
+    turn_head DOWN
+    step_end
 .escapeMovement
     jump_step LEFT
     big_step UP
@@ -107,7 +107,7 @@ Map01_Yahaha:
     big_step UP
     big_step LEFT
     big_step LEFT
-	step_end
+    step_end
 
 Map04_NormalSuicuneText:
     text "It looks like a Suicune!"

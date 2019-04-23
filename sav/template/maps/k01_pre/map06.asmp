@@ -14,8 +14,8 @@ Map06_DataStruct:
 Map06_Events:
     db 0, 0
     db 2 ; warps
-	warp_event 2, 7, MAP_02, 1
-	warp_event 3, 7, MAP_02, 1
+    warp_event 2, 7, MAP_02, 1
+    warp_event 3, 7, MAP_02, 1
     db 0 ; coord events
     db 1 ; bg events
     bg_event 7, 1, 0, MapCallScriptInSRAM

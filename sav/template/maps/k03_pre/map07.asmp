@@ -68,15 +68,15 @@ Map07_MoveRandomizer:
     iffalse_rel .end
     closetext
     special FadeBlackQuickly
-	special ReloadSpritesNoPalettes
-	special HealParty
-	playmusic 0
+    special ReloadSpritesNoPalettes
+    special HealParty
+    playmusic 0
     playsound $8D
     pause 80
     playsound $8E
     pause 20
     special RestartMapMusic
-	special FadeInQuickly    
+    special FadeInQuickly    
     opentext
     writetext_vwf Map07_MoveRandomizerDoneText
 .end
@@ -103,18 +103,18 @@ Map07_MoveRandomizer:
     farcall CompareMoney
     jr c, .notEnough
     ld bc, rel_ptr .cost
-	ld de, wMoney
-	farcall TakeMoney
+    ld de, wMoney
+    farcall TakeMoney
     farcall PlaceMoneyTopRight
     ld c, 15
     call DelayFrames
-	ld de, SFX_TRANSACTION
-	call PlaySFX
+    ld de, SFX_TRANSACTION
+    call PlaySFX
     call WaitSFX
     ld a, [wCurPartyMon]
-	ld hl, wPartyMon1Moves
-	ld bc, PARTYMON_STRUCT_LENGTH
-	call AddNTimes
+    ld hl, wPartyMon1Moves
+    ld bc, PARTYMON_STRUCT_LENGTH
+    call AddNTimes
     ld d, h
     ld e, l
 .randomizeSlot

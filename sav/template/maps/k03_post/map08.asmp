@@ -157,7 +157,7 @@ Map08_BrailleFinalPiece:
     loadvar wTrainerCurrentTheme, MUSIC_KANTO_GYM_LEADER_BATTLE
     loadvar wRivalName, $E6
     loadvar wRivalName+1, $50
-	loadtrainer RIVAL1, 1
+    loadtrainer RIVAL1, 1
     dontrestartmapmusic
     startandwaitbattle
     opentext

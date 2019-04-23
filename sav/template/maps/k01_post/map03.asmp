@@ -138,19 +138,19 @@ Map03_OldTrainer_DefeatText:
 Map03_Healer:
     faceplayer
     opentext
-	writetext_vwf Map03_HealerPreText
-	waitbutton
+    writetext_vwf Map03_HealerPreText
+    waitbutton
     closetext
     special FadeBlackQuickly
-	special ReloadSpritesNoPalettes
-	special HealParty
-	playmusic MUSIC_HEAL
-	pause 60
-	special RestartMapMusic
-	special FadeInQuickly
+    special ReloadSpritesNoPalettes
+    special HealParty
+    playmusic MUSIC_HEAL
+    pause 60
+    special RestartMapMusic
+    special FadeInQuickly
     opentext
-	writetext_vwf Map03_HealerPostText
-	waitbutton
+    writetext_vwf Map03_HealerPostText
+    waitbutton
     closetext
     end
 
@@ -164,13 +164,13 @@ Map03_Assistant:
     iftrue_rel .has
     checkitem ULTRA_BALL
     iftrue_rel .has
-	writetext_vwf Map03_AssistantPreText
+    writetext_vwf Map03_AssistantPreText
     verbosegiveitem POKE_BALL
     verbosegiveitem GREAT_BALL
     verbosegiveitem ULTRA_BALL
 .has
-	writetext_vwf Map03_AssistantPostText
-	waitbutton
+    writetext_vwf Map03_AssistantPostText
+    waitbutton
     closetext
     end
 
@@ -303,18 +303,18 @@ Map03_Trainer03_Script:
     opentext
     checkevent EVENT_TRAINER_K1_PRE_4
     iftrue_rel .defeatText
-	playmusic MUSIC_OFFICER_ENCOUNTER
-	writetext_vwf Map03_Trainer03_EncounterText
-	waitbutton
+    playmusic MUSIC_OFFICER_ENCOUNTER
+    writetext_vwf Map03_Trainer03_EncounterText
+    waitbutton
     closetext
-	setlasttalked 3
+    setlasttalked 3
     winlosstext MapWriteTextInSRAM, 0
-	loadtrainer OFFICER, 1
+    loadtrainer OFFICER, 1
     startandwaitbattle
     setevent EVENT_TRAINER_K1_PRE_4
     opentext
 .defeatText
-	writetext_vwf Map03_Trainer03_PostText
-	waitbutton
+    writetext_vwf Map03_Trainer03_PostText
+    waitbutton
     closetext
     end

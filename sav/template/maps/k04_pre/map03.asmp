@@ -38,7 +38,7 @@ Map03_Danalise:
     setlasttalked 1
     winlosstext MapWriteTextInSRAM, 0
     loadvar wTrainerCurrentTheme, MUSIC_JOHTO_GYM_LEADER_BATTLE
-	loadtrainer LASS, 250
+    loadtrainer LASS, 250
     dontrestartmapmusic
     startandwaitbattle
     opentext

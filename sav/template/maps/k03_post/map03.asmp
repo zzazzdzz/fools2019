@@ -63,16 +63,16 @@ Map03_Yahaha:
     closetext
     end
 .spinMovement
-	turn_head DOWN
-	turn_head LEFT
-	turn_head UP
-	turn_head RIGHT
-	turn_head DOWN
-	turn_head LEFT
-	turn_head UP
-	turn_head RIGHT
-	turn_head DOWN
-	step_end
+    turn_head DOWN
+    turn_head LEFT
+    turn_head UP
+    turn_head RIGHT
+    turn_head DOWN
+    turn_head LEFT
+    turn_head UP
+    turn_head RIGHT
+    turn_head DOWN
+    step_end
 .escapeMovement
     jump_step UP
     big_step UP
@@ -81,7 +81,7 @@ Map03_Yahaha:
     big_step UP
     big_step UP
     big_step UP
-	step_end
+    step_end
 
 Map03_NormalTreeText:
     text "Just a normal tree."

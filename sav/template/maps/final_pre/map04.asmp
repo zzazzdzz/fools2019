@@ -43,12 +43,12 @@ Map04_MissingnoScript:
     writetext_vwf Map04_MissingnoPreEncounter
     waitbutton
     closetext
-	setlasttalked 1
+    setlasttalked 1
     winlosstext MapWriteTextInSRAM, 0
     loadvar wTrainerCurrentTheme, MUSIC_CHAMPION_BATTLE
     loadvar $d080, $50
     callasm_rel .forceEnableAnimations
-	loadtrainer RED, 11
+    loadtrainer RED, 11
     startandwaitbattle
     setevent EVENT_MISSINGNO_DEFEATED
     opentext
@@ -59,7 +59,7 @@ Map04_MissingnoScript:
     changeblock 6, 2, 123
     changeblock 8, 4, 123
     changeblock 6, 6, 123
-	playsound SFX_STRENGTH
+    playsound SFX_STRENGTH
     reloadmappart
     pause 40
     playmusic MUSIC_LAKE_OF_RAGE_ROCKET_RADIO
@@ -71,10 +71,10 @@ Map04_MissingnoScript:
     pause 20
     playsound $69
     special FadeOutPalettes
-	special LoadMapPalettes
-	pause 15
-	special FadeInPalettes
-	pause 15
+    special LoadMapPalettes
+    pause 15
+    special FadeInPalettes
+    pause 15
     opentext
     writetext_vwf Map04_MissingnoPostEncounter3
     waitbutton
@@ -82,10 +82,10 @@ Map04_MissingnoScript:
     pause 20
     playsound $69
     special FadeOutPalettes
-	special LoadMapPalettes
-	pause 15
-	special FadeInPalettes
-	pause 15
+    special LoadMapPalettes
+    pause 15
+    special FadeInPalettes
+    pause 15
     opentext
     writetext_vwf Map04_MissingnoPostEncounter4
     closetext
@@ -117,36 +117,36 @@ Map04_Missingno_SubScript1:
     pause 15
     changeblock 4, 4, 2
     changeblock 6, 2, 2
-	playsound SFX_STRENGTH
+    playsound SFX_STRENGTH
     reloadmappart
     pause 15
     changeblock 8, 4, 2
     changeblock 6, 6, 1
-	playsound SFX_STRENGTH
+    playsound SFX_STRENGTH
     reloadmappart
     pause 15
     changeblock 2, 2, 2
     changeblock 2, 6, 2
     changeblock 10, 2, 2
     changeblock 10, 6, 2
-	playsound SFX_STRENGTH
+    playsound SFX_STRENGTH
     reloadmappart
     pause 15
     changeblock 4, 0, 2
     changeblock 8, 0, 2
     changeblock 2, 8, 2
     changeblock 10, 8, 2
-	playsound SFX_STRENGTH
+    playsound SFX_STRENGTH
     reloadmappart
     pause 25
     opentext
     writetext_vwf Map04_MissingnoPostEncounter5
     pause 15
     closetext
-	playsound SFX_STRENGTH
+    playsound SFX_STRENGTH
     earthquake 8
     pause 15
-	playsound SFX_STRENGTH
+    playsound SFX_STRENGTH
     earthquake 8
     pause 25
     disappear OBJ_1
@@ -161,7 +161,7 @@ Map04_Missingno_SubScript1:
     special FadeOutPalettes
     callasm SwitchToSRA3
     callasm StartCredits
-	end
+    end
 
 Map04_Trainers:
     dw Map04_Trainer_Missingno

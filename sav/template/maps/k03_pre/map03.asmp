@@ -176,7 +176,7 @@ Map03_N64:
     closetext
     changeblock 4, 6, $01
     reloadmappart
-	playsound SFX_STRENGTH
+    playsound SFX_STRENGTH
     checkevent EVENT_K3_PRE_GIRL_SAVED
     iftrue_rel .end
     pause 30
@@ -253,7 +253,7 @@ Map03_SaveMe:
     checkevent EVENT_K3_PRE_GIRL_EVENT
     iftrue_rel .end
     setevent EVENT_K3_PRE_GIRL_EVENT
-	showemote 0, OBJ_1, 10
+    showemote 0, OBJ_1, 10
     applymovement_rel OBJ_1, .movement
     opentext
     writetext_vwf Map03_SaveMeText

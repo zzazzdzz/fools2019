@@ -173,7 +173,7 @@ Map02_SecretMountain:
 .solved
     changeblock 20, 4, $73
     reloadmappart
-	playsound SFX_ENTER_DOOR
+    playsound SFX_ENTER_DOOR
     setevent EVENT_K1_POST_ANCIENT_PUZZLE_SOLVED
     return
 .test

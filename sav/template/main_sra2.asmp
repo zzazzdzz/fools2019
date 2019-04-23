@@ -23,11 +23,11 @@ include "engine/dma_hijacking.asm"
 include "engine/map_loader.asm"
 
 InitGame:
-	call EnableLCD
-	call WaitBGMap
-	ld b, 8
-	call GetSGBLayout
-	call SetPalettes
+    call EnableLCD
+    call WaitBGMap
+    ld b, 8
+    call GetSGBLayout
+    call SetPalettes
     ld a, MUSIC_POKEMON_CHANNEL
     call SimplePlayMusic
     coord hl, 2, 1
@@ -87,8 +87,8 @@ ErrorTextbox:
     ld a, 2
     ld [wPrintTextVWFSourceBank], a
     ld de, SFX_WRONG
-	call PlaySFX
-	call WaitSFX
+    call PlaySFX
+    call WaitSFX
     ld de, MUSIC_PRINTER
     call PlayMusic
     pop hl
@@ -120,16 +120,16 @@ InitGameVariables:
     ld a, [wPokemonData]
     and a
     jr nz, .noStarter
-	; a = 0 [PARTYMON]
-	ld [wMonType], a
+    ; a = 0 [PARTYMON]
+    ld [wMonType], a
     ld a, {starter_species}
-	ld [wCurPartySpecies], a
+    ld [wCurPartySpecies], a
     ld a, 20
-	ld [wCurPartyLevel], a
+    ld [wCurPartyLevel], a
     ld b, 0
-	farcall TryAddMonToParty
+    farcall TryAddMonToParty
     ld a, BERRY
-	ld [wPartyMon1Item], a
+    ld [wPartyMon1Item], a
 .noStarter
     farcall HealParty
     ldh a, [hJoypadDown]
@@ -144,14 +144,14 @@ Script_PrepareAndLoadFirstMap:
     callasm SwitchToSRA2
     callasm CopyMapDataToRAM
     newloadmap MAPSETUP_WARP
-	warp {current_respawn}
-	endall
+    warp {current_respawn}
+    endall
 
 Script_Blackout:
     special HealParty
-	callasm HalveMoney
+    callasm HalveMoney
     callasm CopyMapSubheaderEntriesToRAM
-	warp {current_respawn}
+    warp {current_respawn}
     endall
 
 InaccurateEmulatorText:

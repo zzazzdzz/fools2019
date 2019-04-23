@@ -33,21 +33,21 @@ Map01_Scripts:
 Map01_Decryptor:
     rel_base Map01_Decryptor
     opentext
-	writetext_vwf Map01_BeforeDecryptText
+    writetext_vwf Map01_BeforeDecryptText
     callasm GenericYesNoTextbox
     iftrue_rel .yes
-	closetext
+    closetext
     end
 .yes
-	writetext_vwf Map01_DecryptingText
+    writetext_vwf Map01_DecryptingText
     callasm SwitchToSRA3
     callasm DecryptionAlgorithm
     writetext_vwf Map01_AfterDecryptText
     waitbutton
-	closetext
+    closetext
     changeblock 4, 2, 2
     reloadmappart
-	playsound SFX_ENTER_DOOR
+    playsound SFX_ENTER_DOOR
     end
 
 Math_Copy32:

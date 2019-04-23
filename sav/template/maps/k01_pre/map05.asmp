@@ -45,7 +45,7 @@ Map05_PC:
 Map05_Diary:
     rel_base Map05_Diary
     opentext
-	writetext_vwf Map05_DiaryBeforePeek
+    writetext_vwf Map05_DiaryBeforePeek
     callasm_rel .loadMenuAndDisplayText
     closetext
     return

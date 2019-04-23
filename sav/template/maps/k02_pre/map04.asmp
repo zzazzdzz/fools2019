@@ -187,10 +187,10 @@ Map04_Heyv:
     writetext_vwf Map04_HeyvBefore
     waitbutton
     closetext
-	setlasttalked 1
+    setlasttalked 1
     winlosstext MapWriteTextInSRAM, 0
     loadvar wTrainerCurrentTheme, MUSIC_JOHTO_GYM_LEADER_BATTLE
-	loadtrainer SUPER_NERD, 15
+    loadtrainer SUPER_NERD, 15
     dontrestartmapmusic
     startandwaitbattle
     opentext

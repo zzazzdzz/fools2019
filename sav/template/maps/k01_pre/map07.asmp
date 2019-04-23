@@ -51,10 +51,10 @@ Map07_MissingnoScript:
     writetext_vwf Map07_MissingnoPreEncounter
     waitbutton
     closetext
-	setlasttalked 1
+    setlasttalked 1
     winlosstext MapWriteTextInSRAM, 0
     loadvar wTrainerCurrentTheme, MUSIC_CHAMPION_BATTLE
-	loadtrainer $5C, 90
+    loadtrainer $5C, 90
     startandwaitbattle
     opentext
     writetext_vwf Map07_MissingnoPostEncounter
@@ -76,7 +76,7 @@ Map07_MissingnoScript:
     writetext_vwf Map07_FinalText
     waitbutton
     closetext
-	end
+    end
 .movement
     step UP
     step UP

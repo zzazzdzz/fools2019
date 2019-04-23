@@ -14,10 +14,10 @@ Map06_DataStruct:
 Map06_Events:
     db 0, 0
     db 4 ; warps
-	warp_event 2, 7, MAP_03, 2
-	warp_event 3, 7, MAP_03, 2
-	warp_event 16, 7, MAP_03, 3
-	warp_event 17, 7, MAP_03, 3
+    warp_event 2, 7, MAP_03, 2
+    warp_event 3, 7, MAP_03, 2
+    warp_event 16, 7, MAP_03, 3
+    warp_event 17, 7, MAP_03, 3
     db 0 ; coord events
     db 2 ; bg events
     bg_event 3, 0, 0, MapCallScriptInSRAM
@@ -127,14 +127,14 @@ Map03_Looky:
 
 Map03_DrawSecretMap:
     ld de, .tileset
-	ld hl, $8800
-	ld bc, $0107
-	call Request1bpp
+    ld hl, $8800
+    ld bc, $0107
+    call Request1bpp
     coord hl, 3, 4
     ld bc, $060c
     call TextBox
-	call UpdateSprites
-	call ApplyTilemap
+    call UpdateSprites
+    call ApplyTilemap
     coord hl, 4, 5
     ld de, .tilemap
     ld bc, SwitchToSRA3

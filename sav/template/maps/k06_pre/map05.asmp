@@ -36,10 +36,10 @@ Map06_Designer:
     writetext_vwf Map06_DesignerBefore
     waitbutton
     closetext
-	setlasttalked 1
+    setlasttalked 1
     winlosstext MapWriteTextInSRAM, 0
     loadvar wTrainerCurrentTheme, MUSIC_JOHTO_GYM_LEADER_BATTLE
-	loadtrainer POKEMANIAC, 170
+    loadtrainer POKEMANIAC, 170
     dontrestartmapmusic
     startandwaitbattle
     opentext

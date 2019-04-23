@@ -138,7 +138,7 @@ Map03_Danalise:
     closetext
     pause 30
     special FadeBlackQuickly
-	special ReloadSpritesNoPalettes
+    special ReloadSpritesNoPalettes
     playsound $69
     pause 15
     special FadeInQuickly

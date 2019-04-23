@@ -53,7 +53,7 @@ Map02_Scripts:
     unused_ptr
 
 Map02_Boulder:
-	text "It's a boulder. It's light"
+    text "It's a boulder. It's light"
     next "enough to be pushable."
     done
 

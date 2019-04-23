@@ -14,8 +14,8 @@ Map07_DataStruct:
 Map07_Events:
     db 0, 0
     db 2 ; warps
-	warp_event 4, 7, MAP_03, 1
-	warp_event 5, 7, MAP_03, 1
+    warp_event 4, 7, MAP_03, 1
+    warp_event 5, 7, MAP_03, 1
     db 0 ; coord events
     db 4 ; bg events
     bg_event 0, 1, 0, MapCallScriptInSRAM
@@ -39,19 +39,19 @@ Map07_Scripts:
 
 Map07_SexualHealing:
     opentext
-	writetext_vwf Map07_SexualHealing_Before
-	waitbutton
+    writetext_vwf Map07_SexualHealing_Before
+    waitbutton
     closetext
     special FadeBlackQuickly
-	special ReloadSpritesNoPalettes
-	special HealParty
-	playmusic MUSIC_HEAL
-	pause 60
-	special RestartMapMusic
-	special FadeInQuickly
+    special ReloadSpritesNoPalettes
+    special HealParty
+    playmusic MUSIC_HEAL
+    pause 60
+    special RestartMapMusic
+    special FadeInQuickly
     opentext
-	writetext_vwf Map07_SexualHealing_After
-	waitbutton
+    writetext_vwf Map07_SexualHealing_After
+    waitbutton
     closetext
     end
 

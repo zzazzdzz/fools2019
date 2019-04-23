@@ -161,12 +161,12 @@ Map05_BattleHouseScript1:
     waitbutton
     closetext
     special FadeBlackQuickly
-	special ReloadSpritesNoPalettes
-	special HealParty
-	playmusic MUSIC_HEAL
-	pause 60
-	special RestartMapMusic
-	special FadeInQuickly
+    special ReloadSpritesNoPalettes
+    special HealParty
+    playmusic MUSIC_HEAL
+    pause 60
+    special RestartMapMusic
+    special FadeInQuickly
     opentext
     writetext EmptyTextbox
     callasm SwitchToSRA3
@@ -185,7 +185,7 @@ Map05_BattleHouseScript_ObjID2:
     setlasttalked 1
     winlosstext MapWriteTextInSRAM, MapWriteTextInSRAM
 Map05_BattleHouseScript_LoadTrainer:
-	loadtrainer COOLTRAINERM, 230
+    loadtrainer COOLTRAINERM, 230
     startandwaitbattlelosable
 Map05_BattleHouseScript_ObjID3:
     applymovement_rel OBJ_3, Map05_BattleHouseScript_Movement4
@@ -193,7 +193,7 @@ Map05_BattleHouseScript_ObjID4:
     disappear OBJ_3
     playsound SFX_ENTER_DOOR
     applymovement_rel OBJ_PLAYER, Map05_BattleHouseScript_Movement2
-	special HealParty
+    special HealParty
     jump_rel Map05_BattleHouseScript1
 Map05_BattleHouseScript_GTFO:
     applymovement_rel OBJ_PLAYER, Map05_BattleHouseScript_Movement5
@@ -315,7 +315,7 @@ Map05_BattleHouseScript_ASM:
     jr c, .noPenta
     ld b, 1 ; SET_FLAG
     ld de, EVENT_K5_POST_PENTAKILL
-	call EventFlagAction
+    call EventFlagAction
 .noPenta
     xor a
     ld [sBattleHouseOpponentStreak], a

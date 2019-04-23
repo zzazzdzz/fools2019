@@ -35,10 +35,10 @@ Map04_Heyaduo:
     writetext_vwf Map04_HeyaduoIntroText
     waitbutton
     closetext
-	setlasttalked 1
+    setlasttalked 1
     winlosstext MapWriteTextInSRAM, 0
     loadvar wTrainerCurrentTheme, MUSIC_JOHTO_GYM_LEADER_BATTLE
-	loadtrainer FALKNER, 1
+    loadtrainer FALKNER, 1
     dontrestartmapmusic
     startandwaitbattle
     opentext

@@ -61,19 +61,19 @@ Map01_GenericB:
 Map01_Healer:
     faceplayer
     opentext
-	writetext_vwf Map01_HealerPreText
-	waitbutton
+    writetext_vwf Map01_HealerPreText
+    waitbutton
     closetext
     special FadeBlackQuickly
-	special ReloadSpritesNoPalettes
-	special HealParty
-	playmusic MUSIC_HEAL
-	pause 60
-	special RestartMapMusic
-	special FadeInQuickly
+    special ReloadSpritesNoPalettes
+    special HealParty
+    playmusic MUSIC_HEAL
+    pause 60
+    special RestartMapMusic
+    special FadeInQuickly
     opentext
-	writetext_vwf Map01_HealerPostText
-	waitbutton
+    writetext_vwf Map01_HealerPostText
+    waitbutton
     closetext
     end
 

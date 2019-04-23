@@ -12,9 +12,9 @@ Map06_DataStruct:
     dw Map06_Trainers
 
 Map06_InitScript:
-	ld b, 1 ; SET_FLAG
+    ld b, 1 ; SET_FLAG
     ld de, EVENT_K3_VISITED_DELIRIA
-	call EventFlagAction
+    call EventFlagAction
     ld a, $ff
     ld [wTrainerCurrentTheme], a
     ret
@@ -64,16 +64,16 @@ Map06_DeliriaHealer:
     rel_base Map06_DeliriaHealer
     faceplayer
     opentext
-	writetext_vwf Map06_DeliriaHealerBefore
+    writetext_vwf Map06_DeliriaHealerBefore
     callasm GenericYesNoTextbox
     iffalse_rel .nope
     closetext
     special FadeBlackQuickly
-	special ReloadSpritesNoPalettes
-	special HealParty
-	callasm_rel .ohnos
-	playmusic MUSIC_HEAL
-	pause 45
+    special ReloadSpritesNoPalettes
+    special HealParty
+    callasm_rel .ohnos
+    playmusic MUSIC_HEAL
+    pause 45
     playsound $a7
     pause 45
     playsound $85
@@ -84,17 +84,17 @@ Map06_DeliriaHealer:
     pause 65
     playsound SFX_FANFARE_2
     pause 80
-	special RestartMapMusic
-	special FadeInQuickly
+    special RestartMapMusic
+    special FadeInQuickly
     opentext
-	writetext_vwf Map06_DeliriaHealerAfter
+    writetext_vwf Map06_DeliriaHealerAfter
     waitbutton
 .nope
     closetext
     end
 .ohnos
-	ld hl, wPartyMon1HP
-	ld bc, PARTYMON_STRUCT_LENGTH - 1
+    ld hl, wPartyMon1HP
+    ld bc, PARTYMON_STRUCT_LENGTH - 1
     ld d, 6
     xor a
 .loop
@@ -182,10 +182,10 @@ Map06_Delirian06:
     special PlaceMoneyTopRight
     callasm GenericYesNoTextbox
     iffalse_rel .nope
-	checkmoney YOUR_MONEY, 10000
-	ifequal_rel HAVE_LESS, .notEnough
-	takemoney YOUR_MONEY, 10000
-	special PlaceMoneyTopRight
+    checkmoney YOUR_MONEY, 10000
+    ifequal_rel HAVE_LESS, .notEnough
+    takemoney YOUR_MONEY, 10000
+    special PlaceMoneyTopRight
     waitsfx
     playsound SFX_TRANSACTION
     writetext_vwf Map06_Delirian06_After

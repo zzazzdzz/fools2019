@@ -14,8 +14,8 @@ Map06_DataStruct:
 Map06_Events:
     db 0, 0
     db 2 ; warps
-	warp_event 2, 7, MAP_01, 2
-	warp_event 3, 7, MAP_01, 2
+    warp_event 2, 7, MAP_01, 2
+    warp_event 3, 7, MAP_01, 2
     db 0 ; coord events
     db 1 ; bg events
     bg_event 7, 1, 0, MapCallScriptInSRAM
@@ -96,9 +96,9 @@ Map06_Radio:
     end
 .asm
     ld hl, rel_ptr .name
-	ld de, wMonOrItemNameBuffer
-	ld bc, 6
-	call CopyBytes
+    ld de, wMonOrItemNameBuffer
+    ld bc, 6
+    call CopyBytes
     ld hl, rel_ptr .radioLines
     call SwitchToSRA2
     jp PlayRadioChannel

@@ -74,27 +74,27 @@ Map03_Healer:
     rel_base Map03_Healer
     faceplayer
     opentext
-	writetext_vwf Map03_HealerPreText
-	special PlaceMoneyTopRight
+    writetext_vwf Map03_HealerPreText
+    special PlaceMoneyTopRight
     callasm GenericYesNoTextbox
     iffalse_rel .nope
-	checkmoney YOUR_MONEY, 800
-	ifequal_rel HAVE_LESS, .notEnough
-	takemoney YOUR_MONEY, 800
-	special PlaceMoneyTopRight
+    checkmoney YOUR_MONEY, 800
+    ifequal_rel HAVE_LESS, .notEnough
+    takemoney YOUR_MONEY, 800
+    special PlaceMoneyTopRight
     waitsfx
     playsound SFX_TRANSACTION
     closetext
     special FadeBlackQuickly
-	special ReloadSpritesNoPalettes
-	special HealParty
-	playmusic MUSIC_HEAL
-	pause 60
-	special RestartMapMusic
-	special FadeInQuickly
+    special ReloadSpritesNoPalettes
+    special HealParty
+    playmusic MUSIC_HEAL
+    pause 60
+    special RestartMapMusic
+    special FadeInQuickly
     opentext
-	writetext_vwf Map03_HealerPostText
-	waitbutton
+    writetext_vwf Map03_HealerPostText
+    waitbutton
     closetext
     end
 .notEnough
@@ -138,7 +138,7 @@ Map03_SecretRock:
 .solved
     changeblock 16, 14, $0b
     reloadmappart
-	playsound SFX_ENTER_DOOR
+    playsound SFX_ENTER_DOOR
     setevent EVENT_K2_POST_ANCIENT_PUZZLE_SOLVED
     return
 .test
