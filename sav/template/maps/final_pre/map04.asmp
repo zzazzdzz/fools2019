@@ -1,0 +1,266 @@
+; Map04
+
+MAP_04_WIDTH equ 8
+MAP_04_HEIGHT equ 14
+
+Map04_DataStruct:
+    dw Map04_Events
+    dw JustPlainRet
+    dw Map04_Blocks
+    dw Map04_Scripts
+    dw Map04_Encounters
+    dw Map04_Trainers
+
+Map04_Events:
+    db 0, 0
+    db 1 ; warps
+    warp_event 4, 17, MAP_02, 6
+    db 0 ; coord events
+    db 0 ; bg events
+    db 1 ; obj events
+    object_event 6, 4, $73, SPRITEMOVEDATA_SPINCLOCKWISE, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, EVENT_MISSINGNO_DEFEATED
+    
+Map04_Blocks:
+    incbin "maps/map04.blk"
+
+Map04_Scripts:
+    script_ptr   Map04_MissingnoScript        ; obj event 1
+    hybrid_ptr   Map04_MissingnoDefeated
+    unused_ptr
+
+Map04_MissingnoScript:
+    rel_base Map04_MissingnoScript
+    callasm UpdateSprites
+    copybytetovar wPlayerFacing
+    ifequal_rel $04, .ok
+    opentext
+    writetext_vwf Map04_OopsWrongSide
+    waitbutton
+    closetext
+    end
+.ok
+    opentext
+    writetext_vwf Map04_MissingnoPreEncounter
+    waitbutton
+    closetext
+	setlasttalked 1
+    winlosstext MapWriteTextInSRAM, 0
+    loadvar wTrainerCurrentTheme, MUSIC_CHAMPION_BATTLE
+    loadvar $d080, $50
+    callasm_rel .forceEnableAnimations
+	loadtrainer RED, 11
+    startandwaitbattle
+    setevent EVENT_MISSINGNO_DEFEATED
+    opentext
+    writetext_vwf Map04_MissingnoPostEncounter1
+    waitbutton
+    closetext
+    changeblock 4, 4, 123
+    changeblock 6, 2, 123
+    changeblock 8, 4, 123
+    changeblock 6, 6, 123
+	playsound SFX_STRENGTH
+    reloadmappart
+    pause 40
+    playmusic MUSIC_LAKE_OF_RAGE_ROCKET_RADIO
+    opentext
+    writetext_vwf Map04_MissingnoPostEncounter2
+    waitbutton
+    closetext
+    loadvar wMusicFade, 8
+    pause 20
+    playsound $69
+    special FadeOutPalettes
+	special LoadMapPalettes
+	pause 15
+	special FadeInPalettes
+	pause 15
+    opentext
+    writetext_vwf Map04_MissingnoPostEncounter3
+    waitbutton
+    closetext
+    pause 20
+    playsound $69
+    special FadeOutPalettes
+	special LoadMapPalettes
+	pause 15
+	special FadeInPalettes
+	pause 15
+    opentext
+    writetext_vwf Map04_MissingnoPostEncounter4
+    closetext
+    callasm_rel .prepareSubScript
+    jump $ca00
+.forceEnableAnimations
+    ld hl, wOptions
+    res 7, [hl]
+    ret
+.prepareSubScript
+    ld de, $ca00
+    ld hl, Map04_Missingno_SubScript1
+    ld bc, 256
+    call SwitchToSRA3
+    jp CopyBytes
+
+Map04_OopsWrongSide:
+    text "Missingno. can't talk to you"
+    next "from the side."
+    para "He's a one-dimensional"
+    next "sprite after all..."
+    para "Try talking to him from the"
+    next "front!"
+    done
+
+Map04_Missingno_SubScript1:
+    playsound SFX_EMBER
+    earthquake 110
+    pause 15
+    changeblock 4, 4, 2
+    changeblock 6, 2, 2
+	playsound SFX_STRENGTH
+    reloadmappart
+    pause 15
+    changeblock 8, 4, 2
+    changeblock 6, 6, 1
+	playsound SFX_STRENGTH
+    reloadmappart
+    pause 15
+    changeblock 2, 2, 2
+    changeblock 2, 6, 2
+    changeblock 10, 2, 2
+    changeblock 10, 6, 2
+	playsound SFX_STRENGTH
+    reloadmappart
+    pause 15
+    changeblock 4, 0, 2
+    changeblock 8, 0, 2
+    changeblock 2, 8, 2
+    changeblock 10, 8, 2
+	playsound SFX_STRENGTH
+    reloadmappart
+    pause 25
+    opentext
+    writetext_vwf Map04_MissingnoPostEncounter5
+    pause 15
+    closetext
+	playsound SFX_STRENGTH
+    earthquake 8
+    pause 15
+	playsound SFX_STRENGTH
+    earthquake 8
+    pause 25
+    disappear OBJ_1
+    callasm RescuedSequenceTrampoline
+    opentext
+    writetext_vwf Map04_MissingnoRescued
+    playsound SFX_DEX_FANFARE_230_PLUS
+    pause 220
+    closetext
+    pause 30
+    callasm RefreshScreen
+    special FadeOutPalettes
+    callasm SwitchToSRA3
+    callasm StartCredits
+	end
+
+Map04_Trainers:
+    dw Map04_Trainer_Missingno
+
+Map04_Trainer_Missingno:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_ITEM_MOVES
+    db {lv_rel 0}, SNORLAX, LEFTOVERS, BODY_SLAM, EARTHQUAKE, LOVELY_KISS, REST
+    db {lv_rel 0}, RAIKOU, MAGNET, THUNDER, SPARK, CRUNCH, TOXIC
+    db {lv_rel 0}, MEW, KINGS_ROCK, SURF, FLAMETHROWER, GIGA_DRAIN, PSYCHIC_M
+    db -1
+
+Map04_Encounters:
+    db $ff
+
+Map04_MissingnoPreEncounter:
+    text "So you're here."
+    next "Welcome to my world!"
+    para "I wish you a pleasant stay."
+    next "Enjoy it while you can!"
+    para "You are too late. I'm fully"
+    next "ready to perform the final"
+    cont "step of my corruption"
+    cont "spreading routine."
+    para "Soon, Glitch Islands will"
+    next "be fully under my control."
+    para "But there's no need to rush"
+    next "it, I can wait for a bit."
+    para "Before I do that, I'll get"
+    next "rid of you first!"
+    para "This is the end! The final"
+    next "stop! Prepare to lose!"
+    done
+
+Map04_MissingnoPostEncounter1:
+    text "Congratulations! It looks"
+    next "like you're pretty good at"
+    cont "battling magical animals."
+    para "Too bad. It doesn't matter."
+    next "You lost anyway."
+    done
+
+Map04_MissingnoPostEncounter2:
+    text "I have already started the"
+    next "final corruption spreading"
+    cont "procedure!"
+    para "Soon all of Glitch Islands"
+    next "will become a corrupted"
+    cont "mess of tiles, and all its"
+    cont "inhabitants will become my"
+    cont "servants."
+    para "Now... the only thing that"
+    next "you can do here..."
+    para "Is just to give up and accept"
+    next "your fate."
+    done
+
+Map04_MissingnoPostEncounter3:
+    text "Hello?"
+    next "Do you hear me?"
+    done
+
+Map04_MissingnoPostEncounter4:
+    text "It's me, Danalise. I'm"
+    next "using telepathy to give you"
+    cont "this message."
+    para "Missingno.'s power seems to"
+    next "be weakened right now."
+    para "Together with Heyv, we can"
+    next "unleash the full charge of"
+    cont "our Glorious Glitch Core."
+    para "Its cleansing power will"
+    next "be enough to erase Missingno."
+    cont "from this world forever!"
+    para "Starting in three..."
+    tx_delayframes 40
+    next "two..."
+    tx_delayframes 40
+    text "one..."
+    tx_delayframes 40
+    text "GO!"
+    done
+
+Map04_MissingnoPostEncounter5:
+    text "What is happening? What"
+    next "happened to my corruption?"
+    done
+
+Map04_MissingnoRescued:
+    text "Missingno., the Glitch Lord"
+    next "seems to be gone..."
+    para "He's not coming back."
+    next "Glitch Islands are safe!"
+    done
+    
+Map04_MissingnoDefeated:
+    text "That was a good battle! You"
+    next "are putting up way more of a"
+    cont "fight than I anticipated."
+    done
+
+include "maps/credits.asm"

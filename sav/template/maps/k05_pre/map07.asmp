@@ -1,0 +1,113 @@
+; Map07
+
+MAP_07_WIDTH equ 4
+MAP_07_HEIGHT equ 4
+
+Map07_DataStruct:
+    dw Map07_Events
+    dw JustPlainRet
+    dw GenericHouseBlocks
+    dw Map07_Scripts
+    dw Map07_Encounters
+    dw Map07_Trainers
+
+Map07_Events:
+    db 0, 0
+    db 2 ; warps
+	warp_event 2, 7, MAP_01, 2
+	warp_event 3, 7, MAP_01, 2
+    db 0 ; coord events
+    db 1 ; bg events
+    bg_event 7, 1, 0, MapCallScriptInSRAM
+    db 2 ; obj events
+    object_event 2, 4, SPRITE_BUENA, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 5, 3, SPRITE_GENTLEMAN, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+
+Map07_Scripts:
+    script_ptr Map07_Radio
+    script_ptr Map07_Healer
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map07_NPC2
+    unused_ptr
+    unused_ptr
+
+Map07_Healer:
+    faceplayer
+    opentext
+	writetext_vwf Map07_HealerPreText
+	waitbutton
+    closetext
+    special FadeBlackQuickly
+	special ReloadSpritesNoPalettes
+	special HealParty
+	playmusic MUSIC_HEAL
+	pause 60
+	special RestartMapMusic
+	special FadeInQuickly
+    opentext
+	writetext_vwf Map07_HealerPostText
+	waitbutton
+    closetext
+    end
+
+Map07_HealerPreText:
+    text "Your Pokémon look tired."
+    next "May I have them?"
+    done
+
+Map07_HealerPostText:
+    text "Here you go, that's a lot"
+    next "better. Take care."
+    done
+
+Map07_NPC2:
+    text "If you were to become"
+    next "president, what would you"
+    cont "do?"
+    para "Me? I'd probably reduce tax"
+    next "on <B>{augment K05_PRE_1}</B>."
+    para "If I got elected, there would"
+    next "be extra <B>{augment K05_PRE_2}</B> for"
+    cont "every <B>{augment K05_PRE_3}</B>."
+    para "Each household would benefit"
+    next "from their own <B>{augment K05_PRE_4}</B>."
+    para "I would keep all <B>{augment K05_PRE_5}</B>"
+    next "from the city's streets."
+    cont "Please vote for me!"
+    done
+
+Map07_Trainers:
+Map07_Encounters:
+    db $ff
+
+Map07_Radio:
+    rel_base Map07_Radio
+    setevent EVENT_K5_RADIO
+    opentext
+    writetext EmptyTextbox
+    playmusic MUSIC_VIRIDIAN_CITY
+    callasm_rel .asm
+    closetext
+    end
+.asm
+    ld hl, rel_ptr .radioLines
+    call SwitchToSRA2
+    jp PlayRadioChannel
+.radioLines
+    dw PnP_Text1
+    dw PnP_Text2
+    dw PnP_Text3
+    dw RadioBirdText
+    dw PnP_lazy
+    dw RadioBirdText
+    dw PnP_weird
+    dw RadioBirdText
+    dw PnP_great
+    dw RadioBirdText
+    dw PnP_noisy
+    dw RadioBirdText
+    dw PnP_sortofok
+    dw RadioBirdText
+    dw RadioBirdText
+    dw $0000

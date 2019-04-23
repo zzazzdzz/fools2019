@@ -1,0 +1,96 @@
+SECTION "main_sram1", ROM0[$B260]
+
+_Map04_HeyaduoAfterText1:
+    text "I AM FAILED TO PROTECT"
+    next "THE ERROR WORLD. BUT"
+    cont "THAT MISSLE BOMB RELIVES,"
+    cont "THEY WILL CONTINUE THE"
+    cont "CRORUPTIONS."
+    para "ERRORS IS TO SURVIVE AND"
+    next "COACH TO STOP EXIST IN"
+    cont "ELF WORLD SOON, NO MATTER"
+    cont "HOW STRONG"
+    done
+
+_Map04_HeyaduoAfterText2:
+    text "EN? AS IF I WAS USED BY"
+    next "SOME STRANGE FORCE, BUT"
+    cont "I WAS SAVED BY YOU."
+    para "YOU ARE A GREAT COACH"
+    next "OF POCKET MONSTER, TO"
+    cont "SAVED ME THANKS TO YOU,"
+    cont "I CAN GO BACK TO MY"
+    cont "GYMNASIUM IN SHANGDAO"
+    para "PLEASE CONTINUE TO FIHGT"
+    next "FOR POCKET MONSTER, TO"
+    cont "SAVE ALL PEOPLES."
+    para "GOOD LUCK TO YOU, MAKE"
+    next "USE OF LEFT TIME TO TRY"
+    cont "HARD!"
+    done
+
+_Map04_HeyaduoIntroText:
+    text "I AM THE HEADER OF"
+    next "GUIXIANG GYNMASIUM,"
+    cont "CALLED HEYADUO."
+    para "PEOPLE WILL ELECTRIC"
+    next "SHOCK THE FLYING"
+    cont "MONSTERS, IGNORING THESE"
+    cont "BIRD MONSTERS, I THINK"
+    cont "THEM NOT EXCUSED."
+    para "THEY WERE FLUTTERING IN"
+    next "THE SKY, MAKING THE SKY"
+    cont "MAGENIFICENT."
+    para "I LET THE WORLDLY PEOPLE"
+    next "UNDERSTAND THEIR"
+    cont "GRANDNESS!"
+    done
+
+_Map01_GenericA:
+    text "Bootleg Kingdom prides itself"
+    next "on being very multicultural."
+    para "There are people here from"
+    next "every region you can imagine."
+    para "We have people from Vietnam!"
+    next "From Janto! From Glitchland!"
+    cont "From Corna! It's amazing!"
+    para "I even heard that Delirians"
+    next "have their secret retreat"
+    cont "somewhere in this kingdom."
+    done
+
+_Map02_Technology:
+    text "Technology is incredible!"
+    para "By compiling save files on"
+    next "demand for each user, it's"
+    cont "possible to create unique"
+    cont "experiences for every player."
+    para "The power of science is"
+    next "staggering!"
+    done
+
+_Map03_Rocket02:
+    text "Hey kiddo, get lost! That N64"
+    next "console over there is not"
+    cont "for playing games!"
+    para "We, the Team Rocket Glitch"
+    next "Research Division, have"
+    cont "modified this device to help"
+    cont "our evil plan!"
+    para "To disable it, you'll need to"
+    next "provide two passwords."
+    para "Wait, why am I telling you"
+    next "this?"
+    done
+
+_Map01_GenericC:
+    text "Hmm, the entrance to this"
+    next "cave is blocked off."
+    para "I need to find a way to get"
+    next "there..."
+    para "I know! Maybe I can use some"
+    next "<B>{augment K03_PRE_6}</B> to <B>{augment K03_PRE_7}</B>"
+    cont "<B>{augment K03_PRE_8}</B> the entrance!"
+    para "No... that wouldn't work."
+    next "It's not a good idea."
+    done

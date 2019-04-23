@@ -1,0 +1,52 @@
+SECTION "main_sram1", ROM0[$B260]
+
+_Map01_GenericA:
+    text "Bootleg Kingdom prides itself"
+    next "on being very multicultural."
+    para "There are people here from"
+    next "every region you can imagine."
+    para "We have people from Vietnam!"
+    next "From Janto! From Glitchland!"
+    cont "From Corna! It's amazing!"
+    para "I even heard that Delirians"
+    next "have their secret retreat"
+    cont "somewhere in this kingdom."
+    done
+
+_Map02_Technology:
+    text "Technology is incredible!"
+    para "By compiling save files on"
+    next "demand for each user, it's"
+    cont "possible to create unique"
+    cont "experiences for every player."
+    para "The power of science is"
+    next "staggering!"
+    done
+
+_Map01_GenericC:
+    text "The entrance to this cave"
+    next "was blocked off a while ago."
+    para "I tried to find a way to get"
+    next "there."
+    para "I thought I could use some"
+    next "<B>{augment K03_PRE_6}</B> to <B>{augment K03_PRE_7}</B>"
+    cont "<B>{augment K03_PRE_8}</B> the entrance."
+    cont "It was a terrible idea."
+    done
+
+_Map01_WorriedExplorer:
+    text "Hello! I'm Matt, but"
+    next "everyone just calls me the"
+    cont "'Worried Explorer'."
+    para "I came from a faraway region"
+    next "called Glitchland, looking"
+    cont "for big treasure."
+    para "Supposedly, this cave is the"
+    next "home of Laylah, the Divine"
+    cont "Spirit of Bootleg Kingdom."
+    para "I'm sure that there is some"
+    next "reward waiting inside."
+    para "The problem? It's too dark!"
+    next "If only there was some way"
+    cont "to light this cave up..."
+    done

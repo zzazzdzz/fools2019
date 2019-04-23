@@ -1,0 +1,15 @@
+include "includes/pokecrystal_symbols.asm"
+include "includes/pokecrystal_macros.asm"
+include "includes/pokecrystal_constants.asm"
+
+include "includes/charmap.asm"
+include "includes/macros.asm"
+include "includes/constants.asm"
+include "includes/hardware.asm"
+
+    rel_base_first 0
+
+include "main_sra2.asm"
+include "maps/sra1.asm"
+include "main_sra0.asm"
+include "maps/map_data.asm"

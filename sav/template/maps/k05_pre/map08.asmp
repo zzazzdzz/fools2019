@@ -1,0 +1,55 @@
+; Map08
+
+MAP_08_WIDTH equ 4
+MAP_08_HEIGHT equ 4
+
+Map08_DataStruct:
+    dw Map08_Events
+    dw JustPlainRet
+    dw Map08_Blocks
+    dw Map08_Scripts
+    dw Map08_Encounters
+    dw Map08_Trainers
+
+Map08_Events:
+    db 0, 0
+    db 2 ; warps
+    warp_event 2, 7, MAP_01, 1
+    warp_event 3, 7, MAP_01, 1
+    db 0 ; coord events
+    db 0 ; bg events
+    db 1 ; obj events
+    object_event 1, 2, SPRITE_CLERK, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map08_Blocks:
+    incbin "maps/map08.blk"
+
+Map08_Scripts:
+    script_ptr Map01_MartClerk                  ; obj event 1
+    unused_ptr
+    unused_ptr
+
+Map08_Trainers:
+Map08_Encounters:
+    db $ff
+
+Map01_MartClerk:
+    rel_base Map01_MartClerk
+    faceplayer
+    opentext
+    showmart_rel .mart
+    closetext
+    return
+.mart
+    db 10
+    db HYPER_POTION
+    db FULL_HEAL
+    db GREAT_BALL
+    db ULTRA_BALL
+    db SUPER_REPEL
+    db REVIVE
+    db $d8
+    db $dd
+    db $e2
+    db $ea
+    db -1

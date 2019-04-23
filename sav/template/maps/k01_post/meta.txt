@@ -1,0 +1,42 @@
+[Info]
+    KingdomName = TUTORIAL KINGDOM
+    Respawn = MAP_01, 14, 10
+    SaveAllowedImmediately = 1
+    KingdomVersion = REVISITED!
+    RoofGraphics = 1
+
+[ObtainableFlags]
+    EVENT_ITEMBALL_K1_PRE_1 = 67
+    EVENT_TRAINER_K1_PRE_2 = 68
+    EVENT_TRAINER_K1_PRE_4 = 70
+    EVENT_ITEMBALL_K1_POST_1 = 73
+    EVENT_SHOWED_METAPOD = 74
+    EVENT_TRAINER_K1_POST_1 = 75
+    EVENT_ITEMBALL_K1_POST_2 = 76
+    EVENT_ITEMBALL_K1_POST_3 = 77
+    EVENT_K1_POST_ANCIENT_PUZZLE_SOLVED = 78
+    EVENT_TRAINER_K1_POST_2 = 79
+    EVENT_K1_POST_CORRUPTION_CLEANSED = 80
+    EVENT_TRAINER_K1_POST_3 = 81
+    EVENT_K1_RADIO = 180
+
+[ObtainableItems]
+    LUCKY_EGG = 1x EVENT_ITEMBALL_K1_POST_1
+    SUPER_POTION = 1x EVENT_ITEMBALL_K1_PRE_1
+    RARE_CANDY = 1x EVENT_ITEMBALL_K1_POST_2, 1x EVENT_SHOWED_METAPOD
+    MASTER_BALL = 1x EVENT_ITEMBALL_K1_POST_3
+    POKE_BALL = 3x always
+    GREAT_BALL = 3x always
+    ULTRA_BALL = 3x always
+    GOLD_BERRY = 1x EVENT_K1_POST_CORRUPTION_CLEANSED
+
+[ObtainableMons]
+    METAPOD = any
+    _RND_1 = any
+    _RND_2 = any
+    _RND_3 = any
+    _RND_4 = any
+    _RND_5 = any
+    _RND_6 = any
+    _RND_7 = any
+    _RND_8 = any

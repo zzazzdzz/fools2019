@@ -1,0 +1,68 @@
+[Info]
+    KingdomName = THROWBACK KINGDOM
+    Respawn = MAP_01, 10, 12
+    SaveAllowedImmediately = 1
+    KingdomVersion = REVISITED!
+    RoofGraphics = 0
+
+[ObtainableFlags]
+    EVENT_TRAINER_K6_PRE_1 = 161
+    EVENT_TRAINER_K6_PRE_2 = 162
+    EVENT_TRAINER_K6_PRE_3 = 163
+    EVENT_ITEMBALL_K6_PRE_1 = 164
+    EVENT_K5_PRE_FLASH_HOUSE = 165
+    EVENT_K5_PRE_MATH_HOMEWORK = 166
+    EVENT_TRAINER_K6_PRE_4 = 167
+    EVENT_TRAINER_K6_PRE_5 = 168
+    EVENT_TRAINER_K6_PRE_6 = 169
+    EVENT_TRAINER_K6_PRE_7 = 170
+    EVENT_TRAINER_K6_PRE_8 = 171
+    EVENT_K6_PRE_COMPLETE = 172
+    EVENT_YAHAHA_FIFTH = 125
+    EVENT_ITEMBALL_K6_POST_1 = 173
+    EVENT_ITEMBALL_K6_POST_2 = 174
+    EVENT_ITEMBALL_K6_POST_3 = 175
+    EVENT_ITEMBALL_K6_POST_4 = 176
+    EVENT_ITEMBALL_K6_POST_5 = 177
+    EVENT_ITEMBALL_K6_POST_6 = 178
+    EVENT_K6_POST_LOST_ITEM = 179
+
+[ObtainableItems]
+    RARE_CANDY = 1x EVENT_K5_PRE_FLASH_HOUSE, 1x EVENT_K6_POST_LOST_ITEM
+    POKE_BALL = any
+    GREAT_BALL = any
+    HYPER_POTION = any
+    FULL_HEAL = any
+    REVIVE = any
+    ULTRA_BALL = 1x EVENT_ITEMBALL_K6_POST_1
+    MAX_REVIVE = 1x EVENT_ITEMBALL_K6_POST_2
+    $CD = 1x EVENT_ITEMBALL_K6_POST_3
+    NUGGET = 1x EVENT_ITEMBALL_K6_POST_4
+    GOLD_BERRY = 1x EVENT_ITEMBALL_K6_POST_5
+    LOST_ITEM = 1x EVENT_ITEMBALL_K6_POST_6
+
+[ObtainableMons]
+    _RND_56 = any
+    _RND_57 = any
+    _RND_58 = any
+    _RND_59 = any
+    _RND_60 = any
+    _RND_61 = any
+    _RND_62 = any
+    _RND_63 = any
+    _RND_64 = any
+    _RND_65 = any
+    _RND_66 = any
+    _RND_67 = any
+    _RND_68 = any
+    _RND_69 = any
+    _RND_70 = any
+    _RND_71 = any
+    _RND_72 = any
+    _RND_73 = any
+    _RND_74 = any
+    _RND_75 = any
+    _RND_76 = any
+    _RND_77 = any
+    _RND_78 = any
+    _RND_79 = any

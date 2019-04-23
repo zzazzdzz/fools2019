@@ -1,0 +1,125 @@
+; Map03
+
+MAP_03_WIDTH equ 12
+MAP_03_HEIGHT equ 14
+
+Map03_DataStruct:
+    dw Map03_Events
+    dw JustPlainRet
+    dw Map03_Blocks
+    dw Map03_Scripts
+    dw Map03_Encounters
+    dw Map03_Trainers
+
+Map03_Events:
+    db 0, 0
+    db 1 ; warps
+    warp_event 19, 3, MAP_07, 2
+    db 0 ; coord events
+    db 0 ; bg events
+    db 3 ; obj events
+    object_event 6, 7, SPRITE_N64, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 21, 15, SPRITE_FRUIT_TREE, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, PAL_NPC_TREE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, EVENT_YAHAHA_FIRST
+    object_event 21, 15, SPRITE_JANINE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_ALWAYS_SET
+    
+Map03_Blocks:
+    incbin "maps/map03.blk"
+
+Map03_Scripts:
+    hybrid_ptr Map03_N64
+    unused_ptr
+    unused_ptr
+    script_ptr Map03_Yahaha
+    unused_ptr
+    unused_ptr
+
+Map03_Yahaha:
+    rel_base Map03_Yahaha
+    checkevent EVENT_YAHAHA_INITIATED
+    iffalse_rel .tree
+    pause 10
+    disappear OBJ_2
+    appear OBJ_3
+    playsound $6D
+    applymovement_rel OBJ_3, .spinMovement
+    setlasttalked 3
+    faceplayer
+    playmusic MUSIC_MT_MOON_SQUARE
+    opentext
+    writetext_vwf Map03_YahahaText
+    waitbutton
+    closetext
+    applymovement_rel OBJ_3, .spinMovement
+    applymovement_rel OBJ_3, .escapeMovement
+    disappear OBJ_3
+    setevent EVENT_YAHAHA_FIRST
+    loadvar wMapMusic, 0
+    playmapmusic
+    end
+.tree
+    opentext
+    writetext_vwf Map03_NormalTreeText
+    waitbutton
+    closetext
+    end
+.spinMovement
+	turn_head DOWN
+	turn_head LEFT
+	turn_head UP
+	turn_head RIGHT
+	turn_head DOWN
+	turn_head LEFT
+	turn_head UP
+	turn_head RIGHT
+	turn_head DOWN
+	step_end
+.escapeMovement
+    jump_step UP
+    big_step UP
+    big_step UP
+    big_step UP
+    big_step UP
+    big_step UP
+    big_step UP
+	step_end
+
+Map03_NormalTreeText:
+    text "Just a normal tree."
+    next "Nothing out of ordinary."
+    done
+
+Map03_YahahaText:
+    tx_deliria
+    text "yahaha"
+    next "you found me !!"
+    para "u are so good .."
+    next "byeee !"
+    done
+
+Map03_N64:
+    text "It's a specially modified"
+    next "Nintendo 64 console."
+    para "Two passwords are entered"
+    next "and visible on the screen."
+    para "'<B>{augment K03_PRE_1 upper} {augment K03_PRE_2 upper}</B>'."
+    next "'<B>{augment K03_PRE_3 upper}</B>'."
+    done
+
+Map03_Trainers:
+Map03_Encounters:
+    db {rnd_basic_mon 23}, {lv_rel -7}
+    db {rnd_basic_mon 23}, {lv_rel -6}
+    db {rnd_basic_mon 23}, {lv_rel -5}
+    db {rnd_basic_mon 23}, {lv_rel -4}
+    db {rnd_basic_mon 24}, {lv_rel -7}
+    db {rnd_basic_mon 24}, {lv_rel -6}
+    db {rnd_basic_mon 24}, {lv_rel -5}
+    db {rnd_basic_mon 24}, {lv_rel -4}
+    db {rnd_basic_mon 25}, {lv_rel -7}
+    db {rnd_basic_mon 25}, {lv_rel -6}
+    db {rnd_basic_mon 25}, {lv_rel -5}
+    db {rnd_basic_mon 25}, {lv_rel -4}
+    db {rnd_basic_mon 26}, {lv_rel -7}
+    db {rnd_basic_mon 26}, {lv_rel -6}
+    db {rnd_basic_mon 26}, {lv_rel -5}
+    db {rnd_basic_mon 26}, {lv_rel -4}

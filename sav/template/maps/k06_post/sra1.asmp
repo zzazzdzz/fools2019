@@ -1,0 +1,48 @@
+SECTION "main_sram1", ROM0[$B260]
+
+_Map06_Designer_BeforeText:
+    text "Strangely, after you saved"
+    next "me, lots of corrupted tiles"
+    cont "started disappearing from"
+    cont "this area."
+    para "It turns out there was a"
+    next "cave underneath some of the"
+    cont "corruption."
+    para "I want to know what's at"
+    next "the end of it, but I'm too"
+    cont "scared to go inside."
+    para "Perhaps you could go there"
+    next "instead? If you were to find"
+    cont "anything interesting, please"
+    cont "show it to me!"
+    done
+
+_Map06_Designer_AfterText:
+    text "Hi! So, what was at the end"
+    next "of this cave?"
+    para "Hey, I remember this item!"
+    next "I dropped it a long time"
+    cont "ago when I was busy working"
+    cont "on one of my creations."
+    para "It's good to finally have it"
+    next "back! Thanks!"
+    cont "You can have this in return."
+    wait
+
+_Map06_Designer_ReturnedText:
+    text "With Missingno. gone from"
+    next "Throwback Kingdom, maybe I"
+    cont "can create some maps again."
+    done
+
+_Map06_Florist:
+    text "This house was sold a while"
+    next "back. I think it was first"
+    cont "owned by a game studio."
+    para "But they weren't able to"
+    next "put out their product fast"
+    cont "enough, and were forced to"
+    cont "pack up their stuff."
+    para "I'm the new owner, and I'm"
+    next "opening a flower shop here!"
+    done

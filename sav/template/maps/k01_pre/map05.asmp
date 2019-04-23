@@ -1,0 +1,113 @@
+; Map05
+
+MAP_05_WIDTH equ 5
+MAP_05_HEIGHT equ 4
+
+Map05_DataStruct:
+    dw Map05_Events
+    dw JustPlainRet
+    dw Map05_Blocks
+    dw Map05_Scripts
+    dw Map05_Encounters
+    dw Map05_Trainers
+
+Map05_Events:
+    db 0, 0
+    db 2 ; warps
+    warp_event 2, 7, MAP_04, 3
+    warp_event 3, 7, MAP_04, 3
+    db 0 ; coord events
+    db 3 ; bg events
+    bg_event 0, 1, 0, MapCallScriptInSRAM
+    bg_event 5, 0, 0, MapCallScriptInSRAM
+    bg_event 5, 4, 0, MapCallScriptInSRAM
+    db 0 ; obj events
+
+Map05_Blocks:
+    incbin "maps/map05.blk"
+
+Map05_Scripts:
+    hybrid_ptr   Map05_PC
+    hybrid_ptr   Map05_Picture
+    script_ptr   Map05_Diary
+
+Map05_PC:
+    text "A computer. Someone left"
+    next "it turned on."
+    para "Hey, what are these"
+    next "documents on the desktop?"
+    para "'fools2019 - making of'?"
+    next "'fools2020 - overview'?"
+    para "Better not read them."
+    next "Spoilers aren't fun!"
+    done
+
+Map05_Diary:
+    rel_base Map05_Diary
+    opentext
+	writetext_vwf Map05_DiaryBeforePeek
+    callasm_rel .loadMenuAndDisplayText
+    closetext
+    return
+.loadMenuAndDisplayText
+    ld bc, $0510
+    ld hl, Map05_DiaryMenu
+    ld de, $0104
+    call DisplayChoiceMenu
+    cp 4
+    ret z
+    ld hl, rel_ptr .ptrs
+    call TextboxTable
+    ld hl, Map05_ContinueReadingText
+    call PrintTextVWF
+    jr .loadMenuAndDisplayText
+.ptrs
+    dw Map05_Diary01
+    dw Map05_Diary02
+    dw Map05_Diary03
+    dw Map05_Diary04
+
+Map05_Diary01:
+    tx_far 1, _Map05_Diary01
+
+Map05_Diary02:
+    tx_far 1, _Map05_Diary02
+
+Map05_Diary03:
+    tx_far 1, _Map05_Diary03
+
+Map05_Diary04:
+    tx_far 1, _Map05_Diary04
+
+; About me
+; About events
+; About this room
+; Carrying on
+; Cancel
+Map05_DiaryMenu:
+    db $80,$a1,$ae,$b4,$b3,$7f,$ac,$a4,$4f
+    db $80,$a1,$ae,$b4,$b3,$7f,$a4,$b5,$a4,$ad,$b3,$b2,$4f
+    db $80,$a1,$ae,$b4,$b3,$7f,$b3,$a7,$a8,$b2,$7f,$b1,$ae,$ae,$ac,$4f
+    db $82,$a0,$b1,$b1,$b8,$a8,$ad,$a6,$7f,$ae,$ad,$4f
+    db $82,$a0,$ad,$a2,$a4,$ab,$50
+
+Map05_Picture:
+    text "A sketch is hanging on the"
+    next "wall."
+    para "A dark, shadowy figure is"
+    next "standing in front of a long,"
+    cont "unlit hallway."
+    done
+
+Map05_DiaryBeforePeek:
+    text "It's some kind of journal."
+    next "You take a peek inside..."
+    done
+
+Map05_ContinueReadingText:
+    text "Keep reading?"
+    done
+
+Map05_Trainers:
+Map05_Encounters:
+    db $ff

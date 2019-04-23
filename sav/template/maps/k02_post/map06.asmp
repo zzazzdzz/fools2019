@@ -1,0 +1,121 @@
+; Map06
+
+MAP_06_WIDTH equ 4
+MAP_06_HEIGHT equ 4
+
+Map06_DataStruct:
+    dw Map06_Events
+    dw JustPlainRet
+    dw GenericHouseBlocks
+    dw Map06_Scripts
+    dw Map06_Encounters
+    dw Map06_Trainers
+
+Map06_Events:
+    db 0, 0
+    db 2 ; warps
+	warp_event 2, 7, MAP_01, 2
+	warp_event 3, 7, MAP_01, 2
+    db 0 ; coord events
+    db 1 ; bg events
+    bg_event 7, 1, 0, MapCallScriptInSRAM
+    db 4 ; obj events
+    object_event 2, 4, SPRITE_POKEFAN_F, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 2, 3, SPRITE_YOUNGSTER, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 5, 3, SPRITE_COOLTRAINER_M, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 6, 5, SPRITE_FAIRY, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 1, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+
+Map06_Scripts:
+    script_ptr   Map06_Radio                    ; bg event 1
+    hybrid_ptr   Map06_Trendsetters1            ; obj event 1
+    unused_ptr
+    unused_ptr
+    hybrid_ptr   Map06_Trendsetters2            ; obj event 2
+    unused_ptr
+    unused_ptr
+    hybrid_ptr   Map06_Trendsetters3            ; obj event 3
+    unused_ptr
+    unused_ptr
+    hybrid_ptr   Map06_Trendsetters4            ; obj event 4
+    unused_ptr
+    unused_ptr
+
+Map06_Trainers:
+Map06_Encounters:
+    db $ff
+
+Map06_Trendsetters1:
+    text "We adore everything that"
+    next "is hip and trendy these days."
+    para "Right now, '<B>{augment K02_TRENDY_PHRASE_1}</B>'"
+    next "is a very big deal."
+    para "I bet that wherever you're"
+    next "from, '<B>{augment K02_TRENDY_PHRASE_1}</B>' is"
+    cont "truly the best thing ever!"
+    done
+
+Map06_Trendsetters2:
+    text "We all already know how"
+    next "amazing <B>{augment K02_TRENDY_PHRASE_1}</B> is,"
+    cont "but I've heard a new trend"
+    cont "is emerging."
+    para "<B>{augment K02_TRENDY_PHRASE_2}</B> might"
+    next "just be slightly better!"
+    para "We're currently discussing"
+    next "which one is really the hot"
+    cont "new thing!"
+    done
+
+Map06_Trendsetters3:
+    text "I just think that there's some"
+    next "deep relationship between"
+    cont "<B>{augment K02_TRENDY_PHRASE_1}</B> and"
+    cont "<B>{augment K02_TRENDY_PHRASE_2}.</B>"
+    para "One seems more <B>{augment K02_TRENDY_PHRASE_3}</B>"
+    next "than the other, but they're"
+    cont "very similar nonetheless."
+    done
+
+Map06_Trendsetters4:
+    text "That's a CLEFAIRY. It seems"
+    next "really confused about this"
+    cont "conversation."
+    para "Maybe it's scared? Is"
+    next "<B>{augment K02_TRENDY_PHRASE_1}</B> good for"
+    cont "Pokémon?"
+    done
+
+Map06_Radio:
+    rel_base Map06_Radio
+    setevent EVENT_K2_RADIO
+    opentext
+    writetext EmptyTextbox
+    playmusic MUSIC_POKEMON_LULLABY
+    callasm_rel .asm
+    closetext
+    end
+.asm
+    ld hl, rel_ptr .name
+	ld de, wMonOrItemNameBuffer
+	ld bc, 6
+	call CopyBytes
+    ld hl, rel_ptr .radioLines
+    call SwitchToSRA2
+    jp PlayRadioChannel
+.name
+    db $e6,$e6,$e6,$e6,$e6,$50
+.radioLines
+    dw BenIntroText1
+    dw BenIntroText2
+    dw BenIntroText3
+    dw OPT_OakText1
+    dw OPT_OakText2
+    dw RocketRadioText2
+    dw PnP_Text2
+    dw RadioBirdText
+    dw BuenaRadioText2
+    dw BuenaRadioText3
+    dw RadioBirdText
+    dw LC_DragText1
+    dw LC_DragText2
+    dw $ff00

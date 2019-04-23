@@ -1,0 +1,49 @@
+SECTION "main_sram1", ROM0[$B260]
+
+_Map01_NPC1:
+    text "Joyful Kingdom is famous"
+    next "for its Game Corner!"
+    para "People come there from many"
+    next "different regions, just to"
+    cont "have fun together."
+    cont "I find that very charming."
+    done
+
+_Map01_Trainer01_Encounter:
+    text "I've seen a lot of Rockets"
+    next "wandering around here."
+    para "I think there might be some"
+    next "criminal activity going on"
+    cont "in this area."
+    done
+
+_Map03_Rocket:
+    text "Welcome to Joyful Kingdom"
+    next "Game Corner!"
+    para "It's just a place for"
+    next "everyone to play their"
+    cont "favorite games!"
+    cont "Nothing shady!"
+    para "There's no secret switch"
+    next "behind the poster!"
+    done
+
+_Map03_NPC4:
+    text "I activate Sensei's Divining"
+    next "Top, while that's on the"
+    cont "stack I pop my fetch land."
+    cont "Then, cast Brainstorm."
+    para "Storm count is 34, floating"
+    next "17 blue and double red..."
+    para "Hey!"
+    next "Can't you see I'm busy?"
+    done
+
+_Map03_NPC2:
+    text "Playing games is so much fun!"
+    next "It's a nice way to relax"
+    cont "after a long day of work..."
+    para "WTF IS THIS GUY DOING?"
+    next "GG, report my team."
+    cont "I hate this damn game."
+    done

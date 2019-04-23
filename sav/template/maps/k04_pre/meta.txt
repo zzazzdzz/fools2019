@@ -1,0 +1,46 @@
+[Info]
+    KingdomName = SEASIDE KINGDOM
+    Respawn = MAP_01, 11, 25
+    SaveAllowedImmediately = 0
+    KingdomVersion = FIRST VISIT!
+    RoofGraphics = 2
+
+[ObtainableFlags]
+    EVENT_K4_SECRET_PATH = 126
+    EVENT_TRAINER_K4_PRE_1 = 127
+    EVENT_TRAINER_K4_PRE_2 = 128
+    EVENT_ITEMBALL_K4_PRE_1 = 129
+    EVENT_K4_STOCK_MARKET_PROFIT = 130
+    EVENT_K4_BICY_POCKET_FUCK = 131
+    EVENT_TRAINER_K4_PRE_3 = 132
+    EVENT_TRAINER_K4_PRE_4 = 133
+    EVENT_TRAINER_K4_PRE_5 = 134
+    EVENT_ITEMBALL_K4_PRE_2 = 135
+    EVENT_ITEMBALL_K4_PRE_3 = 136
+    EVENT_K4_PRE_COMPLETE = 137
+    EVENT_YAHAHA_SECOND = 122
+
+[ObtainableItems]
+    MYSTIC_WATER = 1x EVENT_ITEMBALL_K4_PRE_1
+    KINGS_ROCK = 1x EVENT_ITEMBALL_K4_PRE_3
+    $f5 = 1x EVENT_K4_PRE_COMPLETE
+    RARE_CANDY = 1x EVENT_K4_SECRET_PATH
+    GREAT_BALL = any
+    ULTRA_BALL = any
+    HYPER_POTION = any
+    REVIVE = any
+    FULL_HEAL = any
+    $ce = any
+    $d5 = any
+    BICYCLE = 1x EVENT_K4_BICY_POCKET_FUCK
+
+[ObtainableMons]
+    _RND_31 = any
+    _RND_32 = any
+    _RND_33 = any
+    _RND_34 = any
+    _RND_35 = any
+    _RND_36 = any
+    _RND_37 = any
+    _RND_38 = any
+    _RND_39 = any

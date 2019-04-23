@@ -1,0 +1,300 @@
+; Map01
+
+MAP_01_WIDTH equ 4
+MAP_01_HEIGHT equ 4
+
+Map01_DataStruct:
+    dw Map01_Events
+    dw JustPlainRet
+    dw Map01_Blocks
+    dw Map01_Scripts
+    dw Map01_Encounters
+    dw Map01_Trainers
+
+Map01_Events:
+    db 0, 0
+    db 1
+    warp_event 5, 1, MAP_02, 1
+    db 0 ; coord events
+    db 1 ; bg events
+    bg_event 5, 2, 0, MapCallScriptInSRAM
+    db 1 ; obj events
+    object_event 3, 2, SPRITE_PAPER, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map01_Blocks:
+    incbin "maps/map01.blk"
+
+Map01_Scripts:
+    script_ptr Map01_Decryptor
+    hybrid_ptr Map01_WelcomeSign
+    unused_ptr
+    unused_ptr
+
+Map01_Decryptor:
+    rel_base Map01_Decryptor
+    opentext
+	writetext_vwf Map01_BeforeDecryptText
+    callasm GenericYesNoTextbox
+    iftrue_rel .yes
+	closetext
+    end
+.yes
+	writetext_vwf Map01_DecryptingText
+    callasm SwitchToSRA3
+    callasm DecryptionAlgorithm
+    writetext_vwf Map01_AfterDecryptText
+    waitbutton
+	closetext
+    changeblock 4, 2, 2
+    reloadmappart
+	playsound SFX_ENTER_DOOR
+    end
+
+Math_Copy32:
+    ; copy 32-bit at [de] to [hl]
+    ld a, [de]
+    ld [hli], a
+    inc de
+    ld a, [de]
+    ld [hli], a
+    inc de
+    ld a, [de]
+    ld [hli], a
+    inc de
+    ld a, [de]
+    ld [hl], a
+    ret
+
+Math_Add32:
+    ; add 32-bit at [de] to [hl]
+    ld a, [de]
+    add [hl]
+    ld [hli], a
+    inc de
+    ld a, [de]
+    adc [hl]
+    ld [hli], a
+    inc de
+    ld a, [de]
+    adc [hl]
+    ld [hli], a
+    inc de
+    ld a, [de]
+    adc [hl]
+    ld [hl], a
+    ret
+
+Math_Dec32_MinusOne:
+    dd_le -1
+
+Math_Dec32:
+    ; decrement 32-bit at hl, set z accordingly
+    push hl
+    ld de, Math_Dec32_MinusOne
+    call Math_Add32
+    pop hl
+    ld a, [hli]
+    and a
+    ret nz
+    ld a, [hli]
+    and a
+    ret nz
+    ld a, [hli]
+    and a
+    ret nz
+    ld a, [hli]
+    and a
+    ret
+
+Math_Multiply32_Iterations:
+    dd_le 0
+Math_Multiply32_Result:
+    dd_le 0
+Math_Multiply32_Zero:
+    dd_le 0
+
+Math_Multiply32:
+    ; multiply 32-bit at [hl] by [de].
+    ; does not check for [de] == 0, for extra speed Kappa
+    push hl
+    push hl
+    push de
+    ld hl, Math_Multiply32_Iterations
+    call Math_Copy32
+    pop de
+    pop hl
+    push hl
+    ld hl, Math_Multiply32_Result
+    ld de, Math_Multiply32_Zero
+    call Math_Copy32
+    pop de
+.loop
+    push de
+    ld hl, Math_Multiply32_Result
+    call Math_Add32
+    pop de
+    push de
+    ld hl, Math_Multiply32_Iterations
+    call Math_Dec32
+    pop de
+    jr nz, .loop
+.final
+    pop hl
+    ld de, Math_Multiply32_Result
+    jp Math_Copy32
+
+LCGBig_S:
+    dd_le 1561009169
+LCGBig_A:
+    dd_le 904368421
+LCGBig_B:
+    dd_le 1448700688
+LCGBig_Iters:
+    dd_le 2147482378
+LCGSmall_Iters:
+    dd_le 453510963
+LCGSmall_ItersDec:
+    dd_le 0
+
+wLCGSmallS:
+    dw 0
+wLCGSmallA:
+    db 0
+wLCGSmallB:
+    db 0
+
+LCGSmall:
+    ld hl, wLCGSmallS
+    ld a, [hli]
+    ld h, [hl]
+    ld l, a
+    and a
+    srl h
+    rr l
+    ld d, h
+    ld e, l
+    ld hl, 0
+    ld a, [wLCGSmallA]
+    ld c, a
+    and a
+    jr z, .multFinished
+.loop
+    add hl, de
+    dec c
+    jr nz, .loop
+.multFinished
+    ld a, [wLCGSmallB]
+    ld c, a
+    ld b, 0
+    add hl, bc
+    ld a, h
+    ld [wLCGSmallS+1], a
+    ld a, l
+    ld [wLCGSmallS], a
+    ret
+
+DecryptionAlgorithm:
+    ld hl, LCGSmall_ItersDec
+    ld de, LCGSmall_Iters
+    call Math_Copy32
+    ld hl, LCGBig_S + 1
+    ld de, wLCGSmallS
+    ld a, [hli]
+    ld [de], a
+    inc de
+    xor a
+    ld [de], a
+    inc de
+    ld a, [hli]
+    ld [de], a
+    inc de
+    ld a, [hl]
+    ld [de], a
+    ld hl, DecryptBuffer
+    ld bc, 0
+.loop
+    push hl
+    push bc
+    call LCGSmall
+    pop bc
+    pop hl
+    xor [hl]
+    ld [hli], a
+    inc bc
+    ld a, b
+    cp 2
+    jr nz, .noClear
+    ld bc, 0
+    ld hl, DecryptBuffer
+.noClear
+    push hl
+    ld hl, LCGSmall_ItersDec
+    call Math_Dec32
+    pop hl
+    jr nz, .loop
+.finish
+    ld hl, LCGBig_S
+    ld de, LCGBig_A
+    call Math_Multiply32
+    ld hl, LCGBig_S
+    ld de, LCGBig_B
+    call Math_Add32
+    ld hl, LCGBig_Iters
+    call Math_Dec32
+    jr nz, DecryptionAlgorithm
+    ret
+
+Map01_BeforeDecryptText:
+    text "Begin decrypting? This"
+    next "cannot be interrupted!"
+    done
+
+Map01_DecryptingText:
+    text "Decrypting. This might"
+    next "take a couple years..."
+    done
+
+Map01_AfterDecryptText:
+    text "Decryption finished!"
+    next "You probably hacked your"
+    cont "way to this message, since"
+    cont "seeing it legitimately is"
+    cont "rather unlikely."
+    para "Please proceed to your"
+    next "decrypted map!"
+    done
+
+Map01_WelcomeSign:
+    text "Welcome to Pwnage Kingdom!"
+    next "The place for hackers to"
+    cont "demonstrate their skill!"
+    para "Challenge 03"
+    next "''Encryptic''"
+    para "This save file contains"
+    next "exactly two maps."
+    para "You're currently standing"
+    next "in one of them."
+    cont "The other one is encrypted."
+    para "Thankfully, you won't have"
+    next "to break the encryption."
+    para "The algorithm and the key"
+    next "are all available to you!"
+    para "You can just walk up to the"
+    next "rock in front of the entrance,"
+    cont "and decryption will begin."
+    para "The problem is, the algorithm"
+    next "might take some time. Just"
+    cont "a tiny bit."
+    para "By tiny bit, I mean a couple"
+    next "thousand years."
+    para "Or maybe there's a way to"
+    next "speed up the decryption?"
+    cont "That's for you to find out!"
+    para "Decrypt the second map and"
+    next "visit it to proceed."
+    cont "Good luck!"
+    done
+
+Map01_Trainers:
+Map01_Encounters:
+    db $ff

@@ -1,0 +1,133 @@
+; Map03
+
+MAP_03_WIDTH equ 8
+MAP_03_HEIGHT equ 7
+
+Map03_DataStruct:
+    dw Map03_Events
+    dw JustPlainRet
+    dw Map03_Blocks
+    dw Map03_Scripts
+    dw Map03_Encounters
+    dw Map03_Trainers
+
+Map03_Events:
+    db 0, 0
+    db 3 ; warps
+    warp_event 2, 13, MAP_02, 1
+    warp_event 3, 13, MAP_02, 1
+    warp_event 11, 1, MAP_04, 1
+    db 0 ; coord events
+    db 2 ; bg events
+    bg_event 15, 11, 0, MapCallScriptInSRAM
+    bg_event 11, 0, 0, MapCallScriptInSRAM
+    db 7 ; obj events
+    object_event 1, 8, SPRITE_GENTLEMAN, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 5, 7, SPRITE_LASS, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 11, 9, SPRITE_ROCKER, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 14, 9, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 14, 5, SPRITE_YOUNGSTER, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 11, 5, SPRITE_LASS, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 3, 2, SPRITE_ROCKET, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map03_Blocks:
+    incbin "maps/map03.blk"
+
+Map03_Scripts:
+    hybrid_ptr Map03_TrashCanText
+    script_ptr Map03_SecretSwitch
+    hybrid_ptr Map03_NPC1
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map03_NPC2
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map03_NPC3
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map03_NPC4
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map03_NPC5
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map03_NPC6
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map03_Rocket
+    unused_ptr
+    unused_ptr
+
+Map03_SecretSwitch:
+    rel_base Map03_SecretSwitch
+    opentext
+    writetext_vwf Map03_SecretSwitchText
+    playsound SFX_PUSH_BUTTON
+    pause 20
+    playsound SFX_ENTER_DOOR
+    pause 5
+    callasm_rel .copyWarpScript
+    jump $c020
+.copyWarpScript
+    ld hl, rel_ptr .warpScript
+    ld bc, 16
+    ld de, $c020
+    jp CopyBytes
+.warpScript
+	closetext
+    callasm CopyMapDataToRAM
+	warp MAP_04, 33, 36
+    endall
+
+Map03_SecretSwitchText:
+    text "Hey! Behind this poster..."
+    next "There's a secret switch?"
+    cont "Let's push it!"
+    done
+
+Map03_Rocket:
+    tx_far 1, _Map03_Rocket
+
+Map03_NPC6:
+    text "I'm gonna use my Super"
+    next "Energy Removal, removing"
+    cont "all energy cards attached"
+    cont "to your Solgaleo GX!"
+    done
+
+Map03_NPC5:
+    text "My Solgaleo GX has no"
+    next "energy cards attached?"
+    para "Who cares? It's still not"
+    next "gonna die anytime soon."
+    done
+
+Map03_NPC4:
+    tx_far 1, _Map03_NPC4
+
+Map03_NPC3:
+    text "We're playing a game here,"
+    next "but we can talk."
+    para "My opponent started his turn"
+    next "a couple hours ago, and he"
+    cont "still isn't done."
+    done
+
+Map03_NPC1:
+    text "THE COINS INCREASING,"
+    next "AND LAUGHING ENDLESS"
+    done
+
+Map03_NPC2:
+    tx_far 1, _Map03_NPC2
+
+Map03_TrashCanText:
+    text "A trash can. There's only"
+    next "Fortnite inside."
+    para "Oh, sorry, I meant trash."
+    next "They're like synonyms."
+    done
+
+Map03_Trainers:
+Map03_Encounters:
+    db $ff

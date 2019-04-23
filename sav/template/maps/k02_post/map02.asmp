@@ -1,0 +1,133 @@
+; Map02
+
+MAP_02_WIDTH equ 8
+MAP_02_HEIGHT equ 18
+
+Map02_DataStruct:
+    dw Map02_Events
+    dw JustPlainRet
+    dw Map02_Blocks
+    dw Map02_Scripts
+    dw Map02_Encounters
+    dw Map02_Trainers
+
+Map02_Events:
+    db 0, 0
+    db 0
+    db 0 ; coord events
+    db 0 ; bg events
+    db 5 ; obj events
+    object_event 10, 7, SPRITE_BUG_CATCHER, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 11, 24, SPRITE_BLACK_BELT, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_TRAINER, 3, TrainerHeader_03, -1
+    object_event 4, 14, SPRITE_KIMONO_GIRL, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 4, 15, SPRITE_GENTLEMAN, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 3, 31, SPRITE_UNUSED_GUY, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map02_Blocks:
+    incbin "maps/map02.blk"
+
+Map02_Scripts:
+    hybrid_ptr Map02_Trainer01_Encounter        ; obj event 1
+    unused_ptr
+    unused_ptr
+    rawtxt_ptr Map02_Trainer02_Encounter        ; obj event 2
+    rawtxt_ptr Map02_Trainer02_Defeat
+    hybrid_ptr Map02_Trainer02_Post
+    hybrid_ptr Map02_DeliriaGirl
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map02_DeliriaGuardian
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map02_MonsterHunter
+    unused_ptr
+    unused_ptr
+
+Map02_Trainers:
+    dw NULL
+    dw Map02_Trainer02
+
+Map02_Trainer02:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -4}, {basic_mon}
+    db {lv_rel -2}, {basic_mon}
+    db -1
+
+Map02_Encounters:
+    db {rnd_basic_mon 10}, {lv_rel -5}
+    db {rnd_basic_mon 10}, {lv_rel -5}
+    db {rnd_basic_mon 10}, {lv_rel -2}
+    db {rnd_basic_mon 11}, {lv_rel -7}
+    db {rnd_basic_mon 11}, {lv_rel -6}
+    db {rnd_basic_mon 11}, {lv_rel -5}
+    db {rnd_basic_mon 12}, {lv_rel -7}
+    db {rnd_basic_mon 12}, {lv_rel -6}
+    db {rnd_basic_mon 12}, {lv_rel -5}
+    db {rnd_basic_mon 13}, {lv_rel -7}
+    db {rnd_basic_mon 13}, {lv_rel -6}
+    db {rnd_basic_mon 13}, {lv_rel -5}
+    db {rnd_basic_mon 16}, {lv_rel -7}
+    db {rnd_basic_mon 16}, {lv_rel -5}
+    db {rnd_basic_mon 17}, {lv_rel -7}
+    db {rnd_basic_mon 17}, {lv_rel -4}
+
+Map02_Trainer01_Encounter:
+    text "There aren't many bugs out"
+    next "here."
+    para "I should check around the"
+    next "Glitch Research Lab. I heard"
+    cont "they are researching bugs!"
+    done
+
+Map02_Trainer02_Encounter:
+    text "I have 99 wins on my record"
+    next "so far! I have never lost!"
+    done
+
+Map02_Trainer02_Defeat:
+    text "No! My perfect record!"
+    next "It's ruined!"
+    done
+
+Map02_Trainer02_Post:
+    text "Missingno. is invading all"
+    next "of Glitch Islands kingdoms,"
+    cont "but that's not the biggest"
+    cont "problem!"
+    para "The biggest problem is my"
+    next "ruined win record!"
+    done
+
+Map02_DeliriaGirl:
+    tx_deliria
+    text "wooow.."
+    next "this kingdom huuuge!"
+    para "not like delirias.."
+    next "deliria smol!"
+    done
+
+Map02_DeliriaGuardian:
+    text "My friend loves travelling."
+    next "She asked me if I could show"
+    cont "her some new places."
+    para "Her home town is rather"
+    next "small and isolated, so she"
+    cont "doesn't get to see other"
+    cont "kingdoms too often."
+    para "Oh, you're interested about"
+    next "this location?"
+    para "I heard it's well hidden"
+    next "somewhere in the Bootleg"
+    cont "Kingdom."
+    done
+
+Map02_MonsterHunter:
+    text "Sssh! Be quiet!"
+    next "I'm hunting Pokémon!"
+    para "I heard that if you hold some"
+    next "<B>{augment K02_PRE_1}</B> in your hand and"
+    cont "dip your feet in <B>{augment K02_PRE_2}</B>,"
+    cont "wild Pokémon will be more"
+    cont "likely to appear!"
+    done

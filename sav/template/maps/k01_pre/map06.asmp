@@ -1,0 +1,83 @@
+; Map06
+
+MAP_06_WIDTH equ 4
+MAP_06_HEIGHT equ 4
+
+Map06_DataStruct:
+    dw Map06_Events
+    dw JustPlainRet
+    dw GenericHouseBlocks
+    dw Map06_Scripts
+    dw Map06_Encounters
+    dw Map06_Trainers
+
+Map06_Events:
+    db 0, 0
+    db 2 ; warps
+	warp_event 2, 7, MAP_02, 1
+	warp_event 3, 7, MAP_02, 1
+    db 0 ; coord events
+    db 1 ; bg events
+    bg_event 7, 1, 0, MapCallScriptInSRAM
+    db 2 ; obj events
+    object_event 2, 4, SPRITE_GRAMPS, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 5, 3, SPRITE_GRANNY, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+
+Map06_Scripts:
+    script_ptr   Map06_GlitchedLuckyChannel     ; bg event 1
+    hybrid_ptr   Map06_FunValueText             ; obj event 1
+    unused_ptr
+    unused_ptr
+    hybrid_ptr   Map06_FunValueText2            ; obj event 2
+    unused_ptr
+    unused_ptr
+
+Map06_Trainers:
+Map06_Encounters:
+    db $ff
+
+Map06_FunValueText:
+    tx_far 1, _Map06_FunValueText
+
+Map06_FunValueText2:
+    text "Hmm... let me see."
+    para "Judging by your look, you"
+    next "should have a Fun Value of"
+    cont "around <B>{fun_value}</B>."
+    para "Is it good? Is it bad?"
+    next "I don't know. Nobody knows..."
+    done
+
+Map06_GlitchedLuckyChannel:
+    rel_base Map06_GlitchedLuckyChannel
+    setevent EVENT_K1_RADIO
+    opentext
+    playmusic MUSIC_GAME_CORNER
+    writetext EmptyTextbox
+    playmusic MUSIC_GAME_CORNER
+    callasm_rel .asm
+    closetext
+    end
+.asm
+    ld hl, rel_ptr .radioLines
+    call SwitchToSRA2
+    jp PlayRadioChannel
+.radioLines
+    dw LC_Text1
+    dw LC_Text2
+    dw LC_Text3
+    dw LC_Text4
+    dw LC_Text5
+    dw RadioBirdText
+    dw RadioSundayText
+    dw BenFernText2A
+    dw RadioBirdText
+    dw FernIntroMusic2
+    dw LC_Text7
+    dw RadioBirdText
+    dw PnP_bold
+    dw PnP_Text1
+    dw PnP_Text2
+    dw RadioBirdText
+    dw RocketRadioText7
+    dw 0

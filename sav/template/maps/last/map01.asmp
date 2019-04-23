@@ -1,0 +1,253 @@
+; Map01
+
+MAP_01_WIDTH equ 24
+MAP_01_HEIGHT equ 7
+
+Map01_DataStruct:
+    dw Map01_Events
+    dw JustPlainRet
+    dw Map01_Blocks
+    dw Map01_Scripts
+    dw Map01_Encounters
+    dw Map01_Trainers
+
+Map01_Events:
+    db 0, 0
+    db 0 ; warps
+    db 0 ; coord events
+    db 0 ; bg events
+    db 11 ; obj events
+    object_event 6, 1, SPRITE_GYM_GUY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 12, 0, SPRITE_SCIENTIST, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 15, 0, SPRITE_SCIENTIST, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 17, 0, SPRITE_SCIENTIST, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 16, 0, SPRITE_N64, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 23, 1, SPRITE_FALKNER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 27, 6, SPRITE_LASS, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 33, 7, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 1, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 33, 7, SPRITE_JANINE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_ALWAYS_SET
+    object_event 32, 7, SPRITE_BUENA, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 39, 8, SPRITE_COOLTRAINER_M, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map01_Blocks:
+    incbin "maps/map01.blk"
+
+Map01_Scripts:
+    hybrid_ptr Map01_Willow
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map01_Shad
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map01_Heyv
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map01_Wazz
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map01_N64
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map01_Heyaduo
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map01_Danalise
+    unused_ptr
+    unused_ptr
+    script_ptr Map01_Delirian2
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map01_Delirian1
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map01_Carter
+    unused_ptr
+    unused_ptr
+
+Map01_Carter:
+    text "I still believe that the best"
+    next "way to get to know a person"
+    cont "is to see them fight."
+    para "Your style of fighting"
+    next "showed extreme dedication,"
+    cont "persistence and courage."
+    para "You were strong enough to"
+    next "defeat the Glitch Lord..."
+    cont "This is something that many"
+    cont "of us failed."
+    para "I don't say that too often,"
+    next "but... I appreciate it."
+    done
+
+Map01_Delirian1:
+    tx_deliria
+    text "wooow .. my friends"
+    next "is all back .."
+    cont "again together !"
+    para "you find them !!"
+    next "all because YOU !"
+    para "u very goods ..."
+    next "the BEST! VERY !!"
+    cont "hide an seek MASTER!"
+    done
+
+Map01_Delirian2:
+    rel_base Map01_Delirian2
+    pause 10
+    disappear OBJ_8
+    appear OBJ_9
+    playsound $6D
+    applymovement_rel OBJ_9, .spinMovement
+    setlasttalked 9
+    faceplayer
+    opentext
+    writetext_vwf Map01_Delirian2Text
+    waitbutton
+    closetext
+    pause 10
+    playsound $6D
+    applymovement_rel OBJ_9, .spinMovement
+    disappear OBJ_9
+    appear OBJ_8
+    end
+.spinMovement
+	turn_head DOWN
+	turn_head LEFT
+	turn_head UP
+	turn_head RIGHT
+	turn_head DOWN
+	turn_head LEFT
+	turn_head UP
+	turn_head RIGHT
+	turn_head DOWN
+	step_end
+
+Map01_Delirian2Text:
+    tx_deliria
+    text "yahaha"
+    next "you found me !!"
+    para "how u find me sooo"
+    next "many time ??"
+    para "u really is good .."
+    next "VERY! VERY GOOD !!"
+    done
+
+Map01_Danalise:
+    text "<B>"
+    tx_buf wPlayerFullName
+    text "</B>."
+    next "You have my sincere thanks."
+    para "With the Glitch Lord finally"
+    next "defeated, things are looking"
+    cont "really great in our world."
+    para "And how are things in your"
+    next "world, <B>"
+    tx_buf wPlayerFullName
+    text "</B>?"
+    para "I really hope everything is"
+    next "all right..."
+    para "If there's anything wrong,"
+    next "surely you'll overcome it."
+    cont "I believe in you."
+    done
+
+Map01_Heyaduo:
+    text "HEY, DON'T MEET FOR A"
+    next "LONG TIME. YOU GROW UP"
+    cont "THE HOLY OF THE LEAGUE,"
+    cont "IT'S TERRIFIC."
+    para "IT'S FOR YOUR TRUST AND"
+    next "LOVE TO THE MONSTER, SO"
+    cont "YOU CAN GRAPPLE NOW THE"
+    cont "RESULT IS THE FRUIT."
+    para "AND ONLY TO DO SO,"
+    next "CONGRATULATIONS."
+    done
+
+Map01_N64:
+    text "It's a specially modified"
+    next "Nintendo 64 console."
+    para "It seems to be using the"
+    next "Pokémon Stadium ACE exploit"
+    cont "to run a custom program."
+    para "The Glorious Glitch Core"
+    next "is integrated inside."
+    done
+
+Map01_Heyv:
+    text "Our Glitch Research Team is"
+    next "very grateful for everything"
+    cont "you did."
+    para "<B>"
+    tx_buf wPlayerFullName
+    text "</B>, was it?"
+    next "I'll be sure to remember"
+    cont "that name forever."
+    done
+
+Map01_Wazz:
+    text "Thanks to your help, our"
+    next "research can now continue"
+    cont "without problems!"
+    para "For instance, we can use"
+    next "this Nintendo 64 to automate"
+    cont "the operation of Glorious"
+    cont "Glitch Core."
+    para "Our system will automatically"
+    next "purge all corruption left"
+    cont "on Glitch Islands!"
+    done
+
+Map01_Willow:
+    text "So, you did it. You really"
+    next "defeated Missingno.!"
+    para "Finally, Glitch Islands are"
+    next "free. Glitches are no longer"
+    cont "a threat to us, humans."
+    para "You..."
+    next "Was it... <B>"
+    tx_buf wPlayerFullName
+    text "</B>?"
+    para "Thank you, <B>"
+    tx_buf wPlayerFullName
+    text "</B>,"
+    next "for being the one in control."
+    para "The world might've been"
+    next "completely destroyed if it"
+    cont "wasn't for you."
+    para "Your intelligent decisions."
+    next "Willingness to explore."
+    para "People of Glitch Islands are"
+    next "happy, all because of you."
+    done
+
+Map01_Shad:
+    text "I can't believe this idea has"
+    next "actually worked..."
+    para "When Missingno. invaded"
+    next "Glitch Islands, our research"
+    cont "group was asked to help."
+    para "Together with Heyv and Wazz,"
+    next "we discussed many ideas. One"
+    cont "of them sparked my interest."
+    para "What if we created a video-"
+    next "game-like interface to our"
+    cont "world?"
+    para "Then, some dedicated player"
+    next "could take control and save"
+    cont "us all..."
+    para "And sure enough, a dedicated"
+    next "player visited our world."
+    cont "It was you, <B>"
+    tx_buf wPlayerFullName
+    text "</B>."
+    para "You are our real hero."
+    next "You, the player."
+    done
+
+Map01_Trainers:
+Map01_Encounters:
+    db $ff

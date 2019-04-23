@@ -1,0 +1,108 @@
+SECTION "main_sram1", ROM0[$B260]
+
+_Map03_Danalise_Encounter:
+    text "Welcome back. Now I could"
+    next "remind you how thankful I"
+    cont "am for your help, but you"
+    cont "probably already know about"
+    cont "this."
+    para "So here's the thing. Have you"
+    next "ever heard of 'Fun Values'?"
+    para "It's said they influence the"
+    next "world around you. Change"
+    cont "them, the world changes too."
+    para "They determine your fate."
+    next "And fate of everyone else..."
+    para "My divine powers can change"
+    next "your Fun Value, so maybe the"
+    cont "world around you will subtly"
+    cont "change along with it."
+    para "Should I use my divine powers"
+    next "to change your Fun Value?"
+    done
+
+_Map03_Danalise_Chant:
+    text "I call upon the Divine Powers"
+    next "of Glitch Islands!"
+    para "Laylah, the Spirit of"
+    next "innocence and trust!"
+    para "Grant this adventurer the"
+    next "power they seek!"
+    done
+
+_Map03_WorriedExplorerIntro:
+    text "Hello! I'm Matt, but"
+    next "everyone just calls me the"
+    cont "'Worried Explorer'."
+    para "I came from a faraway region"
+    next "called Glitchland, looking"
+    cont "for big treasure."
+    para "This area is huge, yet it"
+    next "is so empty. Quite suspicious,"
+    cont "don't you think?"
+    para "Especially this rock. It"
+    next "seems really out of place."
+    para "I'm sure this all has some"
+    next "meaning. There's even an"
+    cont "ancient tale about this place."
+    done
+
+_Map03_AncientTale:
+    text "Oh yes, an ancient tale. It"
+    next "goes something like this:"
+    para ""
+    tx_kasstheme
+    text "Down in these ponds,"
+    tx_delayframes 110
+    next "in the waters deep,"
+    tx_delayframes 90
+    tx_paranowait
+    text "Our ancient treasures do"
+    next "tightly sleep."
+    tx_delayframes 180
+    tx_paranowait
+    text "Who the treasure takes"
+    tx_delayframes 110
+    next "from all three lakes,"
+    tx_delayframes 90
+    tx_paranowait
+    text "It is one who inside our"
+    next "prize room makes."
+    tx_delayframes 250
+    tx_restartmapmusic
+    tx_paranowait
+    text "Treasure in the waters..."
+    next "Should you look around the"
+    cont "ponds around here?"
+    para "And what's the meaning of"
+    next "this rock? Is it the prize"
+    cont "room that was mentioned?"
+    para "Maybe you'll figure it out."
+    next "I'm clueless."
+    done
+
+_Map05_NPC1:
+    text "Wow, this event is so cool,"
+    next "yet the code behind it is so"
+    cont "incredibly stupid!"
+    para "What is this 'cp 1'? You can"
+    next "just 'dec a'! Blasphemy!"
+    para "Reading values from other"
+    next "SRAM banks via ROP chains?"
+    para "You can just copy this"
+    next "routine to WRAM! It's really"
+    cont "that easy!"
+    para "Wait, is that an 'ld a, 0'?"
+    next "ARRRGHHHH!!"
+    done
+
+_Map05_NPC2:
+    text "Welcome to our small, indie"
+    next "game studio."
+    para "We're working on many things,"
+    next "but today, it's our day off."
+    para "TheZZAZZGlitch's April Fools"
+    next "Event 2019 just got released!"
+    para "Quick! We need to disassemble"
+    next "it and look at the code!"
+    done

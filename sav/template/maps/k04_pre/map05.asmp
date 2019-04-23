@@ -1,0 +1,118 @@
+; Map05
+
+MAP_05_WIDTH equ 4
+MAP_05_HEIGHT equ 4
+
+Map05_DataStruct:
+    dw Map05_Events
+    dw JustPlainRet
+    dw Map05_Blocks
+    dw Map05_Scripts
+    dw Map05_Encounters
+    dw Map05_Trainers
+
+Map05_Events:
+    db 0, 0
+    db 2 ; warps
+    warp_event 4, 7, MAP_01, 1
+    warp_event 5, 7, MAP_01, 1
+    db 0 ; coord events
+    db 2 ; bg events
+    bg_event 1, 4, 0, MapCallScriptInSRAM
+    bg_event 5, 2, 0, MapCallScriptInSRAM
+    db 4 ; obj events
+    object_event 0, 5, SPRITE_SCIENTIST, SPRITEMOVEDATA_STANDING_UP, 0, 1, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 4, 3, SPRITE_ROCKER, SPRITEMOVEDATA_STANDING_UP, 0, 1, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 7, 2, SPRITE_YOUNGSTER, SPRITEMOVEDATA_STANDING_DOWN, 0, 1, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 6, 5, SPRITE_BUG_CATCHER, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 1, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map05_Blocks:
+    incbin "maps/map05.blk"
+
+Map05_Scripts:
+    hybrid_ptr Map05_PC1
+    hybrid_ptr Map05_PC1
+    hybrid_ptr Map05_NPC1
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map05_NPC2
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map05_NPC3
+    unused_ptr
+    unused_ptr
+    script_ptr Map05_NPC4
+    unused_ptr
+    unused_ptr
+
+Map05_Trainers:
+Map05_Encounters:
+    db $ff
+
+Map05_NPC1:
+    text "Wow, this event is so cool,"
+    next "yet the code behind it is so"
+    cont "incredibly stupid!"
+    para "What is this 'cp 1'? You can"
+    next "just 'dec a'! Blasphemy!"
+    para "Reading values from other"
+    next "SRAM banks via ROP chains?"
+    para "You can just copy this"
+    next "routine to WRAM! It's really"
+    cont "that easy!"
+    para "Wait, is that an 'ld a, 0'?"
+    next "ARRRGHHHH!!"
+    done
+
+Map05_NPC2:
+    text "Welcome to our small, indie"
+    next "game studio."
+    para "We're working on many things,"
+    next "but today, it's our day off."
+    para "TheZZAZZGlitch's April Fools"
+    next "Event 2019 just got released!"
+    para "Quick! We need to disassemble"
+    next "it and look at the code!"
+    done
+
+Map05_NPC3:
+    text "Everyone from my team is"
+    next "messing with the April Fools"
+    cont "Event."
+    para "But I'd rather think about"
+    next "our newest game!"
+    para "It's like GTA 5, but with"
+    next "blockchain! Cool, huh?"
+    done
+
+Map05_PC1:
+    text "The event SAV file is loaded"
+    next "in the BGB debugger."
+    done
+
+Map05_NPC4:
+    rel_base Map05_NPC4
+    faceplayer
+    opentext
+    writetext_vwf Map05_NPC4_Intro
+    showmart_rel .mart
+    closetext
+    return
+.mart
+    db 7
+    db GREAT_BALL
+    db ULTRA_BALL
+    db HYPER_POTION
+    db REVIVE
+    db FULL_HEAL
+    db $ce
+    db $d5
+    db -1
+
+Map05_NPC4_Intro:
+    text "We're a small game studio,"
+    next "and we'll need some extra"
+    cont "budget for our new project."
+    para "That's why I also sell some"
+    next "items to travellers."
+    wait

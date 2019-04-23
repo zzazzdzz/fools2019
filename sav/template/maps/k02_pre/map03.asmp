@@ -1,0 +1,150 @@
+; Map03
+
+MAP_03_WIDTH equ 17
+MAP_03_HEIGHT equ 14
+
+Map03_DataStruct:
+    dw Map03_Events
+    dw JustPlainRet
+    dw Map03_Blocks
+    dw Map03_Scripts
+    dw Map03_Encounters
+    dw Map03_Trainers
+
+Map03_Events:
+    db 0, 0
+    db 0
+    db 0 ; coord events
+    db 0 ; bg events
+    db 5 ; obj events
+    object_event 7, 3, SPRITE_YOUNGSTER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 4, TrainerHeader_04, -1
+    object_event 17, 7, SPRITE_NURSE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 24, 14, SPRITE_SCIENTIST, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 24, 15, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 11, 18, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_01, EVENT_ITEMBALL_K2_PRE_1
+    
+Map03_Blocks:
+    incbin "maps/map03.blk"
+
+Map03_Scripts:
+    rawtxt_ptr Map03_Trainer01_Encounter        ; obj event 1
+    rawtxt_ptr Map03_Trainer01_Defeat
+    hybrid_ptr Map03_Trainer01_Encounter
+    script_ptr Map03_Healer
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map03_Scientist
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map03_Officer
+    unused_ptr
+    unused_ptr
+
+Map03_Trainers:
+    dw Map03_Trainer01
+
+Map03_Trainer01:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -6}, {basic_mon}
+    db {lv_rel -5}, {basic_mon}
+    db -1
+
+Map03_Encounters:
+    db {rnd_basic_mon 13}, {lv_rel -8}
+    db {rnd_basic_mon 13}, {lv_rel -7}
+    db {rnd_basic_mon 13}, {lv_rel -6}
+    db {rnd_basic_mon 13}, {lv_rel -6}
+    db {rnd_basic_mon 13}, {lv_rel -6}
+    db {rnd_basic_mon 14}, {lv_rel -7}
+    db {rnd_basic_mon 14}, {lv_rel -6}
+    db {rnd_basic_mon 14}, {lv_rel -5}
+    db {rnd_basic_mon 12}, {lv_rel -6}
+    db {rnd_basic_mon 12}, {lv_rel -5}
+    db {rnd_basic_mon 11}, {lv_rel -7}
+    db {rnd_basic_mon 11}, {lv_rel -6}
+    db {rnd_basic_mon 11}, {lv_rel -5}
+    db {rnd_basic_mon 10}, {lv_rel -7}
+    db {rnd_basic_mon 10}, {lv_rel -6}
+    db {rnd_basic_mon 10}, {lv_rel -5}
+
+Map03_Healer:
+    rel_base Map03_Healer
+    faceplayer
+    opentext
+	writetext_vwf Map03_HealerPreText
+	special PlaceMoneyTopRight
+    callasm GenericYesNoTextbox
+    iffalse_rel .nope
+	checkmoney YOUR_MONEY, 800
+	ifequal_rel HAVE_LESS, .notEnough
+	takemoney YOUR_MONEY, 800
+	special PlaceMoneyTopRight
+    waitsfx
+    playsound SFX_TRANSACTION
+    closetext
+    special FadeBlackQuickly
+	special ReloadSpritesNoPalettes
+	special HealParty
+	playmusic MUSIC_HEAL
+	pause 60
+	special RestartMapMusic
+	special FadeInQuickly
+    opentext
+	writetext_vwf Map03_HealerPostText
+	waitbutton
+    closetext
+    end
+.notEnough
+    writetext_vwf Map03_NotEnoughMoney
+    waitbutton
+.nope
+    closetext
+    end
+
+Map03_HealerPreText:
+    text "Your Pokémon look tired."
+    next "I can heal them, but it's not"
+    cont "going to be cheap!"
+    para "I think a small fee of $800"
+    next "should be enough."
+    done
+
+Map03_HealerPostText:
+    text "Thank you for using our"
+    next "services. We hope to see"
+    cont "you spend money again!"
+    done
+
+Map03_NotEnoughMoney:
+    text "Oops. Looks like you can't"
+    next "afford it!"
+    done
+
+Map03_Scientist:
+    text "I'm testing some new methods"
+    next "of removing corruption."
+    para "I tried using <B>{augment K02_PRE_3}</B> to"
+    next "remove these corrupted tiles,"
+    cont "but it doesn't seem to work."
+    done
+
+Map03_Officer:
+    text "The scientists from Glitch"
+    next "Research Labs are helping"
+    cont "us fight the corruption."
+    para "We're testing unconventional,"
+    next "new methods of removing"
+    cont "corrupted tiles from the"
+    cont "overworld."
+    done
+
+Map03_Trainer01_Encounter:
+    text "I hate leggings. They are"
+    next "uncomfy and hard to wear."
+    done
+
+Map03_Trainer01_Defeat:
+    text "Hey! Do you remember my"
+    next "super-cool RATTATA?"
+    done

@@ -1,0 +1,30 @@
+; Map04
+
+MAP_04_WIDTH equ 10
+MAP_04_HEIGHT equ 7
+
+Map04_DataStruct:
+    dw Map04_Events
+    dw JustPlainRet
+    dw Map04_Blocks
+    dw Map04_Scripts
+    dw Map04_Encounters
+    dw Map04_Trainers
+
+Map04_Events:
+    db 0, 0
+    db 3 ; warps
+    warp_event 19, 10, MAP_03, 1
+    warp_event 19, 11, MAP_03, 1
+    warp_event 5, 5, MAP_05, 1
+    db 0 ; coord events
+    db 0 ; bg events
+    db 0 ; obj events
+
+Map04_Blocks:
+    incbin "maps/map04.blk"
+
+Map04_Scripts:
+Map04_Trainers:
+Map04_Encounters:
+    db $ff

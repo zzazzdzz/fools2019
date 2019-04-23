@@ -1,0 +1,164 @@
+; Map07
+
+MAP_07_WIDTH equ 6
+MAP_07_HEIGHT equ 10
+
+Map07_DataStruct:
+    dw Map07_Events
+    dw JustPlainRet
+    dw Map07_Blocks
+    dw Map07_Scripts
+    dw Map07_Encounters
+    dw Map07_Trainers
+
+Map07_Events:
+    db 0, 0
+    db 0 ; warps
+    db 0 ; coord events
+    db 1 ; bg events
+    bg_event 7, 7, 0, MapCallScriptInSRAM
+    db 2 ; obj events
+    object_event 6, 6, $73, SPRITEMOVEDATA_SPINCLOCKWISE, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, EVENT_K1_PRE_COMPLETE
+    object_event 6, 12, SPRITE_GYM_GUY, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, EVENT_TUTORIAL_WILLOW
+
+Map07_Blocks:
+    incbin "maps/map07.blk"
+
+Map07_Scripts:
+    hybrid_ptr   Map07_Sign                   ; bg event 1
+    script_ptr   Map07_MissingnoScript        ; obj event 1
+    hybrid_ptr   Map07_MissingnoDefeated
+    unused_ptr
+    hybrid_ptr   Map07_PostText               ; obj event 2
+    unused_ptr
+    unused_ptr
+
+Map07_Trainers:
+    dw Map07_MissingnoTrainerData
+
+Map07_MissingnoTrainerData:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_ITEM_MOVES
+    db 15, MEW,    BERRY,     WATER_GUN, EMBER, VINE_WHIP, NO_MOVE
+    db -1
+
+Map07_Encounters:
+    db $ff
+
+Map07_MissingnoScript:
+    rel_base Map07_MissingnoScript
+    opentext
+    writetext_vwf Map07_MissingnoPreEncounter
+    waitbutton
+    closetext
+	setlasttalked 1
+    winlosstext MapWriteTextInSRAM, 0
+    loadvar wTrainerCurrentTheme, MUSIC_CHAMPION_BATTLE
+	loadtrainer $5C, 90
+    startandwaitbattle
+    opentext
+    writetext_vwf Map07_MissingnoPostEncounter
+    waitbutton
+    closetext
+    playmusic MUSIC_NONE
+    disappear OBJ_1
+    callasm RescuedSequenceTrampoline
+    opentext
+    writetext_vwf Map07_MissingnoRescued
+    waitbutton
+    closetext
+    callasm PostEnding
+    playmapmusic
+    appear OBJ_2
+    applymovement_rel OBJ_2, .movement
+    applymovement_rel OBJ_PLAYER, .movement2
+    opentext
+    writetext_vwf Map07_FinalText
+    waitbutton
+    closetext
+	end
+.movement
+    step UP
+    step UP
+    step UP
+    step UP
+    step_end
+.movement2
+    turn_head DOWN
+    step_end
+
+Map07_Sign:
+    text "3 ERROR."
+    done
+
+Map07_MissingnoPreEncounter:
+    text "We finally meet again."
+    next "I was expecting you!"
+    para "You can call me Missingno.,"
+    next "the Glitch Lord!"
+    para "See all of this corruption?"
+    next "It's so beautiful!"
+    para "Corrupt a bit of memory,"
+    next "and even the most stubborn"
+    cont "opponents become my loyal"
+    cont "slaves."
+    para "That's what will happen to"
+    next "you right now."
+    done
+
+Map07_MissingnoPostEncounter:
+    text "You think you won this"
+    next "battle? That's so cute."
+    para "It was just to buy time."
+    next "Time you desperately need."
+    para "As we're speaking, all of"
+    next "Glitch Islands kingdoms"
+    cont "are being invaded by my"
+    cont "servants."
+    para "The corruption will spread"
+    next "across this whole land,"
+    cont "and soon, the entire world."
+    para "You will not stop me this"
+    next "year."
+    para "Humans will perish, and"
+    next "glitches will prevail!"
+    done
+
+Map07_MissingnoRescued:
+    text "Missingno. has left the"
+    next "grounds of Tutorial Kingdom!"
+    tx_medalfanfare
+    done
+
+Map07_FinalText:
+    text "Wow, you really defeated"
+    next "Missingno., the Glitch Lord?"
+    cont "That's unbelievable!"
+    para "He ended up escaping, but at"
+    next "least Tutorial Kingdom is"
+    cont "safe now. Thank you."
+    para "Maybe you're the hero we"
+    next "need to save Glitch Islands."
+    para "Missingno. has captured and"
+    next "taken control of several of"
+    cont "our people."
+    para "Please rescue them and defeat"
+    next "Missingno. once and for all."
+    cont "You are our only hope!"
+    para "My friends in Verdant Kingdom"
+    next "Glitch Research Lab should"
+    cont "be able to help you with your"
+    cont "mission."
+    para ""
+Map07_PostText:
+    text "Please do your best. We're"
+    next "counting on you."
+    para "By the way, you can leave the"
+    next "kingdom you're visiting by"
+    cont "choosing SAVE in the Start"
+    cont "menu."
+    done
+
+Map07_MissingnoDefeated:
+    text "... ..."
+    done

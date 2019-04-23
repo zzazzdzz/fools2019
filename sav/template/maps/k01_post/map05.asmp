@@ -1,0 +1,27 @@
+; Map05
+
+MAP_05_WIDTH equ 5
+MAP_05_HEIGHT equ 4
+
+Map05_DataStruct:
+    dw Map05_Events
+    dw JustPlainRet
+    dw Map05_Blocks
+    dw Map05_Scripts
+    dw Map05_Encounters
+    dw Map05_Trainers
+
+Map05_Events:
+    db 0, 0
+    db 0 ; warps
+    db 0 ; coord events
+    db 0 ; bg events
+    db 0 ; obj events
+
+Map05_Blocks:
+    incbin "maps/map05.blk"
+
+Map05_Scripts:
+Map05_Trainers:
+Map05_Encounters:
+    db $ff

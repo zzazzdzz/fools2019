@@ -1,0 +1,109 @@
+; Map05
+
+MAP_05_WIDTH equ 7
+MAP_05_HEIGHT equ 5
+
+Map05_DataStruct:
+    dw Map05_Events
+    dw JustPlainRet
+    dw Map05_Blocks
+    dw Map05_Scripts
+    dw Map05_Encounters
+    dw Map05_Trainers
+
+Map05_Events:
+    db 0, 0
+    db 0 ; warps
+    db 0 ; coord events
+    db 0 ; bg events
+    db 1 ; obj events
+    object_event 2, 5, SPRITE_BUG_CATCHER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map05_Blocks:
+    incbin "maps/map05.blk"
+
+Map05_Scripts:
+    script_ptr Map06_Designer
+    rawtxt_ptr Map06_DesignerDefeated
+    unused_ptr
+
+Map06_Designer:
+    rel_base Map06_Designer
+    faceplayer
+    checkevent EVENT_K6_PRE_COMPLETE
+    iftrue_rel .done
+    opentext
+    writetext_vwf Map06_DesignerBefore
+    waitbutton
+    closetext
+	setlasttalked 1
+    winlosstext MapWriteTextInSRAM, 0
+    loadvar wTrainerCurrentTheme, MUSIC_JOHTO_GYM_LEADER_BATTLE
+	loadtrainer POKEMANIAC, 170
+    dontrestartmapmusic
+    startandwaitbattle
+    opentext
+    writetext_vwf Map06_DesignerAfter
+    waitbutton
+    closetext
+    callasm RescuedSequenceTrampoline
+    opentext
+    writetext_vwf Map06_Rescued
+    waitbutton
+    closetext
+    pause 20
+    callasm SwitchToSRA2
+    callasm PostEnding
+    playmapmusic
+    setevent EVENT_K6_PRE_COMPLETE
+.done
+    opentext
+    writetext_vwf Map06_DesignerCongradnafio
+    waitbutton
+    closetext
+    end
+
+Map06_Rescued:
+    text "You have rescued Matthew,"
+    next "the Genius Level Designer."
+    para "Missingno. has left the"
+    next "grounds of Throwback Kingdom!"
+    tx_medalfanfare
+    done
+
+Map06_DesignerBefore:
+    text "You pose a threat to this"
+    next "world."
+    para "You cannot stop glitches in"
+    next "their path to domination."
+    cont "You must be eliminated!"
+    done
+
+Map06_DesignerDefeated:
+    text "Glitch Lord, forgive me, for"
+    next "I have failed to protect you."
+    done
+
+Map06_DesignerAfter:
+    text "This is not over yet."
+    next "You cannot defeat us."
+    para "The world of glitches..."
+    next "... will rule above all..."
+    done
+
+Map06_DesignerCongradnafio:
+    tx_far 1, _Map06_DesignerCongradnafio
+
+Map05_Trainers:
+    dw Map06_TrainerDesigner
+
+Map06_TrainerDesigner:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_ITEM_MOVES
+    db {lv_rel -2}, PORYGON2, TWISTEDSPOON, PSYBEAM, PSYCHIC_M, RECOVER, SWIFT
+    db {lv_rel -2}, CROBAT, POISON_BARB, CONFUSE_RAY, WING_ATTACK, SLUDGE_BOMB, GIGA_DRAIN
+    db {lv_rel 0}, URSARING, GOLD_BERRY, THRASH, EARTHQUAKE, FURY_SWIPES, FAINT_ATTACK
+    db -1
+
+Map05_Encounters:
+    db $ff

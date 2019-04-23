@@ -1,0 +1,30 @@
+; Map06
+
+MAP_06_WIDTH equ 9
+MAP_06_HEIGHT equ 5
+
+Map06_DataStruct:
+    dw Map06_Events
+    dw JustPlainRet
+    dw Map06_Blocks
+    dw Map06_Scripts
+    dw Map06_Encounters
+    dw Map06_Trainers
+
+Map06_Events:
+    db 0, 0
+    db 1 ; warps
+    warp_event 3, 3, MAP_05, 1
+    db 0 ; coord events
+    db 0 ; bg events
+    db 1 ; obj events
+    object_event 14, 2, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 1, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_05, EVENT_ITEMBALL_K5_POST_1
+    
+Map06_Blocks:
+    incbin "maps/map06.blk"
+
+Map06_Scripts:
+
+Map06_Trainers:
+Map06_Encounters:
+    db $ff

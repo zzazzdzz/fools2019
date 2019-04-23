@@ -1,0 +1,459 @@
+; Map05
+
+MAP_05_WIDTH equ 4
+MAP_05_HEIGHT equ 11
+
+Map05_DataStruct:
+    dw Map05_Events
+    dw JustPlainRet
+    dw Map05_Blocks
+    dw Map05_Scripts
+    dw Map05_Encounters
+    dw Map05_Trainers
+
+Map05_Events:
+    db 0, 0
+    db 2 ; warps
+    warp_event 3, 21, MAP_06, 1
+    warp_event 4, 21, MAP_06, 1
+    db 2 ; coord events
+    coord_event 3, 15, $ff, MapCallScriptInSRAM
+    coord_event 2, 15, $ff, MapCallScriptInSRAM
+    db 1 ; bg events
+    bg_event 1, 18, 0, MapCallScriptInSRAM
+    db 12 ; obj events
+    object_event 0, 15, SPRITE_COOLTRAINER_M, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, ObjectEvent, -1
+    object_event 1, 7, SPRITE_NURSE, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, ObjectEvent, -1
+    object_event 4, 0, SPRITE_SAILOR, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_K5_PRE_COMPLETE
+    object_event 4, 0, SPRITE_BUG_CATCHER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_K5_PRE_COMPLETE
+    object_event 4, 0, SPRITE_TEACHER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_K5_PRE_COMPLETE
+    object_event 4, 0, SPRITE_BUENA, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_K5_PRE_COMPLETE
+    object_event 4, 0, SPRITE_GENTLEMAN, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_K5_PRE_COMPLETE
+    object_event 4, 0, SPRITE_SUPER_NERD, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_K5_PRE_COMPLETE
+    object_event 4, 0, SPRITE_LASS, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_K5_PRE_COMPLETE
+    object_event 4, 0, SPRITE_COOLTRAINER_F, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_K5_PRE_COMPLETE
+    object_event 4, 16, SPRITE_YOUNGSTER, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 6, 19, SPRITE_UNUSED_GUY, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+
+Map05_Blocks:
+    incbin "maps/map05.blk"
+
+Map05_Scripts:
+    hybrid_ptr Map05_PC
+    rawtxt_ptr Map05_GenericDefeatTextbox
+    rawtxt_ptr Map05_GenericDefeatTextbox
+    rawtxt_ptr Map05_GenericDefeatTextbox
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map05_NPC1
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map05_NPC2
+    unused_ptr
+    unused_ptr
+    script_ptr Map05_BattleHouseWelcome
+    script_ptr Map05_BattleHouseWelcome
+
+Map05_NPC1:
+    text "This battle facility is a"
+    next "good way to train your"
+    cont "Pokémon fast!"
+    para "You don't get any rewards,"
+    next "but you get to keep all"
+    cont "prize money and experience!"
+    done
+
+Map05_NPC2:
+    text "What is your highest win"
+    next "streak? I was able to get"
+    cont "four wins recently!"
+    done
+
+Map05_BattleHouseWelcome:
+    rel_base Map05_BattleHouseWelcome
+    copybytetovar wXCoord
+    ifequal_rel 3, .doMovement1
+    ifequal_rel 2, .doMovement2
+    end
+.doMovement1
+    applymovement_rel OBJ_PLAYER, .movement1
+    jump_rel .continue
+.doMovement2
+    applymovement_rel OBJ_PLAYER, .movement2
+.continue
+    opentext
+    writetext EmptyTextbox
+    callasm_rel .introAsm
+    iffalse_rel .nope
+    closetext
+    applymovement_rel OBJ_PLAYER, .movement4
+    jump_rel Map05_BattleHouseScript1
+.nope
+    writetext_vwf Map05_BattleHouseWeHopeToSee
+    waitbutton
+    closetext
+    applymovement_rel OBJ_PLAYER, .movement3
+    end
+.movement1
+    step LEFT
+    step_end
+.movement2
+    turn_step LEFT
+    step_end
+.movement3
+    step DOWN
+    step_end
+.movement4
+    step UP
+    step UP
+    step UP
+    step UP
+    step UP
+    step UP
+    step UP
+    step UP
+    turn_step LEFT
+    step_end
+.introAsm
+    ld a, 3
+    ld [wPrintTextVWFSourceBank], a
+    ld hl, Map05_BattleHouseWelcomeText
+    call PrintTextVWF
+    call GenericYesNoTextbox
+    and a
+    ret z
+    ld hl, Map05_BattleHouseItemWarning
+    call PrintTextVWF
+    call GenericYesNoTextbox
+    and a
+    ret z
+    ld hl, Map05_BattleHouseStartText
+    jp PrintTextVWF
+
+Map05_BattleHouseScript1:
+    opentext
+    writetext_vwf Map05_HealFirstText
+    waitbutton
+    closetext
+    special FadeBlackQuickly
+	special ReloadSpritesNoPalettes
+	special HealParty
+	playmusic MUSIC_HEAL
+	pause 60
+	special RestartMapMusic
+	special FadeInQuickly
+    opentext
+    writetext EmptyTextbox
+    callasm SwitchToSRA3
+    callasm Map05_BattleHouseScript_ASM
+    waitbutton
+    closetext
+    iffalse_rel Map05_BattleHouseScript_GTFO
+    applymovement_rel OBJ_PLAYER, Map05_BattleHouseScript_Movement1
+Map05_BattleHouseScript_ObjID1:
+    appear OBJ_3
+    playsound SFX_ENTER_DOOR
+Map05_BattleHouseScript_ObjID2:
+    applymovement_rel OBJ_3, Map05_BattleHouseScript_Movement3
+    special UpdateSprites
+    pause 20
+    setlasttalked 1
+    winlosstext MapWriteTextInSRAM, MapWriteTextInSRAM
+Map05_BattleHouseScript_LoadTrainer:
+	loadtrainer COOLTRAINERM, 230
+    startandwaitbattlelosable
+Map05_BattleHouseScript_ObjID3:
+    applymovement_rel OBJ_3, Map05_BattleHouseScript_Movement4
+Map05_BattleHouseScript_ObjID4:
+    disappear OBJ_3
+    playsound SFX_ENTER_DOOR
+    applymovement_rel OBJ_PLAYER, Map05_BattleHouseScript_Movement2
+	special HealParty
+    jump_rel Map05_BattleHouseScript1
+Map05_BattleHouseScript_GTFO:
+    applymovement_rel OBJ_PLAYER, Map05_BattleHouseScript_Movement5
+    end
+Map05_BattleHouseScript_Movement1:
+    step UP
+    step UP
+    step UP
+    turn_step RIGHT
+    step_end
+Map05_BattleHouseScript_Movement2:
+    step DOWN
+    step DOWN
+    step DOWN
+    turn_step LEFT
+    step_end
+Map05_BattleHouseScript_Movement3:
+    step DOWN
+    step DOWN
+    step DOWN
+    step DOWN
+    step RIGHT
+    turn_step LEFT
+    step_end
+Map05_BattleHouseScript_Movement4:
+    step LEFT
+    step UP
+    step UP
+    step UP
+    step UP
+    step_end
+Map05_BattleHouseScript_Movement5:
+    step DOWN
+    step DOWN
+    step DOWN
+    step DOWN
+    step DOWN
+    step DOWN
+    step DOWN
+    step DOWN
+    step DOWN
+    step_end
+    db $ff
+
+Map05_PrintTextVWF:
+    ld bc, SwitchToSRA3
+    push bc
+    ld bc, PrintTextVWF
+    push bc
+    jp SwitchToSRA2
+
+sBattleHouseOpponentStreak:
+    db 0
+sBattleHouseStoredItemCount:
+    db 0
+sBattleHouseFirstItemID:
+    db 0
+
+Map05_ResetInternalVars:
+    ld a, {lv_rel -10}
+    ld [Map05_Trainer + 2], a
+    ld [Map05_Trainer + 5], a
+    ld [Map05_Trainer + 8], a
+    xor a
+    ld [wBattleResult], a
+    ret
+
+Map05_BattleHouseScript_ASM:
+    ld hl, sBattleHouseOpponentStreak
+    ld a, [hl]
+    inc [hl]
+    and a
+    jr nz, .testIfLost
+    call Map05_ResetInternalVars
+    ld hl, wNumItems
+    ld de, sBattleHouseStoredItemCount
+    ld a, [hl]
+    ld [de], a
+    inc de
+    ld [hl], 0
+    inc hl
+    ld a, [hl]
+    ld [de], a
+    ld [hl], $ff
+.testIfLost
+    ld a, [wBattleResult]
+    and $3f
+    cp 1
+    jr z, .lost
+    ld b, $ff
+    ld a, [sBattleHouseOpponentStreak]
+.tens
+    inc b
+    sub 10
+    jr nc, .tens
+    add 10
+    ld c, a
+    ld hl, Map05_OpponentStreakText_Num
+    ld a, b
+    and a
+    jr z, .skip
+    add "0"
+    ld [hli], a
+.skip
+    ld a, c
+    add "0"
+    ld [hli], a
+    ld a, "."
+    ld [hli], a
+    ld [hl], 0
+    ld hl, Map05_OpponentStreakText
+    call Map05_PrintTextVWF
+    jp Map05_PrepareOpponent
+.lost
+    ld hl, Map05_OpponentStreakEnded
+    call Map05_PrintTextVWF
+    ld a, [sBattleHouseOpponentStreak]
+    cp 5 + 2
+    jr c, .noPenta
+    ld b, 1 ; SET_FLAG
+    ld de, EVENT_K5_POST_PENTAKILL
+	call EventFlagAction
+.noPenta
+    xor a
+    ld [sBattleHouseOpponentStreak], a
+    ld [wScriptVar], a
+    ld hl, wNumItems
+    ld de, sBattleHouseStoredItemCount
+    ld a, [de]
+    ld [hli], a    
+    inc de
+    ld a, [de]
+    ld [hl], a
+    ret
+    
+Map05_GetRandomMonSpecies:
+    call Random
+    and a
+    jr z, Map05_GetRandomMonSpecies
+    cp EGG - 1
+    jr nc, Map05_GetRandomMonSpecies
+    ret
+
+Map05_PrepareOpponent:
+    call Random
+    and $07
+    ld b, 0
+    ld c, a
+    ld hl, .possibleOpponents
+    add hl, bc
+    add hl, bc
+    add hl, bc
+    ld de, rel_ptr Map05_BattleHouseScript_LoadTrainer + 1
+    ld a, [hli]
+    ld [de], a
+    inc de
+    ld a, [hli]
+    ld [de], a
+    ld a, [hl]
+    ld [rel_ptr Map05_BattleHouseScript_ObjID1 + 1], a
+    ld [rel_ptr Map05_BattleHouseScript_ObjID2 + 1], a
+    ld [rel_ptr Map05_BattleHouseScript_ObjID3 + 1], a
+    ld [rel_ptr Map05_BattleHouseScript_ObjID4 + 1], a
+    ld hl, Map05_Trainer + 2
+    ld a, [hl]
+    add 5
+    ld [hli], a
+    call Map05_GetRandomMonSpecies
+    ld [hli], a
+    inc hl
+    ld a, [hl]
+    add 5
+    ld [hli], a
+    call Map05_GetRandomMonSpecies
+    ld [hli], a
+    inc hl
+    ld a, [hl]
+    add 5
+    ld [hli], a
+    call Map05_GetRandomMonSpecies
+    ld [hl], a
+    ld a, 1
+    ld [wScriptVar], a
+    ret
+.possibleOpponents
+    db SAILOR, 13+15, OBJ_3
+    db BUG_CATCHER, 13+15+19+21+25+19, OBJ_4
+    db TEACHER, 13+15+19+21+25+19+1+3, OBJ_5
+    db SKIER, 13+15+19+21+25+19+1+3+2, OBJ_6
+    db GENTLEMAN, 13+15+19+21+25+19+1+3+2+5, OBJ_7
+    db POKEMANIAC, 13+15+19+21+25+19+1+3+2+5+31+12+4, OBJ_8
+    db BEAUTY, 13+15+19+21+25+19+1+3+2+5+31+12+17+4, OBJ_9
+    db COOLTRAINERF, 13+15+19+21+25+19+1+3+2+5+31+12+17+21+4, OBJ_10
+
+Map05_OpponentStreakText:
+    text "You are about to battle"
+    next "opponent #"
+Map05_OpponentStreakText_Num:
+    text "1."
+    done
+
+Map05_BattleHouseWelcomeText:
+    text "Welcome to the Joyful Kingdom"
+    next "Battle House!"
+    para "Defeat as many trainers as"
+    next "you can in a row, each with"
+    cont "increasing difficulty!"
+    para "Do you want to test your"
+    next "Pokémon fighting skills?"
+    done
+
+Map05_BattleHouseItemWarning:
+    text "Before the challenge, we'll"
+    next "have to take away everything"
+    cont "in your Item Pocket."
+    para "We will return your items"
+    next "afterwards. Is that OK?"
+    done
+
+Map05_BattleHouseStartText:
+    text "Great! Let the challenge"
+    next "begin!"
+    wait
+
+Map05_BattleHouseWeHopeToSee:
+    text "I understand."
+    next "We hope to see you again."
+    done
+
+Map05_HealFirstText:
+    text "First, let me heal your"
+    next "Pokémon."
+    done
+
+Map05_GenericDefeatTextbox:
+    text "Oh no!"
+    next "I got defeated!"
+    done
+
+Map05_OpponentStreakEnded:
+    text "Uh-oh..."
+    next "Looks like it's game over!"
+    cont "Better luck next time."
+    done
+
+Map05_PC:
+    text "This PC displays a bunch of"
+    next "dumb nerd shit!"
+    done
+
+Map05_Trainers:
+    dw Map05_Trainer
+
+Map05_Trainer:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_ITEM
+    db 1, 1, NO_ITEM
+    db 1, 1, NO_ITEM
+    db 1, 1, NO_ITEM
+    db -1
+
+Map05_Encounters:
+    db $ff

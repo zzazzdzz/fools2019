@@ -1,0 +1,271 @@
+; Map07
+
+MAP_07_WIDTH equ 14
+MAP_07_HEIGHT equ 5
+
+Map07_DataStruct:
+    dw Map07_Events
+    dw JustPlainRet
+    dw Map07_Blocks
+    dw Map07_Scripts
+    dw Map07_Encounters
+    dw Map07_Trainers
+
+Map07_Events:
+    db 0, 0
+    db 4
+    warp_event 22, 9, MAP_04, 1
+    warp_event 23, 9, MAP_04, 1
+    warp_event 27, 2, MAP_07, 4
+    warp_event 9, 6, MAP_07, 3
+    db 0 ; coord events
+    db 4 ; bg events
+    bg_event 21, 3, 0, MapCallScriptInSRAM
+    bg_event 27, 5, 0, MapCallScriptInSRAM
+    bg_event 16, 1, 0, MapCallScriptInSRAM
+    bg_event 0, 5, 0, MapCallScriptInSRAM
+    db 6 ; obj events
+    object_event 20, 4, SPRITE_ELM, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 25, 4, SPRITE_SCIENTIST, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 25, 6, SPRITE_SCIENTIST, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 4, 3, SPRITE_SCIENTIST, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 7, 2, SPRITE_SCIENTIST, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 0, 2, SPRITE_SCIENTIST, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+
+Map07_Scripts:
+    script_ptr Map07_Radio
+    hybrid_ptr Map07_Trash
+    hybrid_ptr Map07_PC
+    hybrid_ptr Map07_PC
+    hybrid_ptr Map07_Scientist1
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map07_Scientist2
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map07_Scientist3
+    unused_ptr
+    unused_ptr
+    script_ptr Map07_Heyv
+    unused_ptr
+    unused_ptr
+    script_ptr Map07_Shad
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map07_Wazz
+    unused_ptr
+    unused_ptr
+
+Map07_Heyv:
+    rel_base Map07_Heyv
+    faceplayer
+    opentext
+    checkevent EVENT_SPOKE_TO_HEYV
+    iftrue_rel .after
+    writetext_vwf Map07_HeyvBeforeText
+    waitbutton
+    closetext
+    setevent EVENT_SPOKE_TO_HEYV
+    end
+.after
+    writetext_vwf Map07_HeyvAfterText
+    waitbutton
+    closetext
+    end
+
+Map07_HeyvBeforeText:
+    tx_far 1, _Map07_Heyv
+
+Map07_HeyvAfterText:
+    ; why +1? to skip the paragraph control character, since we're reading in the
+    ; middle of intro text
+    ; a dirty hack, but it saves bytes, and we need those bytes
+    ; this enormous story sequence is already barely fitting in SRAM
+    tx_far 1, _Map07_Heyv_GlitchCore + 1
+
+Map07_Shad:
+    rel_base Map07_Shad
+    faceplayer
+    opentext
+    checkevent EVENT_RECEIVED_CUT
+    iftrue_rel .after
+    writetext_vwf Map07_ShadBeforeText
+    buttonsound
+	verbosegiveitem $f3
+    setevent EVENT_RECEIVED_CUT
+.after
+    writetext_vwf Map07_ShadAfterText
+    waitbutton
+    closetext
+    end
+
+Map07_ShadBeforeText:
+    text "Shad: Oh, hello! You're"
+    next "the one who rescued Heyv."
+    para "I'm sure you heard this a lot"
+    next "already, but thank you."
+    para "With your Pokémon battling"
+    next "skills, we might be able to"
+    cont "defeat Missingno.!"
+    para "I'm sure this will help you"
+    next "in achieving this goal."
+    done
+
+Map07_ShadAfterText:
+    tx_far 1, _Map07_ShadAfterText
+
+Map07_Wazz:
+    tx_far 1, _Map07_Wazz
+
+Map07_Scientist1:
+    text "Well, welcome to our Glitch"
+    next "Research Lab!"
+    para "We're not usually open for"
+    next "visitors, but we've heard"
+    cont "about you and what took"
+    cont "place at Verdant Pathway."
+    para "Feel free to look around!"
+    next "Wazz, Heyv and Shad are"
+    cont "waiting for you upstairs."
+    done
+
+Map07_Scientist2:
+    tx_far 1, _Map07_Scientist2
+
+Map07_Scientist3:
+    tx_far 1, _Map07_Scientist3
+
+Map07_PC:
+    text "The BGB emulator is running"
+    next "with the debugger open."
+    para "Hey, what's it debugging?"
+    next "It's a game, but it looks"
+    cont "exactly like this world!"
+    done
+
+Map07_Trash:
+    text "In the trash can... there's"
+    next "some trash! Unbelievable!"
+    done
+
+Map07_Radio:
+    rel_base Map07_Radio
+    opentext
+	writetext_vwf Map07_RadioText
+    callasm GenericYesNoTextbox
+    iftrue_rel .turnOff
+	closetext
+    return
+.turnOff
+    setevent EVENT_K2_LAPTOP
+    callasm_rel .speedUp
+    waitbutton
+	closetext
+    return
+.speedUp
+    ld de, MUSIC_GAME_CORNER
+    call PlayMusic
+    ld c, 50
+    call DelayFrames
+    di
+    ld hl, $ca01
+    ld a, [hl]
+    add 32
+    ld [hl], a
+    ld e, a
+    ld d, 4
+    ld hl, wChannel1Field16
+    ld b, 0
+.loop
+    ld [hl], 0
+    ld c, wChannel1Tempo - wChannel1Field16
+    add hl, bc
+    ld a, [hl]
+    sub e
+    ld [hl], a
+    ld c, wChannel2Field16 - wChannel1Tempo
+    add hl, bc
+    dec d
+    jr nz, .loop
+    ei
+    ld hl, $ca00
+    ld a, [hl]
+    cp 8
+    jr z, .noIncrement
+    inc [hl]
+.noIncrement
+    ld hl, rel_ptr .ptrs
+    jp TextboxTable
+.ptrs
+    dw Map07_RadioTurnOffText1
+    dw Map07_RadioTurnOffText2
+    dw Map07_RadioTurnOffText3
+    dw Map07_RadioTurnOffText4
+    dw Map07_RadioTurnOffText5
+    dw Map07_RadioTurnOffText6
+    dw Map07_RadioTurnOffText7
+    dw Map07_RadioTurnOffText8
+    dw Map07_RadioTurnOffTextFinal
+
+Map07_RadioText:
+    text "A small laptop. It's playing"
+    next "the GSC Lucky Channel Theme"
+    cont "at full volume!"
+    cont "Try changing the track?"
+    done
+
+Map07_RadioTurnOffText1:
+    text "What? The second track is"
+    next "just a faster version of the"
+    cont "first one."
+    done
+
+Map07_RadioTurnOffText2:
+    text "You try that again."
+    next "The music got even faster."
+    done
+
+Map07_RadioTurnOffText3:
+    text "Insanity is doing the same"
+    next "thing over and over, and"
+    cont "expecting different results."
+    done
+
+Map07_RadioTurnOffText4:
+    text "It's possible that you may"
+    next "have a problem..."
+    done
+
+Map07_RadioTurnOffText5:
+    text "The music got so fast that"
+    next "it underflowed and became"
+    cont "incredibly slow..."
+    done
+
+Map07_RadioTurnOffText6:
+    text "People in the lab give you"
+    next "a lot of strange looks."
+    cont "You probably should stop."
+    done
+
+Map07_RadioTurnOffText7:
+    text "Everyone is questioning your"
+    next "choices, but you don't care."
+    done
+
+Map07_RadioTurnOffText8:
+    text "Hey, the music is back to"
+    next "normal now! Everything has"
+    cont "come full circle."
+    done
+
+Map07_RadioTurnOffTextFinal:
+    text "...really?"
+    done
+
+Map07_Blocks:
+    incbin "maps/map07.blk"
+
+Map07_Trainers:
+Map07_Encounters:
+    db $ff

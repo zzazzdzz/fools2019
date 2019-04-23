@@ -1,0 +1,73 @@
+; Map02
+
+MAP_02_WIDTH equ 4
+MAP_02_HEIGHT equ 4
+
+REPT 32
+    db $13,$37
+ENDR
+db $55, $A5, $5D, $55, $95, $5F
+
+DecryptBuffer:
+
+Map02_DataStruct:
+    dw Map02_Events
+    dw JustPlainRet
+    dw Map02_Blocks
+    dw Map02_Scripts
+    dw Map02_Encounters
+    dw Map02_Trainers
+
+Map02_Events:
+    db 0, 0
+    db 1
+    warp_event 3, 1, MAP_01, 1
+    db 0 ; coord events
+    db 0 ; bg events
+    db 1 ; obj events
+    object_event 4, 4, SPRITE_PAPER, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map02_Blocks:
+    db 16,19,13,17
+    db 10,2,26,8
+    db 10,32,2,8
+    db 9,5,5,9
+
+Map02_Scripts:
+    script_ptr Map02_Completed
+
+Map02_Completed:
+    rel_base Map02_Completed
+    callasm_rel .copyKey
+    loadvar wSaveAllowed, 1
+    opentext
+    writetext_vwf .text
+    playsound SFX_GET_EGG_FROM_DAY_CARE_MAN
+    waitbutton
+    closetext
+    return
+.text
+    text "Congratulations!"
+    next "You completed the challenge."
+    cont "The game can now be saved."
+    done
+.copyKey
+    ld de, $3f0d
+    ld hl, wEventFlags + 8
+    ld c, 16
+.loop
+    ld a, [de]
+    inc de
+    xor $cf
+    ld [hli], a
+    dec c
+    jr nz, .loop
+    ret
+
+Map02_Trainers:
+Map02_Encounters:
+    db $ff
+
+REPT 512
+    db $ff
+ENDR

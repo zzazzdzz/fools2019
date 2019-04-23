@@ -1,0 +1,253 @@
+; Map03
+
+MAP_03_WIDTH equ 17
+MAP_03_HEIGHT equ 14
+
+Map03_DataStruct:
+    dw Map03_Events
+    dw JustPlainRet
+    dw Map03_Blocks
+    dw Map03_Scripts
+    dw Map03_Encounters
+    dw Map03_Trainers
+
+Map03_Events:
+    db 0, 0
+    db 3
+    warp_event 16, 14, MAP_08, 1
+    warp_event 16, 15, MAP_08, 2
+    warp_event 16, 16, MAP_08, 1
+    db 0 ; coord events
+    db 2 ; bg events
+    bg_event 16, 15, 0, MapCallScriptInSRAM
+    bg_event 17, 15, 0, MapCallScriptInSRAM
+    db 5 ; obj events
+    object_event 7, 3, SPRITE_YOUNGSTER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 17, 7, SPRITE_NURSE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 28, 14, SPRITE_SCIENTIST, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 28, 15, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 18, 16, SPRITE_SAGE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 11, 18, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_01, EVENT_ITEMBALL_K2_PRE_1
+    
+Map03_Blocks:
+    incbin "maps/map03.blk"
+
+Map03_Scripts:
+    script_ptr Map03_SecretRock
+    script_ptr Map03_SecretRock
+    hybrid_ptr Map03_Trainer01_Encounter        ; obj event 1
+    unused_ptr
+    unused_ptr
+    script_ptr Map03_Healer
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map03_Scientist
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map03_Officer
+    unused_ptr
+    unused_ptr
+    script_ptr Map03_WorriedExplorer
+    unused_ptr
+    unused_ptr
+
+Map03_Trainers:
+Map03_Encounters:
+    db {rnd_basic_mon 13}, {lv_rel -8}
+    db {rnd_basic_mon 13}, {lv_rel -7}
+    db {rnd_basic_mon 13}, {lv_rel -6}
+    db {rnd_basic_mon 14}, {lv_rel -7}
+    db {rnd_basic_mon 14}, {lv_rel -6}
+    db {rnd_basic_mon 14}, {lv_rel -5}
+    db {rnd_basic_mon 15}, {lv_rel -6}
+    db {rnd_basic_mon 15}, {lv_rel -4}
+    db {rnd_basic_mon 12}, {lv_rel -6}
+    db {rnd_basic_mon 12}, {lv_rel -5}
+    db {rnd_basic_mon 11}, {lv_rel -7}
+    db {rnd_basic_mon 11}, {lv_rel -6}
+    db {rnd_basic_mon 11}, {lv_rel -5}
+    db {rnd_basic_mon 10}, {lv_rel -7}
+    db {rnd_basic_mon 10}, {lv_rel -6}
+    db {rnd_basic_mon 10}, {lv_rel -5}
+
+Map03_Healer:
+    rel_base Map03_Healer
+    faceplayer
+    opentext
+	writetext_vwf Map03_HealerPreText
+	special PlaceMoneyTopRight
+    callasm GenericYesNoTextbox
+    iffalse_rel .nope
+	checkmoney YOUR_MONEY, 800
+	ifequal_rel HAVE_LESS, .notEnough
+	takemoney YOUR_MONEY, 800
+	special PlaceMoneyTopRight
+    waitsfx
+    playsound SFX_TRANSACTION
+    closetext
+    special FadeBlackQuickly
+	special ReloadSpritesNoPalettes
+	special HealParty
+	playmusic MUSIC_HEAL
+	pause 60
+	special RestartMapMusic
+	special FadeInQuickly
+    opentext
+	writetext_vwf Map03_HealerPostText
+	waitbutton
+    closetext
+    end
+.notEnough
+    writetext_vwf Map03_NotEnoughMoney
+    waitbutton
+.nope
+    closetext
+    end
+
+Map03_WorriedExplorer:
+    rel_base Map03_WorriedExplorer
+    faceplayer
+    opentext
+    writetext_vwf Map03_WorriedExplorerIntro
+    callasm_rel .menu
+    iftrue_rel .ancientTale
+    closetext
+    return
+.ancientTale
+    writetext_vwf Map03_AncientTale
+    waitbutton
+    closetext
+    return
+.menu
+    ld bc, $020e
+    ld hl, Map03_AncientTaleMenu
+    ld de, $0100
+    call DisplayChoiceMenu
+    ld [wScriptVar], a
+    ret
+
+Map03_SecretRock:
+    rel_base Map03_SecretRock
+    opentext
+    writetext_vwf Map03_SecretRockText
+    waitbutton
+    closetext
+    callasm_rel .test
+    iftrue_rel .solved
+    return
+.solved
+    changeblock 16, 14, $0b
+    reloadmappart
+	playsound SFX_ENTER_DOOR
+    setevent EVENT_K2_POST_ANCIENT_PUZZLE_SOLVED
+    return
+.test
+    ld a, 1
+    ld [wScriptVar], a
+    ld hl, $C8C1
+    ld de, rel_ptr .reference
+    ld c, $C938 - $C8C1
+.loop
+    ld a, [hli]
+    cp 2
+    jr z, .check
+    cp 3
+    jr z, .check
+.next
+    dec c
+    jr nz, .loop
+    ret
+.check
+    ld b, a
+    ld a, [de]
+    inc de
+    cp b
+    jr z, .next
+    xor a
+    ld [wScriptVar], a
+    jr .next
+.reference
+    db 3, 3, 3, 3, 3
+    db 3, 3
+    db 2
+    db 2, 3, 3
+    db 3, 3, 3, 2, 3
+    db 2, 3, 3
+
+Map03_SecretRockText:
+    text "This rock looks suspicious."
+    next "Maybe there's a secret path"
+    cont "hiding under it?"
+    done
+
+Map03_WorriedExplorerIntro:
+    text "Hello! I'm Matt, but"
+    next "everyone just calls me the"
+    cont "'Worried Explorer'."
+    para "I came from a faraway region"
+    next "called Glitchland, looking"
+    cont "for big treasure."
+    para "Let's see. A suspicious rock"
+    next "in the middle of nowhere..."
+    para "I think there's some secret"
+    next "here to be discovered."
+    para "I heard an ancient tale about"
+    next "this place, so there's no"
+    cont "mistaking it."
+    done
+
+Map03_AncientTale:
+    tx_far 1, _Map03_AncientTale
+
+Map03_AncientTaleMenu:
+    ; Good luck!
+    ; Ancient tale?
+    db $86,$ae,$ae,$a3,$7f,$ab,$b4,$a2,$aa,$e7,$4f
+    db $80,$ad,$a2,$a8,$a4,$ad,$b3,$7f,$b3,$a0,$ab,$a4,$e6,$50
+
+Map03_HealerPreText:
+    text "Your Pokémon look tired."
+    next "I can heal them, but it's not"
+    cont "going to be cheap!"
+    para "I think a small fee of $800"
+    next "should be enough."
+    done
+
+Map03_HealerPostText:
+    text "Thank you for using our"
+    next "services. We hope to see"
+    cont "you spend money again!"
+    done
+
+Map03_NotEnoughMoney:
+    text "Oops. Looks like you can't"
+    next "afford it!"
+    done
+
+Map03_Scientist:
+    text "We're testing unconventional,"
+    next "new methods of removing"
+    cont "corrupted tiles from the"
+    cont "overworld."
+    para "I tried using <B>{augment K02_PRE_3}</B> to"
+    next "remove these corrupted tiles,"
+    cont "but it doesn't seem to work."
+    done
+
+Map03_Officer:
+    text "Unfortunately, we weren't"
+    next "able to remove the corruption."
+    para "As hard as it was, we've"
+    next "made the decision to just"
+    cont "close the affected area."
+    para "We just planted some trees,"
+    next "and it looks perfect! No one"
+    cont "will ever notice."
+    para "The corruption won't spread."
+    next "Maybe. I hope."
+    done
+
+Map03_Trainer01_Encounter:
+    text "I hate leggings. They are"
+    next "uncomfy and hard to wear."
+    done

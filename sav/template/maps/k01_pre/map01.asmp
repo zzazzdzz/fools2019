@@ -1,0 +1,38 @@
+; Map01
+
+MAP_01_WIDTH equ 10
+MAP_01_HEIGHT equ 8
+
+Map01_DataStruct:
+    dw Map01_Events
+    dw JustPlainRet
+    dw Map01_Blocks
+    dw Map01_Scripts
+    dw Map01_Encounters
+    dw Map01_Trainers
+
+Map01_Events:
+    db 0, 0
+    db 0
+    db 0 ; coord events
+    db 1 ; bg events
+    bg_event 13, 5, 0, MapCallScriptInSRAM
+    db 0 ; obj events
+    
+Map01_Blocks:
+    incbin "maps/map01.blk"
+
+Map01_Scripts:
+    hybrid_ptr   Map01_SignpostText         ; bg event 1
+
+Map01_SignpostText:
+    text "An old, faded signpost."
+    next "It's impossible to read."
+    para "This place looks empty, it's"
+    next "no use staying here."
+    cont "Better go on!"
+    done
+
+Map01_Trainers:
+Map01_Encounters:
+    db $ff

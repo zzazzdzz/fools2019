@@ -1,0 +1,253 @@
+# Augmentation list
+
+[K01_PRE_1]
+    Type = noun
+    Default = bepis
+    Length = 8
+    Context = There's one thing I truly hate, and that's @!
+
+[K01_PRE_2]
+    Type = adjective
+    Default = anxious
+    Length = 10
+    Context = Just thinking about it makes me feel @!
+
+[K01_PRE_3]
+    Type = any
+    Default = Martin
+    Length = 8
+    Context = I think my friend @ can relate to this.
+
+[K01_PRE_4]
+    Type = any
+    Default = SimpleFlips
+    Length = 10
+    Context = @ is just so much better, don't you agree?
+
+[K01_PRE_5]
+    Type = adjective
+    Default = beautiful
+    Length = 10
+    Context = Your Pokémon look @ today.
+
+[K01_PRE_6]
+    Type = adjective
+    Default = beloved
+    Length = 8
+    Context = I spent some time with my @ boyfriend.
+
+[K01_PRE_7]
+    Type = noun
+    Default = boyfriend
+    Length = 10
+    Context = I spent some time with my beloved @.
+
+[K01_PRE_8]
+    Type = noun
+    Default = danger
+    Length = 8
+    Context = Even the biggest @ won't separate us!
+
+[K01_POST_1]
+    Type = verb
+    Default = water
+    Length = 10
+    Context = My new hobby is to @ $K01_POST_2.
+    
+[K01_POST_2]
+    Type = noun
+    Default = flowers
+    Length = 10
+    Context = My new hobby is $K01_POST_1 @.
+
+[K02_TRENDY_PHRASE_1]
+    Type = any
+    Default = Zero Error
+    Length = 12
+    Context = "@" is the best thing ever!
+    
+[K02_TRENDY_PHRASE_2]
+    Type = any
+    Default = One Error
+    Length = 12
+    Context = "$K02_TRENDY_PHRASE_1" is great, but "@" might be better!
+    
+[K02_TRENDY_PHRASE_3]
+    Type = adjective
+    Default = interesting
+    Length = 10
+    Context = "$K02_TRENDY_PHRASE_1" is more @ than "$K02_TRENDY_PHRASE_2".
+    
+[K02_PRE_1]
+    Type = noun
+    Default = candies
+    Length = 8
+    Context = If you hold some @ in your hand, Pokémon will be more likely to attack.
+    
+[K02_PRE_2]
+    Type = noun
+    Default = honey
+    Length = 8
+    Context = If you dip your feet in @, Pokémon will be more likely to attack.
+
+[K02_PRE_3]
+    Type = noun
+    Default = cheese
+    Length = 8
+    Context = We tried using @ to remove the corruption, but we failed.
+
+[K03_PRE_1]
+    Type = adjective
+    Default = special
+    Length = 9
+    Context = The password is '@ $K03_PRE_2'.
+    
+[K03_PRE_2]
+    Type = noun
+    Default = attack
+    Length = 9
+    Context = The password is '$K03_PRE_1 @'.
+    
+[K03_PRE_3]
+    Type = any
+    Default = rst 38
+    Length = 10
+    Context = The password is '@'.
+    
+[K03_PRE_4]
+    Type = any
+    Default = watermelon
+    Length = 10
+    Context = Everyone in Deliria loves @!
+
+[K03_PRE_5]
+    Type = any
+    Default = oranges
+    Length = 10
+    Context = Everyone in Deliria hates @!
+
+[K03_PRE_6]
+    Type = noun
+    Default = device
+    Length = 8
+    Context = Maybe I can use some @ to get inside.
+    
+[K03_PRE_7]
+    Type = adjective
+    Default = quickly
+    Length = 8
+    Context = Maybe I could use something to @ $K03_PRE_8 the entrance.
+    
+[K03_PRE_8]
+    Type = verb
+    Default = penetrate
+    Length = 10
+    Context = Maybe I could use something to $K03_PRE_7 @ the entrance.
+    
+[K04_PRE_1]
+    Type = noun
+    Default = yoghurt
+    Length = 8
+    Context = I use @ as a fishing bait.
+    
+[K04_PRE_2]
+    Type = noun
+    Default = bread
+    Length = 8
+    Context = @ is a better fishing bait than $K04_PRE_1.
+
+[K04_PRE_3]
+    Type = any
+    Default = bepis
+    Length = 8
+    Context = This is Seaside Kingdom's Great Lake @.
+    
+[K04_PRE_STOCK_1]
+    Type = any
+    Default = Bepis
+    Length = 8
+    Context = "@corp", one of the companies on the Seaside Kingdom Stock Exchange.
+    
+[K04_PRE_STOCK_2]
+    Type = any
+    Default = Meme
+    Length = 8
+    Context = "@tech", one of the companies on the Seaside Kingdom Stock Exchange.
+    
+[K04_PRE_STOCK_3]
+    Type = any
+    Default = Poggers
+    Length = 7
+    Context = "@ Inc.", one of the companies on the Seaside Kingdom Stock Exchange.
+    
+[K04_PRE_STOCK_4]
+    Type = any
+    Default = Kappa
+    Length = 8
+    Context = "@ LLC", one of the companies on the Seaside Kingdom Stock Exchange.
+    
+[K04_PRE_STOCK_5]
+    Type = any
+    Default = Missingnex
+    Length = 12
+    Context = "@", one of the companies on the Seaside Kingdom Stock Exchange.
+
+[K05_PRE_1]
+    Type = noun
+    Default = salaries
+    Length = 8
+    Context = If I were president, I would first reduce tax on @.
+    
+[K05_PRE_2]
+    Type = noun
+    Default = cars
+    Length = 8
+    Context = If I were elected, there would be @ for every $K05_PRE_3!
+    
+[K05_PRE_3]
+    Type = noun
+    Default = garage
+    Length = 8
+    Context = If I were elected, there would be $K05_PRE_2 for every @!
+    
+[K05_PRE_4]
+    Type = noun
+    Default = bepis
+    Length = 8
+    Context = Each household could benefit from their own @.
+    
+[K05_PRE_5]
+    Type = noun
+    Default = garbage
+    Length = 8
+    Context = If I were elected, I would keep all @ from the city's streets.
+    
+[K05_PRE_6]
+    Type = any
+    Default = Glitch
+    Length = 6
+    Context = @tron is the newest invention of Team Rocket's Glitch Research Division.
+    
+[K05_PRE_7]
+    Type = noun
+    Default = glitch
+    Length = 8
+    Context = The machine invented by Team Rocket's Glitch Research Division requires @ to operate.
+
+[K06_PRE_1]
+    Type = noun
+    Default = person
+    Length = 8
+    Context = Some @ is eating $K06_PRE_2.
+    
+[K06_PRE_2]
+    Type = noun
+    Default = spaghetti
+    Length = 8
+    Context = Some $K06_PRE_1 is eating @.
+    
+[K06_PRE_3]
+    Type = noun
+    Default = bricks
+    Length = 8
+    Context = Someone is eating, when suddenly, @ come flying out of the window!

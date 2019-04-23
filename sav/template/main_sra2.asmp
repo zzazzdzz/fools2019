@@ -1,0 +1,208 @@
+SECTION "main_sram2", ROM0[$A000]
+
+EntryPoint:
+    jp InitGame
+
+SaveID:
+    db {current_save_id}
+
+sSaveDataFinalized:
+    db 0
+sCurrentRoofTileset:
+    db {current_roof_tileset}
+
+include "engine/bankswitch.asm"
+include "engine/utils.asm"
+include "engine/text_engine.asm"
+include "engine/choice_menu.asm"
+include "engine/emulator_tests.asm"
+include "engine/callbacks.asm"
+include "engine/save.asm"
+
+include "engine/dma_hijacking.asm"
+include "engine/map_loader.asm"
+
+InitGame:
+	call EnableLCD
+	call WaitBGMap
+	ld b, 8
+	call GetSGBLayout
+	call SetPalettes
+    ld a, MUSIC_POKEMON_CHANNEL
+    call SimplePlayMusic
+    coord hl, 2, 1
+    ld de, FlavorTextA
+    call PutString
+    ld c, 110
+    call DelayFrames
+    coord hl, 1, 4
+    ld de, FlavorTextB
+    call PutString
+    ld c, 90
+    call DelayFrames
+    coord hl, 1, 8
+    ld de, SaveInformation
+    call PutString
+    ld c, 110
+    call DelayFrames
+    coord hl, 5, 15
+    ld de, GoodLuckText
+    call PutString
+    ld c, 150
+    call DelayFrames
+    call CheckEmulationAccuracy
+    call c, InaccurateEmulator
+    call CheckROM
+    call nz, WrongROM
+    ld a, [sSaveDataFinalized]
+    and a
+    call nz, SaveFinalized
+    ld de, $d910
+    ld hl, Script_PrepareAndLoadFirstMap
+    ld bc, 32
+    call CopyBytes
+    ld de, SFX_WARP_TO
+    call PlaySFX
+    farcall FadeOutPalettes
+    call WaitSFX
+    call PrepareBankswitchCode
+    call ClearBGPalettes
+    call ClearScreen
+    call InitGameVariables
+    jp DisableLCD
+
+InaccurateEmulator:
+    ld hl, InaccurateEmulatorText
+    jr ErrorTextbox
+SaveFinalized:
+    ld hl, SaveFinalizedText
+    jr ErrorTextbox
+WrongROM:
+    ld hl, WrongROMText
+    ; jr ErrorTextbox
+
+ErrorTextbox:
+    push hl
+    call PrepareBankswitchCode
+    ld a, 2
+    ld [wPrintTextVWFSourceBank], a
+    ld de, SFX_WRONG
+	call PlaySFX
+	call WaitSFX
+    ld de, MUSIC_PRINTER
+    call PlayMusic
+    pop hl
+    call PrintTextVWF
+.forever
+    jr .forever
+    ret
+
+InitGameVariables:
+    xor a
+    ld hl, wBoxAlignment
+    ld [hli], a
+    dec a
+    ld [hli], a
+    ld [hl], LOW(wBoxAlignment)
+    inc hl
+    ld [hl], HIGH(wBoxAlignment)
+    ld hl, sBoxCount
+    ld b, 20
+    call BToHLAtSRA1
+    ld bc, SCRATCH_RAM_AREA_SIZE
+    ld hl, MapUtilityEntries
+    ld de, $DF30
+    call CopyBytes
+    ld a, {current_kingdom_is_save_allowed}
+    ld [wSaveAllowed], a
+    ld a, $80
+    ld [wPokegearFlags], a
+    ld a, [wPokemonData]
+    and a
+    jr nz, .noStarter
+	; a = 0 [PARTYMON]
+	ld [wMonType], a
+    ld a, {starter_species}
+	ld [wCurPartySpecies], a
+    ld a, 20
+	ld [wCurPartyLevel], a
+    ld b, 0
+	farcall TryAddMonToParty
+    ld a, BERRY
+	ld [wPartyMon1Item], a
+.noStarter
+    farcall HealParty
+    ldh a, [hJoypadDown]
+    cp $03
+    jr nz, .noDebug
+    xor a
+    ld [wPokemonData], a
+.noDebug
+    ret
+
+Script_PrepareAndLoadFirstMap:
+    callasm SwitchToSRA2
+    callasm CopyMapDataToRAM
+    newloadmap MAPSETUP_WARP
+	warp {current_respawn}
+	endall
+
+Script_Blackout:
+    special HealParty
+	callasm HalveMoney
+    callasm CopyMapSubheaderEntriesToRAM
+	warp {current_respawn}
+    endall
+
+InaccurateEmulatorText:
+    text "You are using an inaccurate"
+    next "or unsupported emulator."
+    para "This save file exploits minor"
+    next "details of CGB operation,"
+    cont "making accurate emulation"
+    cont "a complete necessity."
+    para "The game can't be played."
+    next "For further information,"
+    cont "visit: zzazzdzz.github.io/emu."
+    done
+
+WrongROMText:
+    text "You are using an invalid"
+    next "or modified ROM image."
+    para "This save file is compatible"
+    next "with Crystal EN v1.0 only."
+    para "The game can't be played."
+    next "Consult the event site for"
+    cont "further information."
+    done
+
+SaveFinalizedText:
+    text "This save file has been fina-"
+    next "lized. It cannot be played."
+    para "Refer to the event site for"
+    next "instructions detailing the"
+    cont "save process."
+    done
+
+FlavorTextA:
+    db $93,$a7,$a4,$99,$99,$80,$99,$99,$86,$ab,$a8,$b3,$a2,$a7,$e0,$b2,$4f
+    db $80,$af,$b1,$a8,$ab,$7f,$85,$ae,$ae,$ab,$b2,$7f,$f8,$f6,$f7,$ff,$50
+
+FlavorTextB:
+    db $7f,$7f,$80,$a1,$ae,$b4,$b3,$7f,$b3,$ae,$7f,$a4,$ad,$b3,$a4,$b1,$4f
+    db $a0,$7f,$a1,$b1,$a0,$ad,$a3,$7f,$ad,$a4,$b6,$7f,$b6,$ae,$b1,$ab,$a3,$e7,$50
+
+SaveInformation:
+    db $7f,$7f,$7f,$7f,$96,$a4,$ab,$a2,$ae,$ac,$a4,$7f,$b3,$ae,$4f
+_KingdomName:
+    db {current_kingdom_name fillchar ',' align 18 poke_charset}
+    db $4f
+_KingdomVersion:
+    db {current_kingdom_version align 18 poke_charset}
+    db $4f,$4f
+_SaveCreationDate:
+    db {current_timestamp poke_charset}
+    db $50
+
+GoodLuckText:
+    db $86,$ae,$ae,$a3,$7f,$ab,$b4,$a2,$aa,$e7,$50

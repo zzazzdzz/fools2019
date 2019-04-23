@@ -1,0 +1,133 @@
+; Map07
+
+MAP_07_WIDTH equ 4
+MAP_07_HEIGHT equ 4
+
+Map07_DataStruct:
+    dw Map07_Events
+    dw JustPlainRet
+    dw Map07_Blocks
+    dw Map07_Scripts
+    dw Map07_Encounters
+    dw Map07_Trainers
+
+Map07_Events:
+    db 0, 0
+    db 2 ; warps
+	warp_event 4, 7, MAP_03, 1
+	warp_event 5, 7, MAP_03, 1
+    db 0 ; coord events
+    db 4 ; bg events
+    bg_event 0, 1, 0, MapCallScriptInSRAM
+    bg_event 6, 1, 0, MapCallScriptInSRAM
+    bg_event 0, 6, 0, MapCallScriptInSRAM
+    bg_event 0, 7, 0, MapCallScriptInSRAM
+    db 1 ; obj events
+    object_event 2, 4, SPRITE_SCIENTIST, SPRITEMOVEDATA_STANDING_RIGHT, 1, 1, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+
+Map07_Blocks:
+    incbin "maps/map07.blk"
+
+Map07_Scripts:
+    hybrid_ptr Map07_Hurtes
+    hybrid_ptr Map07_Movie
+    script_ptr Map07_SexualHealing
+    script_ptr Map07_SexualHealing
+    script_ptr Map07_NPC1
+    unused_ptr
+    unused_ptr
+
+Map07_SexualHealing:
+    opentext
+	writetext_vwf Map07_SexualHealing_Before
+	waitbutton
+    closetext
+    special FadeBlackQuickly
+	special ReloadSpritesNoPalettes
+	special HealParty
+	playmusic MUSIC_HEAL
+	pause 60
+	special RestartMapMusic
+	special FadeInQuickly
+    opentext
+	writetext_vwf Map07_SexualHealing_After
+	waitbutton
+    closetext
+    end
+
+Map07_SexualHealing_Before:
+    text "A comfy bed. Makes you want"
+    next "to sleep..."
+    done
+
+Map07_SexualHealing_After:
+    text "You wake up, fully recharged."
+    next "Time to go!"
+    done
+
+Map07_NPC1:
+    rel_base Map07_NPC1
+    faceplayer
+    opentext
+    checkevent EVENT_K5_PRE_FLASH_HOUSE
+    iftrue_rel .done
+    callasm_rel .test
+    iffalse_rel .noFlash
+    writetext_vwf Map07_NPC1_AfterFlash
+    verbosegiveitem RARE_CANDY
+    setevent EVENT_K5_PRE_FLASH_HOUSE
+    closetext
+    end
+.noFlash
+    writetext_vwf Map07_NPC1_BeforeFlash
+    waitbutton
+    closetext
+    end
+.done
+    writetext_vwf Map07_NPC1_Completed
+    waitbutton
+    closetext
+    end
+.test
+    ld a, [wStatusFlags]
+    and %00000100
+    ld [wScriptVar], a
+    ret
+
+Map07_NPC1_BeforeFlash:
+    text "I didn't pay my electricity"
+    next "bills again..."
+    cont "What should I do now?"
+    done
+
+Map07_NPC1_AfterFlash:
+    text "Whoa... suddenly it's a lot"
+    next "brighter now!"
+    para "I have no idea what you did,"
+    next "but thank you!"
+    cont "Here, have this in return."
+    wait
+
+Map07_NPC1_Completed:
+    text "Come to think of it..."
+    next "I actually like living in the"
+    cont "darkness."
+    done
+
+Map07_Hurtes:
+    text "Must nott touch stove with"
+    next "hand... HUrts!"
+    done
+
+Map07_Movie:
+    text "There's a movie on TV."
+    para "Some <B>{augment K06_PRE_1}</B> is just"
+    next "eating <B>{augment K06_PRE_2}</B>, when"
+    cont "suddenly... <B>{augment K06_PRE_3}</B>"
+    cont "come flying out of the window!"
+    para "I'd better go too."
+    done
+
+Map07_Trainers:
+Map07_Encounters:
+    db $ff

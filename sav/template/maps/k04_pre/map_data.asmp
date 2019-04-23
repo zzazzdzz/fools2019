@@ -1,0 +1,188 @@
+; map array:
+; pointers to map data structs
+
+; map data struct:
+; pointer to event data
+; pointer to onload asm
+; pointer to blocks
+; pointer to script array
+; pointer to wild encounters
+; pointer to textbox array
+
+; script array:
+; pointers to scripts
+
+; wild encounters:
+; rept 16
+;   byte[1] species
+;   byte[1] level
+; all are evenly probable, with 1/256 shiny chance
+
+SECTION "main_sram3", ROM0[$A000]
+
+MapArray:
+    dw Map01_DataStruct
+    dw Map02_DataStruct
+    dw Map03_DataStruct
+    dw Map04_DataStruct
+    dw Map05_DataStruct
+    dw Map06_DataStruct
+    dw Map07_DataStruct
+NumberOfMaps:
+    db 7
+
+include "maps/map01.asm"
+include "maps/map02.asm"
+include "maps/map03.asm"
+include "maps/map04.asm"
+include "maps/map05.asm"
+include "maps/map06.asm"
+include "maps/map07.asm"
+
+include "engine/generic_scripts.asm"
+
+SECTION "mapdata_headers", ROM0[$DB79]
+
+Map01_Header:
+    map_hdr_tileset TILESET_JOHTO
+    map_hdr_permission ENVIRONMENT_TOWN
+    map_hdr_subhdrptr Map01_SubHeader
+    map_hdr_music MUSIC_ROUTE_36
+    map_hdr_pals PALETTE_AUTO 
+    map_hdr_fishgroup 1
+
+Map02_Header:
+    map_hdr_tileset TILESET_JOHTO
+    map_hdr_permission ENVIRONMENT_TOWN
+    map_hdr_subhdrptr Map02_SubHeader
+    map_hdr_music MUSIC_ROUTE_36
+    map_hdr_pals PALETTE_AUTO 
+    map_hdr_fishgroup 1
+
+Map03_Header:
+    map_hdr_tileset TILESET_JOHTO
+    map_hdr_permission ENVIRONMENT_TOWN
+    map_hdr_subhdrptr Map03_SubHeader
+    map_hdr_music MUSIC_RUINS_OF_ALPH_RADIO
+    map_hdr_pals PALETTE_AUTO 
+    map_hdr_fishgroup 1
+
+Map04_Header:
+    map_hdr_tileset TILESET_JOHTO
+    map_hdr_permission ENVIRONMENT_TOWN
+    map_hdr_subhdrptr Map04_SubHeader
+    map_hdr_music MUSIC_ROUTE_36
+    map_hdr_pals PALETTE_AUTO 
+    map_hdr_fishgroup 1
+
+Map05_Header:
+    map_hdr_tileset TILESET_FACILITY
+    map_hdr_permission ENVIRONMENT_TOWN
+    map_hdr_subhdrptr Map05_SubHeader
+    map_hdr_music MUSIC_BUG_CATCHING_CONTEST_RANKING
+    map_hdr_pals PALETTE_AUTO 
+    map_hdr_fishgroup 1
+
+Map06_Header:
+    map_hdr_tileset TILESET_BATTLE_TOWER
+    map_hdr_permission ENVIRONMENT_TOWN
+    map_hdr_subhdrptr Map06_SubHeader
+    map_hdr_music MUSIC_BUG_CATCHING_CONTEST
+    map_hdr_pals PALETTE_AUTO 
+    map_hdr_fishgroup 1
+
+Map07_Header:
+    map_hdr_tileset TILESET_CHAMPIONS_ROOM
+    map_hdr_permission ENVIRONMENT_TOWN
+    map_hdr_subhdrptr Map07_SubHeader
+    map_hdr_music MUSIC_ROUTE_36
+    map_hdr_pals PALETTE_AUTO 
+    map_hdr_fishgroup 1
+
+SECTION "mapdata_subheaders", ROM0[$D289]
+
+Map01_SubHeader:
+    map_subhdr_border $05
+    map_subhdr_dimensions MAP_01_WIDTH, MAP_01_HEIGHT
+    map_subhdr_blocks Map01_Blocks
+    map_subhdr_scripts DummyScriptData
+    map_subhdr_events DummyEventData
+    map_subhdr_connections WEST | EAST
+    connection west, Map04, MAP_04, 9
+    connection east, Map02, MAP_02, 5
+
+Map02_SubHeader:
+    map_subhdr_border $05
+    map_subhdr_dimensions MAP_02_WIDTH, MAP_02_HEIGHT
+    map_subhdr_blocks Map02_Blocks
+    map_subhdr_scripts DummyScriptData
+    map_subhdr_events DummyEventData
+    map_subhdr_connections WEST | EAST
+    connection west, Map01, MAP_01, -5
+    connection east, Map03, MAP_03, -11
+
+Map03_SubHeader:
+    map_subhdr_border $05
+    map_subhdr_dimensions MAP_03_WIDTH, MAP_03_HEIGHT
+    map_subhdr_blocks Map03_Blocks
+    map_subhdr_scripts DummyScriptData
+    map_subhdr_events DummyEventData
+    map_subhdr_connections WEST
+    connection west, Map02, MAP_02, 11
+
+Map04_SubHeader:
+    map_subhdr_border $05
+    map_subhdr_dimensions MAP_04_WIDTH, MAP_04_HEIGHT
+    map_subhdr_blocks Map04_Blocks
+    map_subhdr_scripts DummyScriptData
+    map_subhdr_events DummyEventData
+    map_subhdr_connections EAST
+    connection east, Map01, MAP_01, -9
+
+Map05_SubHeader:
+    map_subhdr_border $00
+    map_subhdr_dimensions MAP_05_WIDTH, MAP_05_HEIGHT
+    map_subhdr_blocks Map05_Blocks
+    map_subhdr_scripts DummyScriptData
+    map_subhdr_events DummyEventData
+    map_subhdr_connections 0
+
+Map06_SubHeader:
+    map_subhdr_border $00
+    map_subhdr_dimensions MAP_06_WIDTH, MAP_06_HEIGHT
+    map_subhdr_blocks Map06_Blocks
+    map_subhdr_scripts DummyScriptData
+    map_subhdr_events DummyEventData
+    map_subhdr_connections 0
+
+Map07_SubHeader:
+    map_subhdr_border $00
+    map_subhdr_dimensions MAP_07_WIDTH, MAP_07_HEIGHT
+    map_subhdr_blocks Map07_Blocks
+    map_subhdr_scripts DummyScriptData
+    map_subhdr_events DummyEventData
+    map_subhdr_connections 0
+
+SECTION "mapdata_trainers", ROM0[$D972]
+
+TrainerHeader_01:
+    trainer FISHER, 8, EVENT_TRAINER_K4_PRE_1, MapWriteTextInSRAM, MapWriteTextInSRAM, 0, MapCallScriptInSRAM
+TrainerHeader_02:
+    trainer FISHER, 11, EVENT_TRAINER_K4_PRE_2, MapWriteTextInSRAM, MapWriteTextInSRAM, 0, MapCallScriptInSRAM
+TrainerHeader_03:
+    trainer SUPER_NERD, 5, EVENT_TRAINER_K4_PRE_3, MapWriteTextInSRAM, MapWriteTextInSRAM, 0, MapCallScriptInSRAM
+TrainerHeader_04:
+    trainer LASS, 17, EVENT_TRAINER_K4_PRE_4, MapWriteTextInSRAM, MapWriteTextInSRAM, 0, MapCallScriptInSRAM
+TrainerHeader_05:
+    trainer YOUNGSTER, 10, EVENT_TRAINER_K4_PRE_5, MapWriteTextInSRAM, MapWriteTextInSRAM, 0, MapCallScriptInSRAM
+
+ItemHeader_01:
+    itemball MYSTIC_WATER
+ItemHeader_02:
+    itemball REVIVE
+ItemHeader_03:
+    itemball KINGS_ROCK
+
+SECTION "mapdata_utility", ROM0[$DF30]
+
+include "engine/map_utility.asm"

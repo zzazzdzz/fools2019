@@ -1,0 +1,2 @@
+SECTION "main_sram1", ROM0[$B260]
+

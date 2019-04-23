@@ -1,0 +1,279 @@
+; Map02
+
+MAP_02_WIDTH equ 12
+MAP_02_HEIGHT equ 16
+
+Map02_DataStruct:
+    dw Map02_Events
+    dw JustPlainRet
+    dw Map02_Blocks
+    dw Map02_Scripts
+    dw Map02_Encounters
+    dw Map02_Trainers
+
+Map02_Events:
+    db 0, 0
+    db 3 ; warps
+    warp_event 5, 9, MAP_06, 1
+    warp_event 20, 5, MAP_04, 1
+    warp_event 20, 6, MAP_04, 1
+    db 0 ; coord events
+    db 3 ; bg events
+    bg_event 19, 13, 0, MapCallScriptInSRAM
+    bg_event 13, 5, 0, MapCallScriptInSRAM
+    bg_event 20, 5, 0, MapCallScriptInSRAM
+    db 8 ; obj events
+    object_event 15, 14, SPRITE_POKEFAN_M, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 16, 14, SPRITE_LASS, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 17, 14, SPRITE_YOUNGSTER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 12, 16, SPRITE_TWIN, SPRITEMOVEDATA_SPINCLOCKWISE, 0, 1, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 5, 22, SPRITE_SUPER_NERD, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_TRAINER, 3, TrainerHeader_01, -1
+    object_event 21, 6, SPRITE_SAGE, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 8, 9, SPRITE_YOUNGSTER, SPRITEMOVEDATA_WALK_UP_DOWN, 0, 2, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 7, 15, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 1, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_02, EVENT_ITEMBALL_K1_PRE_1
+    
+Map02_Blocks:
+    incbin "maps/map02.blk"
+
+Map02_Scripts:
+    hybrid_ptr   Map02_SpecialEncountersSign      ; bg event 1
+    hybrid_ptr   Map02_TrainerBattlesSign         ; bg event 2
+    script_ptr   Map02_SecretMountain             ; bg event 3
+    hybrid_ptr   Map02_SubstitutionsText1         ; obj event 1
+    unused_ptr
+    unused_ptr
+    hybrid_ptr   Map02_SubstitutionsText2         ; obj event 2
+    unused_ptr
+    unused_ptr
+    hybrid_ptr   Map02_SubstitutionsText3         ; obj event 3
+    unused_ptr
+    unused_ptr
+    hybrid_ptr   Map02_TallGrassText              ; obj event 4
+    unused_ptr
+    unused_ptr
+    rawtxt_ptr   Map02_Trainer01_EncounterText    ; obj event 5
+    rawtxt_ptr   Map02_Trainer01_DefeatText
+    hybrid_ptr   Map02_Trainer01_PostText
+    script_ptr   Map02_WorriedExplorer            ; obj event 6
+    unused_ptr
+    unused_ptr
+    hybrid_ptr   Map02_RetiredYoungsterText       ; obj event 7
+    unused_ptr
+    unused_ptr
+    ; obj event 8 (itemball, unused)
+
+Map02_SpecialEncountersSign:
+    tx_far 1, _Map02_SpecialEncountersSign
+
+Map02_TrainerBattlesSign:
+    text "When trainer eyes meet, it's"
+    next "time to battle!"
+    para "There are no Pokémon Centers"
+    next "in parallel universes, so"
+    cont "healing is very limited."
+    done
+
+Map02_SubstitutionsText1:
+    text "Whenever someone visits and"
+    next "leaves a universe, they cause"
+    cont "small disturbances in the"
+    cont "time-space continuum."
+    para "These disturbances lead to"
+    next "slight changes in our world."
+    cont "We call them 'augmentations'."
+    para "When a string of character"
+    next "dialogue has been affected"
+    cont "by an augmentation, it will"
+    cont "be written in <B>bold face</B>."
+    done
+
+Map02_SubstitutionsText2:
+    text "There's one thing I truly"
+    next "hate, and that's <B>{augment K01_PRE_1}</B>!"
+    para "Just thinking about <B>{augment K01_PRE_1}</B>"
+    next "makes me feel <B>{augment K01_PRE_2}</B>."
+    para "I think my friend <B>{augment K01_PRE_3 capitalize}</B>"
+    next "can relate to this."
+    done
+
+Map02_SubstitutionsText3:
+    text "My name is <B>{augment K01_PRE_3 capitalize}</B>, and"
+    next "I absolutely hate <B>{augment K01_PRE_1}</B>!"
+    para "<B>{augment K01_PRE_4 capitalize}</B> is just so much"
+    next "better I think. You agree?"
+    done
+
+Map02_TallGrassText:
+    text "Pokémon can attack in the"
+    next "tall grass."
+    cont "You have to be prepared!"
+    para "Recently, there was a massive"
+    next "outbreak of Metapod! I'm"
+    cont "looking for some right now!"
+    done
+
+Map02_Trainer01_EncounterText:
+    text "I have devised a truly"
+    next "unbeatable Pokémon strategy!"
+    cont "Wanna check it out?"
+    done
+
+Map02_Trainer01_DefeatText:
+    text "How did that happen?"
+    next "My strategy was perfect!"
+    done
+
+Map02_Trainer01_PostText:
+    text "Your Pokémon team is crazy!"
+    next "My Pokémon can't win against"
+    cont "a team like that!"
+    para "You needed precisely this"
+    next "attack to win!"
+    para "There was nothing I could do."
+    next "I played that perfectly!"
+    done
+
+Map02_WorriedExplorer:
+    rel_base Map02_WorriedExplorer
+    faceplayer
+    opentext
+    writetext_vwf Map02_WorriedExplorerIntro
+    callasm_rel .menu
+    iftrue_rel .ancientTale
+    closetext
+    return
+.ancientTale
+    writetext_vwf Map02_AncientTale
+    waitbutton
+    closetext
+    return
+.menu
+    ld bc, $020e
+    ld hl, Map02_AncientTaleMenu
+    ld de, $0100
+    call DisplayChoiceMenu
+    ld [wScriptVar], a
+    ret
+
+Map02_AncientTaleMenu:
+    ; Good luck!
+    ; Ancient tale?
+    db $86,$ae,$ae,$a3,$7f,$ab,$b4,$a2,$aa,$e7,$4f
+    db $80,$ad,$a2,$a8,$a4,$ad,$b3,$7f,$b3,$a0,$ab,$a4,$e6,$50
+
+Map02_SecretMountain:
+    rel_base Map02_SecretMountain
+    opentext
+    writetext_vwf Map02_SecretMountainText
+    waitbutton
+    closetext
+    callasm_rel .test
+    ifequal_rel 1, .solved
+    return
+.solved
+    changeblock 20, 4, $73
+    reloadmappart
+	playsound SFX_ENTER_DOOR
+    setevent EVENT_K1_POST_ANCIENT_PUZZLE_SOLVED
+    return
+.test
+    ld hl, wPartyMon1HP
+    ld a, [hli]
+    sla a
+    or [hl]
+    ld [wScriptVar], a
+    ret
+
+Map02_SecretMountainText:
+    text "This wall is very rocky."
+    next "Could there be something"
+    cont "behind it?"
+    done
+
+Map02_WorriedExplorerIntro:
+    text "Hello! I'm Matt, but"
+    next "everyone just calls me the"
+    cont "'Worried Explorer'."
+    para "I came from a faraway region"
+    next "called Glitchland, looking"
+    cont "for big treasure."
+    para "I'm sure there is something"
+    next "hidden in this rock."
+    para "There's an ancient tale about"
+    next "this place, so there must be"
+    cont "some secret to it!"
+    done
+
+Map02_AncientTale:
+    text "Oh yes, an ancient tale. It"
+    next "goes something like this:"
+    para ""
+    tx_kasstheme
+    text "When your Pokémon are weak,"
+    tx_delayframes 110
+    next "close to this mountain's peak,"
+    tx_delayframes 90
+    tx_paranowait
+    text "You'll then claim the reward"
+    next "you seek."
+    tx_delayframes 180
+    tx_paranowait
+    text "Make your party leader"
+    tx_delayframes 110
+    next "just hang by a thread,"
+    tx_delayframes 90
+    tx_paranowait
+    text "And a path shall open right"
+    next "up ahead."
+    tx_delayframes 250
+    tx_restartmapmusic
+    tx_paranowait
+    text "There must be some secret to"
+    next "these words, I'm sure!"
+    para "This rock formation next to"
+    next "me looks really strange."
+    para "Try checking it out."
+    next "Maybe there's a secret path?"
+    done
+
+Map02_RetiredYoungsterText:
+    text "I have realized that battling"
+    next "isn't exactly my strong suit."
+    para "So I decided to change."
+    next "From now on, my hobby is to"
+    cont "<B>{augment K01_POST_1} {augment K01_POST_2}</B>."
+    cont "It's a lot more relaxing."
+    done
+
+Map02_Trainers:
+    dw JustPlainRet
+    dw JustPlainRet
+    dw JustPlainRet
+    dw JustPlainRet
+    dw Map02_Trainer01
+
+Map02_Trainer01:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_ITEM_MOVES
+    db {lv_rel -5}, WOBBUFFET
+    db MIRACLEBERRY
+    db DESTINY_BOND, DESTINY_BOND, DESTINY_BOND, DESTINY_BOND
+    db -1
+
+Map02_Encounters:
+    db {rnd_basic_mon 1}, {lv_rel -10}
+    db {rnd_basic_mon 1}, {lv_rel -9}
+    db {rnd_basic_mon 1}, {lv_rel -8}
+    db {rnd_basic_mon 1}, {lv_rel -7}
+    db {rnd_basic_mon 1}, {lv_rel -6}
+    db {rnd_basic_mon 1}, {lv_rel -5}
+    db {rnd_basic_mon 2}, {lv_rel -10}
+    db {rnd_basic_mon 2}, {lv_rel -9}
+    db {rnd_basic_mon 2}, {lv_rel -8}
+    db {rnd_basic_mon 2}, {lv_rel -7}
+    db {rnd_basic_mon 2}, {lv_rel -6}
+    db {rnd_basic_mon 3}, {lv_rel -5}
+    db {rnd_basic_mon 3}, {lv_rel -4}
+    db {rnd_basic_mon 3}, {lv_rel -3}
+    db METAPOD, {lv_rel 0}
+    db METAPOD, {lv_rel 0}

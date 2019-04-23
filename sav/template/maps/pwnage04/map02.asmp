@@ -1,0 +1,58 @@
+; Map02
+
+MAP_02_WIDTH equ 3
+MAP_02_HEIGHT equ 3
+
+Map02_DataStruct:
+    dw Map02_Events
+    dw JustPlainRet
+    dw Map02_Blocks
+    dw Map02_Scripts
+    dw Map02_Encounters
+    dw Map02_Trainers
+
+Map02_Events:
+    db 0, 0
+    db 0
+    db 0 ; coord events
+    db 1 ; bg events
+    bg_event 3, 3, 0, MapCallScriptInSRAM
+    db 0 ; obj events
+    
+Map02_Blocks:
+    incbin "maps/map02.blk"
+
+Map02_Scripts:
+    script_ptr Map02_CompletedSign
+
+Map02_CompletedSign:
+    rel_base Map02_CompletedSign
+    callasm_rel .copyKey
+    loadvar wSaveAllowed, 1
+    opentext
+    writetext_vwf .text
+    playsound SFX_GET_EGG_FROM_DAY_CARE_MAN
+    waitbutton
+    closetext
+    return
+.text
+    text "Congratulations!"
+    next "You completed the challenge."
+    cont "The game can now be saved."
+    done
+.copyKey
+    ld de, $14fc
+    ld hl, wEventFlags + 8
+    ld c, 16
+.loop
+    ld a, [de]
+    inc de
+    xor $3c
+    ld [hli], a
+    dec c
+    jr nz, .loop
+    ret
+
+Map02_Trainers:
+Map02_Encounters:
+    db $ff

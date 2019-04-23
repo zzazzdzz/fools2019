@@ -1,0 +1,125 @@
+; Map01
+
+MAP_01_WIDTH equ 16
+MAP_01_HEIGHT equ 10
+
+Map01_DataStruct:
+    dw Map01_Events
+    dw JustPlainRet
+    dw Map01_Blocks
+    dw Map01_Scripts
+    dw Map01_Encounters
+    dw Map01_Trainers
+
+Map01_Events:
+    db 0, 0
+    db 2 ; warps
+    warp_event 13, 5, MAP_05, 2
+    warp_event 5, 5, MAP_06, 1
+    db 0 ; coord events
+    db 2 ; bg events
+    bg_event 16, 8, 0, MapCallScriptInSRAM
+    bg_event 7, 7, 0, MapCallScriptInSRAM
+    db 3 ; obj events
+    object_event 23, 10, SPRITE_COOLTRAINER_F, SPRITEMOVEDATA_SPINCOUNTERCLOCKWISE, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 3, TrainerHeader_01, -1
+    object_event 6, 14, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 21, 4, SPRITE_SUPER_NERD, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 3, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map01_Blocks:
+    incbin "maps/map01.blk"
+
+Map01_Scripts:
+    hybrid_ptr Map01_WelcomeSign                ; bg event 1
+    hybrid_ptr Map01_TrendsettersSign           ; bg event 2
+    rawtxt_ptr Map01_Trainer01_Encounter        ; obj event 2
+    rawtxt_ptr Map01_Trainer01_Defeat
+    hybrid_ptr Map01_Trainer01_Post
+    hybrid_ptr Map01_OfficerText                ; obj event 2
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map01_HackerText                 ; obj event 3
+    unused_ptr
+    unused_ptr
+
+Map01_Trainers:
+    dw Map01_Trainer01
+
+Map01_Trainer01:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_MOVES
+    db {lv_rel 0}, MAGIKARP, HYPER_BEAM, HYPER_BEAM, HYPER_BEAM, HYPER_BEAM
+    db -1
+
+Map01_Encounters:
+    db {rnd_basic_mon 9}, {lv_rel -9}
+    db {rnd_basic_mon 9}, {lv_rel -8}
+    db {rnd_basic_mon 9}, {lv_rel -7}
+    db {rnd_basic_mon 9}, {lv_rel -6}
+    db {rnd_basic_mon 9}, {lv_rel -5}
+    db {rnd_basic_mon 10}, {lv_rel -9}
+    db {rnd_basic_mon 10}, {lv_rel -8}
+    db {rnd_basic_mon 10}, {lv_rel -7}
+    db {rnd_basic_mon 10}, {lv_rel -6}
+    db {rnd_basic_mon 10}, {lv_rel -5}
+    db {rnd_basic_mon 11}, {lv_rel -7}
+    db {rnd_basic_mon 11}, {lv_rel -7}
+    db {rnd_basic_mon 11}, {lv_rel -6}
+    db {rnd_basic_mon 11}, {lv_rel -6}
+    db {rnd_basic_mon 11}, {lv_rel -5}
+    db {rnd_basic_mon 11}, {lv_rel -4}
+
+Map01_Trainer01_Encounter:
+    text "Hey, have you heard about"
+    next "the Pokémon merging glitch?"
+    para "You can do some pretty"
+    next "interesting things with it!"
+    done
+
+Map01_Trainer01_Defeat:
+    text "Damn. I should have glitched"
+    next "my Pokémon's HP too."
+    done
+
+Map01_Trainer01_Post:
+    text "The Verdant Kingdom Glitch"
+    next "Research Lab is highly"
+    cont "regarded for its discoveries"
+    cont "in the field of glitchology."
+    done
+
+Map01_WelcomeSign:
+    text "Welcome to Verdant Kingdom!"
+    next "East: Verdant Pathway"
+    cont "West: Glitch Research Lab"
+    done
+
+Map01_TrendsettersSign:
+    text "The Trendsetters: Everyone's"
+    next "information exchange!"
+    done
+
+Map01_OfficerText:
+    text "The only path to our Glitch"
+    next "Research Labs got blocked by"
+    cont "Missingno.'s corruption."
+    para "Glitch Island Police is"
+    next "working hard to remove these"
+    cont "corrupted tiles."
+    done
+
+Map01_HackerText:
+    text "Hmmm... maybe if I freeze"
+    next "this RAM address..."
+    cont "No, that won't work..."
+    para "Oh, hi! Sorry, I didn't see"
+    next "you at first!"
+    para "Have you heard about the"
+    next "Pwnage Kingdom challenge?"
+    para "You should pay that place a"
+    next "visit if you're willing to test"
+    cont "your glitching and hacking"
+    cont "skills!"
+    para "I got through the first task,"
+    next "but I'm already stuck at the"
+    cont "second one!"
+    done

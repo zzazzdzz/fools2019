@@ -1,0 +1,150 @@
+SECTION "main_sram1", ROM0[$B260]
+
+_Map03_AncientTale:
+    text "Oh yes, an ancient tale. It"
+    next "goes something like this:"
+    para ""
+    tx_kasstheme
+    text "'Symmetry is beauty',"
+    tx_delayframes 110
+    next "someone once said."
+    tx_delayframes 90
+    tx_paranowait
+    text "Yet mother nature had that"
+    next "phrase misread."
+    tx_delayframes 180
+    tx_paranowait
+    text "Cut just enough grass"
+    tx_delayframes 110
+    next "to make symmetry first-class."
+    tx_delayframes 90
+    tx_paranowait
+    text "Only in such case will I"
+    next "let you pass."
+    tx_delayframes 250
+    tx_restartmapmusic
+    tx_paranowait
+    text "Something about symmetry..."
+    next "Do we need to make something"
+    cont "symmetric?"
+    para "Then cutting a perfect amount"
+    next "of grass... How do those two"
+    cont "things relate?"
+    para "And then there's this rock."
+    next "I'm sure it has some meaning"
+    cont "too."
+    para "Maybe you'll be able to figure"
+    next "this out. I'm out of ideas!"
+    done
+
+_Map07_Scientist2:
+    text "You're kidding, right?"
+    next "-gm is the best ACE glitch"
+    cont "item in Gen I games, period!"
+    para "It doesn't require a specific"
+    next "party Pokémon setup, it will"
+    cont "always work."
+    para "Not only that, it's a lot"
+    next "faster to bootstrap than 8F!"
+    para "You can even convert your 8F"
+    next "setups to -gm ones with some"
+    cont "extra effort."
+    para "8F is obsolete. Why can't"
+    next "people understand that?"
+    para "Hey, we're having a heated"
+    next "debate here. Go away!"
+    done
+
+_Map07_Scientist3:
+    text "For me, 8F is still a better"
+    next "ACE item than -gm."
+    para "There are plenty of resources"
+    next "on the Internet for it, tons"
+    cont "of item lists."
+    para "Also 8F is transparent and"
+    next "easy to understand. It just"
+    cont "executes your party as code!"
+    para "Wrong party means wrong code."
+    next "Debug it by looking at it."
+    para "Yeah, try to debug a -gm"
+    next "crash without an emulator!"
+    para "Just speedrunners think it's"
+    next "cool, because setting it up"
+    cont "takes maybe 20 minutes less"
+    cont "than setting up 8F!"
+    done
+
+_Map07_Heyv:
+    text "Hey, nice to see you again!"
+    next "Once again, huge thanks for"
+    cont "saving me and all of Verdant"
+    cont "Kingdom's inhabitants."
+    para "I probably should introduce"
+    next "myself."
+    para "I'm Heyv, leader of the"
+    next "Glitch Research Group Alpha."
+    para "Myself, I don't know much"
+    next "about glitchology."
+    para "That's why I have my friends,"
+    next "Wazz and Shad, to deal with"
+    cont "all the technical stuff!"
+    para "We're working together to"
+    next "defeat Missingno. and cleanse"
+    cont "all kingdoms of corruption."
+    para "And I think you're on the"
+    next "same page as we are!"
+_Map07_Heyv_GlitchCore:
+    para "We're working on our newest"
+    next "invention. We call it the"
+    cont "Glorious Glitch Core."
+    para "It's a device that when"
+    next "charged could release a huge"
+    cont "corruption-cleansing beam."
+    para "A beam strong enough to purge"
+    next "the corrupted tile blockade"
+    cont "in Central Kingdom."
+    para "Then, some skilled trainer"
+    next "could go there and defeat"
+    cont "Missingno. once and for all."
+    para "Unfortunately, this isn't all"
+    next "that simple. Missingno.'s"
+    cont "corruption is still too strong"
+    cont "around that area."
+    para "The plan is: try to rescue as"
+    next "many kingdoms as possible."
+    cont "This will cause Missingno.'s"
+    cont "corruption to weaken."
+    para "Then, we'll be able to charge"
+    next "up the Glorious Glitch Core,"
+    cont "and purge the blockade in"
+    cont "Central Kingdom."
+    para "Please do your best."
+    next "We're all counting on you."
+    para "Oh, and make sure to talk"
+    next "to Shad. He probably has some"
+    cont "item that will help you out."
+    done
+
+_Map07_Wazz:
+    text "Wazz: Hi there! Thanks for"
+    next "saving Heyv. Too bad I wasn't"
+    cont "able to see you in action."
+    para "The entrance to the lab was"
+    next "blocked by corrupted tiles."
+    para "Funnily enough, I didn't even"
+    next "notice, since I never left"
+    cont "this room at that time."
+    para "I think you should save some"
+    next "other kingdoms too."
+    cont "I wish you best of luck!"
+    done
+
+_Map07_ShadAfterText:
+    text "HM01 is a special Pokémon"
+    next "technique called Cut."
+    para "I'm sure you already know"
+    next "what it does, so I won't"
+    cont "bother explaining."
+    para "Go save other kingdoms. I"
+    next "deeply hope for your success!"
+    done

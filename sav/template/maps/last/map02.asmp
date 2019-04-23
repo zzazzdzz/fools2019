@@ -1,0 +1,116 @@
+; Map02
+
+MAP_02_WIDTH equ 22
+MAP_02_HEIGHT equ 10
+
+Map02_DataStruct:
+    dw Map02_Events
+    dw JustPlainRet
+    dw Map02_Blocks
+    dw Map02_Scripts
+    dw Map02_Encounters
+    dw Map02_Trainers
+
+Map02_Events:
+    db 0, 0
+    db 0 ; warps
+    db 0 ; coord events
+    db 0 ; bg events
+    db 4 ; obj events
+    object_event 2, 9, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 11, 7, SPRITE_BUG_CATCHER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 8, 2, SPRITE_SAGE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 16, 6, SPRITE_GRAMPS, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map02_Blocks:
+    incbin "maps/map02.blk"
+
+Map02_Scripts:
+    hybrid_ptr Map02_Fisher
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map02_Designer
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map02_WorriedExplorer
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map02_Final
+    unused_ptr
+    unused_ptr
+
+Map02_Final:
+    text "Every adventure has its own"
+    next "beginning."
+    para "As such, every adventure has"
+    next "to end eventually..."
+    para "It's a strange feeling. When"
+    next "you SAVE, your adventure"
+    cont "will truly be over."
+    para "But what a great adventure"
+    next "it was..."
+    para "Our world is safe. Now, you"
+    next "can return to your own world."
+    cont "Do your best, <B>"
+    tx_buf wPlayerFullName
+    text "</B>."
+    done
+
+Map02_WorriedExplorer:
+    text "Hello! I'm Matt, but"
+    next "everyone just calls me the"
+    cont "'Worried Explorer'."
+    para "Seeing you solve all of"
+    next "these ancient puzzles was"
+    cont "really inspiring."
+    para "And I'm sure that I would've"
+    next "never figured them out"
+    cont "without your help."
+    para "When I return to Glitchland,"
+    next "I'll be sure to inform people"
+    cont "about your discoveries."
+    done
+
+Map02_Fisher:
+    text "Remember that hooked Metapod"
+    next "you showed me a while back?"
+    para "I think I got that figured"
+    next "out! When it hardens its shell,"
+    cont "it gets heavy enough to sink."
+    para "Just like that, a Metapod can"
+    next "live under water."
+    cont "It's not a glitch after all!"
+    done
+
+Map02_Designer:
+    text "Glitch Islands are safe, so"
+    next "now I can come back to work!"
+    para "I think it's time for everyone"
+    next "here to see my great level"
+    cont "design!"
+    para "Where should I make my next"
+    next "creation, that's the question!"
+    para "There's lots of open space"
+    next "here. Maybe I'll construct"
+    cont "something amazing!"
+    done
+
+Map02_Trainers:
+
+Map02_Encounters:
+    db CELEBI, {lv_rel 0}
+    db CELEBI, {lv_rel 0}
+    db CELEBI, {lv_rel 0}
+    db CELEBI, {lv_rel 0}
+    db CELEBI, {lv_rel 0}
+    db CELEBI, {lv_rel 0}
+    db CELEBI, {lv_rel 0}
+    db CELEBI, {lv_rel 0}
+    db CELEBI, {lv_rel 0}
+    db CELEBI, {lv_rel 0}
+    db CELEBI, {lv_rel 0}
+    db CELEBI, {lv_rel 0}
+    db CELEBI, {lv_rel 0}
+    db CELEBI, {lv_rel 0}
+    db CELEBI, {lv_rel 0}
+    db CELEBI, {lv_rel 0}

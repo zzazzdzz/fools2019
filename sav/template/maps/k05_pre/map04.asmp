@@ -1,0 +1,217 @@
+; Map04
+
+MAP_04_WIDTH equ 20
+MAP_04_HEIGHT equ 20
+
+Map04_DataStruct:
+    dw Map04_Events
+    dw JustPlainRet
+    dw Map04_Blocks
+    dw Map04_Scripts
+    dw Map04_Encounters
+    dw Map04_Trainers
+
+Map04_Events:
+    db 0, 0
+    db 8 ; warps
+    warp_event 33, 36, MAP_03, 3
+    warp_event 7, 33, MAP_04, 4
+    warp_event 9, 31, MAP_04, 5
+    warp_event 37, 25, MAP_04, 2
+    warp_event 3, 21, MAP_04, 3
+    warp_event 27, 21, MAP_04, 7
+    warp_event 19, 21, MAP_04, 6
+    warp_event 33, 6, MAP_05, 1
+    db 0 ; coord events
+    db 0 ; bg events
+    db 12 ; obj events
+    object_event 28, 35, SPRITE_ROCKET, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_TRAINER, 4, TrainerHeader_04, -1
+    object_event 22, 33, SPRITE_ROCKET_GIRL, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 13, 31, SPRITE_ROCKET, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, 0, OBJECTTYPE_TRAINER, 4, TrainerHeader_05, -1
+    object_event 25, 19, SPRITE_ROCKET, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_TRAINER, 3, TrainerHeader_06, -1
+    object_event 34, 16, SPRITE_ROCKET_GIRL, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 19, 12, SPRITE_ROCKET_GIRL, SPRITEMOVEDATA_SPINCLOCKWISE, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 4, TrainerHeader_07, -1
+    object_event 7, 16, SPRITE_ROCKET, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_TRAINER, 3, TrainerHeader_08, -1
+    object_event 11, 3, SPRITE_ROCKET_GIRL, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 4, TrainerHeader_09, -1
+    object_event 27, 14, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 1, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_01, EVENT_ITEMBALL_K5_PRE_1
+    object_event 16, 19, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 1, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_02, EVENT_ITEMBALL_K5_PRE_2
+    object_event 28, 11, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 1, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_03, EVENT_ITEMBALL_K5_PRE_3
+    object_event 5, 9, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 1, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_04, EVENT_ITEMBALL_K5_PRE_4
+    
+Map04_Blocks:
+    incbin "maps/map04.blk"
+
+Map04_Scripts:
+    rawtxt_ptr Map04_Trainer01_Encounter
+    rawtxt_ptr Map04_Trainer01_Defeat
+    hybrid_ptr Map04_Trainer01_Encounter
+    hybrid_ptr Map04_NPC1
+    unused_ptr
+    unused_ptr
+    rawtxt_ptr Map04_Trainer02_Encounter
+    rawtxt_ptr Map04_Trainer02_Defeat
+    hybrid_ptr Map04_Trainer02_Defeat
+    rawtxt_ptr Map04_Trainer03_Encounter
+    rawtxt_ptr Map04_Trainer03_Defeat
+    hybrid_ptr Map04_Trainer03_Defeat
+    hybrid_ptr Map04_NPC2
+    unused_ptr
+    unused_ptr
+    rawtxt_ptr Map04_Trainer04_Encounter
+    rawtxt_ptr Map04_Trainer04_Defeat
+    hybrid_ptr Map04_Trainer04_Encounter
+    rawtxt_ptr Map04_Trainer05_Encounter
+    rawtxt_ptr Map04_Trainer05_Defeat
+    hybrid_ptr Map04_Trainer05_Defeat
+    rawtxt_ptr Map04_Trainer06_Encounter
+    rawtxt_ptr Map04_Trainer06_Defeat
+    hybrid_ptr Map04_Trainer06_Encounter
+
+Map04_Trainer06_Encounter:
+    text "Get out from our Research"
+    next "Center! You know nothing"
+    cont "about glitchology!"
+    para "You're probably still doing"
+    next "empirical glitching in 2019!"
+    done
+
+Map04_Trainer06_Defeat:
+    text "Taking that back."
+    next "Empirical glitching is great."
+    done
+
+Map04_Trainer05_Encounter:
+    text "I WILL BE RUDE TO YOU IF"
+    next "YOU DISTURB OUR WORK"
+    done
+
+Map04_Trainer05_Defeat:
+    text "DO GOOG! BUT IT WILL NOT"
+    next "BE SO EASY NEXT TIME"
+    done
+
+Map04_Trainer04_Encounter:
+    text "What is your favorite method"
+    next "of spreading evil?"
+    para "Mine is turning off the LCD"
+    next "outside of VBlank!"
+    done
+
+Map04_Trainer04_Defeat:
+    text "Fine, fine! I'll stop with"
+    next "the mid-frame LCD disabling."
+    cont "We're not that evil."
+    done
+
+Map04_NPC2:
+    text "Our <B>{augment K05_PRE_6 capitalize concat tron}</B> requires"
+    next "a special key to operate."
+    para "There should be spare keys"
+    next "hidden somewhere in our"
+    cont "hideout."
+    para "Wait, why am I telling you"
+    next "all of this?"
+    done
+
+Map04_Trainer03_Encounter:
+    text "Install yourself somewhere,"
+    next "and enjoy a battle!"
+    done
+
+Map04_Trainer03_Defeat:
+    text "This was unexpected."
+    next "How did I lose?"
+    done
+
+Map04_Trainer02_Encounter:
+    text "I'll decrement your Pokémon"
+    next "count, one by one!"
+    done
+
+Map04_Trainer02_Defeat:
+    text "No! Your number of Pokémon"
+    next "was too large to decrement!"
+    done
+
+Map04_NPC1:
+    text "Our Glitch Research Division"
+    next "is working on a new project!"
+    para "We've created <B>{augment K05_PRE_6 capitalize concat tron}</B>!"
+    next "A machine that facilitates"
+    cont "fast corruption spreading!"
+    para "It uses <B>{augment K05_PRE_7}</B> shards"
+    next "for its operation."
+    para "Wait, why am I telling you"
+    next "all of this?"
+    done
+
+Map04_Trainer01_Encounter:
+    text "How did you find our secret"
+    next "Research Center?"
+    para "The switch was so well"
+    next "hidden! It's impossible!"
+    done
+
+Map04_Trainer01_Defeat:
+    text "Quick!"
+    next "I must alert our boss!"
+    done
+
+Map04_Trainers:
+    dw Map04_Trainer01
+    dw NULL
+    dw Map04_Trainer02
+    dw Map04_Trainer03
+    dw NULL
+    dw Map04_Trainer04
+    dw Map04_Trainer05
+    dw Map04_Trainer06
+
+Map04_Trainer01:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -4}, {basic_mon}
+    db {lv_rel -3}, {first_stage_mon}
+    db -1
+
+Map04_Trainer02:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -6}, {basic_mon}
+    db {lv_rel -3}, {first_stage_mon}
+    db {lv_rel -6}, {basic_mon}
+    db -1
+
+Map04_Trainer03:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -5}, {basic_mon}
+    db {lv_rel -5}, {basic_mon}
+    db {lv_rel -5}, {basic_mon}
+    db -1
+
+Map04_Trainer04:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -5}, {basic_mon}
+    db {lv_rel -3}, {first_stage_mon}
+    db -1
+
+Map04_Trainer05:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -5}, {basic_mon}
+    db {lv_rel -5}, {basic_mon}
+    db {lv_rel -5}, {basic_mon}
+    db -1
+
+Map04_Trainer06:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -5}, {basic_mon}
+    db {lv_rel -5}, {first_stage_mon}
+    db {lv_rel -3}, {basic_mon}
+    db -1
+
+Map04_Encounters:
+    db $ff

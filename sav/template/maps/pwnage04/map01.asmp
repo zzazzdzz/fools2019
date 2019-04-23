@@ -1,0 +1,73 @@
+; Map01
+
+MAP_01_WIDTH equ 3
+MAP_01_HEIGHT equ 2
+
+Map01_DataStruct:
+    dw Map01_Events
+    dw JustPlainRet
+    dw Map01_Blocks
+    dw Map01_Scripts
+    dw Map01_Encounters
+    dw Map01_Trainers
+
+Map01_Events:
+    db 0, 0
+    db 0
+    db 0 ; coord events
+    db 1 ; bg events
+    bg_event 3, 0, 0, MapCallScriptInSRAM
+    db 0 ; obj events
+    
+Map01_Blocks:
+    incbin "maps/map01.blk"
+
+Map01_Scripts:
+    hybrid_ptr Map01_WelcomeSign
+
+Map01_WelcomeSign:
+    text "Welcome to Pwnage Kingdom!"
+    next "The place for hackers to"
+    cont "demonstrate their skill!"
+    para "Challenge 04"
+    next "''Master of Saving''"
+    para "You conquered every task"
+    next "thrown at you so far."
+    cont "Here's your final mission."
+    para "Reverse-engineer the game"
+    next "saving system."
+    para "To prove your understanding"
+    next "of the save mechanics,"
+    cont "you need to create a very"
+    cont "special save file for me."
+    para "Each completed save file"
+    next "contains a blob encoding"
+    cont "variables related to your"
+    cont "game progression."
+    para "The server then decodes it"
+    next "and updates your progress."
+    para "To pass the challenge, every"
+    next "byte in the DECODED blob has"
+    cont "to be equal to its offset in"
+    cont "the data, mod 256."
+    para "So, byte on offset $3F should"
+    next "have the value $3F. And on"
+    cont "$1C3, it should be $C3."
+    para "There are two exceptions."
+    next "First, any checksum bytes"
+    cont "are exempt from this rule."
+    para "Second, the four decoded"
+    next "bytes at offset $1A5 should"
+    cont "have special values:"
+    cont "<B>{current_save_id}</B> (DEC)."
+    para "This is to make sure it's"
+    next "impossible to upload files"
+    cont "created by other users."
+    para "Submit this special file to"
+    next "Pwnage Kingdom IV to finish"
+    cont "the challenge. Good luck!"
+    done
+
+Map01_Trainers:
+Map01_Encounters:
+    db $ff

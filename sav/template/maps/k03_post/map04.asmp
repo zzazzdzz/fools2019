@@ -1,0 +1,30 @@
+; Map04
+
+MAP_04_WIDTH equ 7
+MAP_04_HEIGHT equ 5
+
+Map04_DataStruct:
+    dw Map04_Events
+    dw JustPlainRet
+    dw Map04_Blocks
+    dw Map04_Scripts
+    dw Map04_Encounters
+    dw Map04_Trainers
+
+Map04_Events:
+    db 0, 0
+    db 0 ; warps
+    db 0 ; coord events
+    db 0 ; bg events
+    db 1 ; obj events
+    object_event 3, 3, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 1, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, EVENT_ITEMBALL_K3_POST_1
+    
+Map04_Blocks:
+    incbin "maps/map04.blk"
+
+Map04_Scripts:
+    script_ptr GlobalItemballScript
+
+Map04_Trainers:
+Map04_Encounters:
+    db $ff

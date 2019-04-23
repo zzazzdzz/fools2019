@@ -1,0 +1,12 @@
+[Info]
+    KingdomName = PWNAGE KINGDOM
+    Respawn = MAP_01, 2, 2
+    SaveAllowedImmediately = 0
+    KingdomVersion = CHALLENGE 4
+    RoofGraphics = 1
+
+[ObtainableFlags]
+
+[ObtainableItems]
+
+[ObtainableMons]

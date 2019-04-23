@@ -1,0 +1,62 @@
+; Map05
+
+MAP_05_WIDTH equ 4
+MAP_05_HEIGHT equ 4
+
+Map05_DataStruct:
+    dw Map05_Events
+    dw JustPlainRet
+    dw Map05_Blocks
+    dw Map05_Scripts
+    dw Map05_Encounters
+    dw Map05_Trainers
+
+Map05_Events:
+    db 0, 0
+    db 2 ; warps
+    warp_event 2, 7, MAP_01, 1
+    warp_event 3, 7, MAP_01, 1
+    db 0 ; coord events
+    db 0 ; bg events
+    db 2 ; obj events
+    object_event 1, 2, SPRITE_CLERK, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 6, 6, SPRITE_TEACHER, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 1, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map05_Blocks:
+    incbin "maps/map05.blk"
+
+Map05_Scripts:
+    script_ptr Map01_MartClerk                  ; obj event 1
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map01_ItNeverHurtsText           ; obj event 2
+    unused_ptr
+    unused_ptr
+
+Map05_Trainers:
+Map05_Encounters:
+    db $ff
+
+Map01_MartClerk:
+    rel_base Map01_MartClerk
+    faceplayer
+    opentext
+    showmart_rel .mart
+    closetext
+    return
+.mart
+    db 10
+    db SUPER_POTION
+    db FULL_HEAL
+    db POKE_BALL
+    db GREAT_BALL
+    db REPEL
+    db $e1, $e9, $f0, $d6, $df
+    db -1
+
+Map01_ItNeverHurtsText:
+    text "It never hurts to have extra"
+    next "items!"
+    para "Oh wait, there's that one"
+    next "glitch in Gen I games..."
+    done

@@ -1,0 +1,96 @@
+; Map04
+
+MAP_04_WIDTH equ 15
+MAP_04_HEIGHT equ 6
+
+Map04_DataStruct:
+    dw Map04_Events
+    dw JustPlainRet
+    dw Map04_Blocks
+    dw Map04_Scripts
+    dw Map04_Encounters
+    dw Map04_Trainers
+
+Map04_Events:
+    db 0, 0
+    db 0 ; warps
+    db 5 ; coord events
+    coord_event 18, 5, $ff, MapCallScriptInSRAM
+    coord_event 16, 2, $ff, MapCallScriptInSRAM
+    coord_event 14, 7, $ff, MapCallScriptInSRAM
+    coord_event 12, 2, $ff, MapCallScriptInSRAM
+    coord_event 10, 3, $ff, MapCallScriptInSRAM
+    db 1 ; bg events
+    bg_event 2, 0, 0, MapCallScriptInSRAM
+    db 0 ; obj events
+    
+Map04_Blocks:
+    incbin "maps/map04.blk"
+
+Map04_Scripts:
+    script_ptr Map04_Sign
+    script_ptr Map04_MarkProgress
+    script_ptr Map04_MarkProgress
+    script_ptr Map04_MarkProgress
+    script_ptr Map04_MarkProgress
+    script_ptr Map04_MarkProgress
+
+Map04_MarkProgress:
+    rel_base Map04_MarkProgress
+    callasm_rel .asm
+    end
+.asm
+    ld hl, $c900
+    ld a, [hl]
+    inc a
+    ret z
+    ld a, [wPlayerFacing]
+    and %11111100
+    cp 8
+    jr nz, .cheater
+    inc [hl]
+    ret
+.cheater
+    ld [hl], $ff
+    ret
+
+Map04_Sign:
+    rel_base Map04_Sign
+    opentext
+    checkevent EVENT_K4_SECRET_PATH
+    iftrue_rel .done
+    copybytetovar $c900
+    ifequal_rel 5, .ok
+.done
+    writetext_vwf Map04_SignFail
+    waitbutton
+    closetext
+    end
+.ok
+    writetext_vwf Map04_SignOK
+    waitbutton
+    verbosegiveitem RARE_CANDY
+    setevent EVENT_K4_SECRET_PATH
+    closetext
+    end
+
+Map04_SignOK:
+    text "Following a specific path"
+    next "enlightened your heart and"
+    cont "soul."
+    para "You are filled with... joy."
+    next "And excitement."
+    para "Oh... there's an item here?"
+    next "Didn't even notice!"
+    done
+
+Map04_SignFail:
+    text "This is a sign."
+    next "What a nice sign!"
+    para "I show no sign of stopping"
+    next "with these terrible puns."
+    done
+
+Map04_Trainers:
+Map04_Encounters:
+    db $ff

@@ -1,0 +1,260 @@
+; Map04
+
+MAP_04_WIDTH equ 9
+MAP_04_HEIGHT equ 6
+
+Map04_DataStruct:
+    dw Map04_Events
+    dw JustPlainRet
+    dw Map04_Blocks
+    dw Map04_Scripts
+    dw Map04_Encounters
+    dw Map04_Trainers
+
+Map04_Events:
+    db 0, 0
+    db 0
+    db 0 ; coord events
+    db 0 ; bg events
+    db 3 ; obj events
+    object_event 12, 4, SPRITE_SCIENTIST, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 8, 5, SPRITE_SCIENTIST, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 5, 2, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map04_Blocks:
+    incbin "maps/map04.blk"
+
+Map04_Scripts:
+    script_ptr Map04_Heyv
+    hybrid_ptr Map04_HeyvDefeated
+    unused_ptr
+    script_ptr Map04_Shad
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map04_Officer
+    unused_ptr
+    unused_ptr
+
+Map04_Trainers:
+    dw Map04_TrainerHeyv
+
+Map04_TrainerHeyv:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_ITEM_MOVES
+    db {lv_rel -6}, SHUCKLE, NO_ITEM, TOXIC, SANDSTORM, REST, NO_MOVE
+    db {lv_rel -4}, AERODACTYL, GOLD_BERRY, ANCIENTPOWER, HEADBUTT, SWAGGER, FLY
+    db -1
+
+Map04_Encounters:
+    db $ff
+
+Map04_ShadBeforeText:
+    text "This is truly terrible..."
+    para "Missingno., the Glitch Lord,"
+    next "has invaded Verdant Kingdom."
+    para "He blocked the entrance to"
+    next "our Glitch Research Lab with"
+    cont "corrupted tiles."
+    para "One of my fellow workmates"
+    next "tried to oppose Missingno. and"
+    cont "defeat him..."
+    para "But he failed, and he got"
+    next "infested with Missingno.'s"
+    cont "corruption too."
+    para "And to make things worse,"
+    next "another one of my friends is"
+    cont "stuck inside the lab. The"
+    cont "exit is blocked by corruption!"
+    para "Why does this always happen"
+    next "to me? When something goes"
+    cont "wrong, everything goes wrong!"
+    para "Without our research, Glitch"
+    next "Islands are doomed to be"
+    cont "destroyed. The hope is lost!"
+    done
+
+Map04_Officer:
+    text "Hmmm... the intensity of"
+    next "memory corruption here is off"
+    cont "the charts."
+    para "It's probably because of that"
+    next "infested glitch scientist."
+    para "Despite our best effort,"
+    next "Glitch Island Police can't do"
+    cont "much of anything."
+    done
+
+Map04_HeyvBefore:
+    text "Glitches... will prevail..."
+    next "Humans... will suffer..."
+    para "I must... defeat you..."
+    next "Corruption... will win!"
+    done
+
+Map04_HeyvDefeated:
+    text "No..."
+    next "I must... defeat you..."
+    done
+
+Map04_HeyvAfter:
+    text "I will... not be defeated."
+    next "Glitches... cannot lose!"
+    para "The chosen ones..."
+    para "... ... ..."
+    next "...will live on... ..."
+    done
+
+Map04_Rescued:
+    text "You have rescued Heyv, the"
+    next "Glitch Scientist."
+    para "Missingno. has left the"
+    next "grounds of Verdant Kingdom!"
+    tx_medalfanfare
+    done
+
+Map04_HeyvAndShad1:
+    text "... ... ... ... ..."
+    next "... ... ... ... ..."
+    para "What happened? Where am I?"
+    next "Did I defeat Missingno.?"
+    para "Hey, Shad, you look quite"
+    next "terrified. What happened?"
+    done
+
+Map04_HeyvAndShad2:
+    text "Let me tell you! This person"
+    next "right next to you has just"
+    cont "saved your life!"
+    para "Your attempt of defeating"
+    next "Missingno. went wrong,"
+    cont "and you got possessed by his"
+    cont "glitch powers."
+    para "But thanks to this traveller,"
+    next "Missingno. has left Verdant"
+    cont "Kingdom and you were able to"
+    cont "return to your senses!"
+    done
+
+Map04_HeyvAndShad3:
+    text "I, together with Heyv, owe"
+    next "you big on this one."
+    para "Thanks to your help, we'll be"
+    next "able to resume our research."
+    para "Are you willing to rescue any"
+    next "other kingdoms too?"
+    para "I, together with my friends,"
+    next "have created something that"
+    cont "could be of huge help."
+    para "Please come visit us in our"
+    next "Glitch Research Lab someday."
+    cont "See you there!"
+    done
+
+Map04_HeyvFinalText:
+    text "I simply cannot express how"
+    next "grateful I am for your help."
+    para "Please visit me and Shad in"
+    next "our Glitch Research Lab."
+    para "I wonder how Wazz is doing."
+    next "Haven't seen him in a while."
+    para "He's probably in the lab,"
+    next "doing his own things."
+    cont "So typical of him!"
+    done
+
+Map04_Shad:
+    rel_base Map04_Shad
+    faceplayer
+    opentext
+    checkevent EVENT_K2_PRE_COMPLETE
+    iftrue_rel .done
+    writetext_vwf Map04_ShadBeforeText
+    waitbutton
+    closetext
+    end
+.done
+    writetext_vwf Map04_HeyvAndShad3
+    waitbutton
+    closetext
+    end
+
+Map04_Heyv:
+    rel_base Map04_Heyv
+    faceplayer
+    checkevent EVENT_K2_PRE_COMPLETE
+    iftrue_rel .done
+    opentext
+    writetext_vwf Map04_HeyvBefore
+    waitbutton
+    closetext
+	setlasttalked 1
+    winlosstext MapWriteTextInSRAM, 0
+    loadvar wTrainerCurrentTheme, MUSIC_JOHTO_GYM_LEADER_BATTLE
+	loadtrainer SUPER_NERD, 15
+    dontrestartmapmusic
+    startandwaitbattle
+    opentext
+    writetext_vwf Map04_HeyvAfter
+    waitbutton
+    closetext
+    callasm RescuedSequenceTrampoline
+    opentext
+    writetext_vwf Map04_Rescued
+    waitbutton
+    closetext
+    applymovement_rel OBJ_2, .movement1
+    applymovement_rel OBJ_PLAYER, .movement2
+    applymovement_rel OBJ_1, .movement3
+    pause 40
+    opentext
+    writetext_vwf Map04_HeyvAndShad1
+    waitbutton
+    closetext
+    pause 20
+    callasm SwitchToSRA2
+    callasm PostEnding
+    playmapmusic
+    opentext
+    writetext_vwf Map04_HeyvAndShad2
+    waitbutton
+    closetext
+    applymovement_rel OBJ_2, .movement4
+    applymovement_rel OBJ_PLAYER, .movement5
+    opentext
+    writetext_vwf Map04_HeyvAndShad3
+    waitbutton
+    closetext
+    setevent EVENT_K2_PRE_COMPLETE
+    end
+.done
+    opentext
+    writetext_vwf Map04_HeyvFinalText
+    waitbutton
+    closetext
+    end
+.movement1
+    big_step DOWN
+    big_step DOWN
+    big_step DOWN
+    big_step RIGHT
+    big_step RIGHT
+    big_step RIGHT
+    big_step RIGHT
+    big_step UP
+    step_end
+.movement2
+    step DOWN
+    step RIGHT
+    turn_step LEFT
+    step_end
+.movement3
+    slow_step DOWN
+    slow_step DOWN
+    step_end
+.movement4
+    step RIGHT
+    turn_step UP
+    step_end
+.movement5
+    turn_step DOWN
+    step_end

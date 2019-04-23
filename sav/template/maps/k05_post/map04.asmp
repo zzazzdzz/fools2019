@@ -1,0 +1,166 @@
+; Map04
+
+MAP_04_WIDTH equ 20
+MAP_04_HEIGHT equ 20
+
+Map04_DataStruct:
+    dw Map04_Events
+    dw JustPlainRet
+    dw Map04_Blocks
+    dw Map04_Scripts
+    dw Map04_Encounters
+    dw Map04_Trainers
+
+Map04_Events:
+    db 0, 0
+    db 8 ; warps
+    warp_event 33, 36, MAP_03, 3
+    warp_event 7, 33, MAP_04, 4
+    warp_event 9, 31, MAP_04, 5
+    warp_event 37, 25, MAP_04, 2
+    warp_event 3, 21, MAP_04, 3
+    warp_event 27, 21, MAP_04, 7
+    warp_event 19, 21, MAP_04, 6
+    warp_event 33, 6, MAP_05, 1
+    db 0 ; coord events
+    db 0 ; bg events
+    db 9 ; obj events
+    object_event 30, 8, SPRITE_SUICUNE, SPRITEMOVEDATA_STILL, 0, 1, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, EVENT_YAHAHA_FOURTH
+    object_event 30, 8, SPRITE_JANINE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_ALWAYS_SET
+    object_event 24, 36, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 11, 34, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    {if_fun_between 0 10}
+        {*} object_event 19, 8, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_SILVER, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    {else}
+        {*} object_event 19, 8, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 27, 14, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 1, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_01, EVENT_ITEMBALL_K5_PRE_1
+    object_event 16, 19, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 1, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_02, EVENT_ITEMBALL_K5_PRE_2
+    object_event 28, 11, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 1, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_03, EVENT_ITEMBALL_K5_PRE_3
+    object_event 5, 9, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 1, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_04, EVENT_ITEMBALL_K5_PRE_4
+    
+Map04_Blocks:
+    incbin "maps/map04.blk"
+
+Map04_Scripts:
+    script_ptr Map01_Yahaha
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map04_Officer1
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map04_Officer2
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map04_Officer3
+    unused_ptr
+    unused_ptr
+
+Map01_Yahaha:
+    rel_base Map01_Yahaha
+    checkevent EVENT_YAHAHA_INITIATED
+    iffalse_rel .nope
+    pause 10
+    disappear OBJ_1
+    appear OBJ_2
+    playsound $6D
+    applymovement_rel OBJ_2, .spinMovement
+    setlasttalked 2
+    faceplayer
+    playmusic MUSIC_MT_MOON_SQUARE
+    opentext
+    writetext_vwf Map04_YahahaText
+    waitbutton
+    closetext
+    applymovement_rel OBJ_2, .spinMovement
+    applymovement_rel OBJ_2, .escapeMovement
+    disappear OBJ_2
+    setevent EVENT_YAHAHA_FOURTH
+    loadvar wMapMusic, 0
+    playmapmusic
+    end
+.nope
+    opentext
+    writetext_vwf Map04_NormalSuicuneText
+    waitbutton
+    closetext
+    end
+.spinMovement
+	turn_head DOWN
+	turn_head LEFT
+	turn_head UP
+	turn_head RIGHT
+	turn_head DOWN
+	turn_head LEFT
+	turn_head UP
+	turn_head RIGHT
+	turn_head DOWN
+	step_end
+.escapeMovement
+    jump_step LEFT
+    big_step UP
+    big_step LEFT
+    big_step UP
+    big_step RIGHT
+    big_step UP
+    big_step LEFT
+    big_step LEFT
+	step_end
+
+Map04_NormalSuicuneText:
+    text "It looks like a Suicune!"
+    next "But somehow it doesn't run"
+    cont "away, and it doesn't want"
+    cont "to fight you either...?"
+    done
+
+Map04_YahahaText:
+    tx_deliria
+    text "yahaha"
+    next "you found me !!"
+    para "u are so good .."
+    next "byeee !"
+    done
+
+Map04_Officer1:
+    text "Interesting... to think that"
+    next "this base remained hidden for"
+    cont "so long..."
+    para "Looking around here should"
+    next "give us lots of insight on"
+    cont "Team Rocket's operation."
+    done
+
+Map04_Officer2:
+    text "We found detailed plans of"
+    next "the <B>{augment K05_PRE_6 capitalize concat tron}</B>."
+    para "It appears to use something"
+    next "called <B>{augment K05_PRE_7}</B> shards"
+    cont "for its operation. Intriguing."
+    done
+
+Map04_Officer3:
+    {if_fun_between 0 10}
+        {*} text "Have you ever imagined a"
+        {*} next "world where nothing ever"
+        {*} cont "changes?"
+        {*} para "A world where your decisions"
+        {*} next "have absolutely no impact?"
+        {*} para "And every day you remain in"
+        {*} next "the same, hopeless situation,"
+        {*} cont "with no signs of any change?"
+        {*} para "What if you're living in such"
+        {*} next "world right now?"
+        {*} para "Don't know about you, but I"
+        {*} next "know a person who does."
+        {*} cont "And it's not a good feeling."
+    {else}
+        {*} text "Our investigation is going"
+        {*} next "very well."
+    done
+
+Map04_Trainers:
+Map04_Encounters:
+    db $ff

@@ -1,0 +1,112 @@
+; Map06
+
+MAP_06_WIDTH equ 9
+MAP_06_HEIGHT equ 5
+
+Map06_DataStruct:
+    dw Map06_Events
+    dw JustPlainRet
+    dw Map06_Blocks
+    dw Map06_Scripts
+    dw Map06_Encounters
+    dw Map06_Trainers
+
+Map06_Events:
+    db 0, 0
+    db 0 ; warps
+    db 0 ; coord events
+    db 0 ; bg events
+    db 1 ; obj events
+    object_event 14, 2, SPRITE_COOLTRAINER_M, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map06_Blocks:
+    incbin "maps/map06.blk"
+
+Map06_Scripts:
+    script_ptr Map06_Carter
+    rawtxt_ptr Map06_CarterDefeated
+    unused_ptr
+
+Map06_Carter:
+    rel_base Map06_Carter
+    faceplayer
+    checkevent EVENT_K5_PRE_COMPLETE
+    iftrue_rel .done
+    opentext
+    writetext_vwf Map06_CarterBefore
+    waitbutton
+    closetext
+	setlasttalked 1
+    winlosstext MapWriteTextInSRAM, 0
+    loadvar wTrainerCurrentTheme, MUSIC_JOHTO_GYM_LEADER_BATTLE
+	loadtrainer COOLTRAINERM, 230
+    dontrestartmapmusic
+    startandwaitbattle
+    opentext
+    writetext_vwf Map06_CarterAfter
+    waitbutton
+    closetext
+    callasm RescuedSequenceTrampoline
+    opentext
+    writetext_vwf Map06_Rescued
+    waitbutton
+    closetext
+    pause 20
+    callasm SwitchToSRA2
+    callasm PostEnding
+    playmapmusic
+    setevent EVENT_K5_PRE_COMPLETE
+.done
+    opentext
+    writetext_vwf Map06_CarterCongradnafio
+    waitbutton
+    closetext
+    end
+
+Map06_CarterCongradnafio:
+    tx_far 1, _Map06_CarterCongradnafio
+
+Map06_Rescued:
+    text "You have rescued Carter, the"
+    next "Battle Adept."
+    para "Missingno. has left the"
+    next "grounds of Joyful Kingdom!"
+    tx_medalfanfare
+    done
+
+Map06_CarterAfter:
+    text "Humans are not perfect."
+    next "Glitches are."
+    para "Glitches lurk in the worlds"
+    next "created by humans, and they"
+    cont "will show their dominance."
+    para "Prepare yourself..."
+    next "The glitches... are coming..."
+    done
+
+Map06_CarterBefore:
+    text "Glitches are the true rulers"
+    next "of this world."
+    cont "And I can prove it!"
+    para "Prepare for complete"
+    next "annihilation!"
+    done
+
+Map06_CarterDefeated:
+    text "It's impossible. Defeated"
+    next "by a human?"
+    done
+
+Map06_Trainers:
+    dw Map06_TrainerCarter
+
+Map06_TrainerCarter:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_ITEM_MOVES
+    db {lv_rel -5}, TAUROS, NO_ITEM, DOUBLE_EDGE, REST, SLEEP_TALK, NO_MOVE
+    db {lv_rel -5}, KANGASKHAN, NO_ITEM, BODY_SLAM, DIZZY_PUNCH, EARTHQUAKE, SUBSTITUTE
+    db {lv_rel -2}, MILTANK, LEFTOVERS, BODY_SLAM, MILK_DRINK, STOMP, ATTRACT
+    db -1
+
+Map06_Encounters:
+    db $ff

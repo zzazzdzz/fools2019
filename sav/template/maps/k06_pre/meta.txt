@@ -1,0 +1,47 @@
+[Info]
+    KingdomName = THROWBACK KINGDOM
+    Respawn = MAP_01, 10, 12
+    SaveAllowedImmediately = 0
+    KingdomVersion = FIRST VISIT!
+    RoofGraphics = 0
+
+[ObtainableFlags]
+    EVENT_TRAINER_K6_PRE_1 = 161
+    EVENT_TRAINER_K6_PRE_2 = 162
+    EVENT_TRAINER_K6_PRE_3 = 163
+    EVENT_ITEMBALL_K6_PRE_1 = 164
+    EVENT_K5_PRE_FLASH_HOUSE = 165
+    EVENT_K5_PRE_MATH_HOMEWORK = 166
+    EVENT_TRAINER_K6_PRE_4 = 167
+    EVENT_TRAINER_K6_PRE_5 = 168
+    EVENT_TRAINER_K6_PRE_6 = 169
+    EVENT_TRAINER_K6_PRE_7 = 170
+    EVENT_TRAINER_K6_PRE_8 = 171
+    EVENT_K6_PRE_COMPLETE = 172
+    EVENT_YAHAHA_FIFTH = 125
+
+[ObtainableItems]
+    RARE_CANDY = 1x EVENT_K5_PRE_FLASH_HOUSE
+    POKE_BALL = any
+    GREAT_BALL = any
+    HYPER_POTION = any
+    FULL_HEAL = any
+    REVIVE = any
+
+[ObtainableMons]
+    _RND_56 = any
+    _RND_57 = any
+    _RND_58 = any
+    _RND_59 = any
+    _RND_60 = any
+    _RND_61 = any
+    _RND_62 = any
+    _RND_63 = any
+    _RND_64 = any
+    _RND_65 = any
+    _RND_66 = any
+    _RND_67 = any
+    _RND_68 = any
+    _RND_69 = any
+    _RND_70 = any
+    _RND_71 = any

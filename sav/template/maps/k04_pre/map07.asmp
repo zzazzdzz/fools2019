@@ -1,0 +1,67 @@
+; Map07
+
+MAP_07_WIDTH equ 4
+MAP_07_HEIGHT equ 4
+
+Map07_DataStruct:
+    dw Map07_Events
+    dw JustPlainRet
+    dw Map07_Blocks
+    dw Map07_Scripts
+    dw Map07_Encounters
+    dw Map07_Trainers
+
+Map07_Events:
+    db 0, 0
+    db 2 ; warps
+    warp_event 2, 7, MAP_02, 2
+    warp_event 3, 7, MAP_02, 2
+    db 0 ; coord events
+    db 0 ; bg events
+    db 1 ; obj events
+    object_event 7, 3, SPRITE_CLERK, SPRITEMOVEDATA_STANDING_LEFT, 0, 1, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map07_Blocks:
+    incbin "maps/map07.blk"
+
+Map07_Scripts:
+    script_ptr Map07_BikeShop
+    unused_ptr
+    unused_ptr
+
+Map07_BikeShop:
+    rel_base Map07_BikeShop
+    opentext
+    checkevent EVENT_K4_BICY_POCKET_FUCK
+    iftrue_rel .nope
+    writetext_vwf Map07_BikeShopPre
+    verbosegiveitem BICYCLE
+    setevent EVENT_K4_BICY_POCKET_FUCK
+.nope
+    writetext_vwf Map07_BikeShopPost
+    waitbutton
+    closetext
+    end
+
+Map07_BikeShopPre:
+    text "Our new Bike Shop in Seaside"
+    next "Kingdom has just opened up!"
+    para "But we just can't sell any"
+    next "bicycles. I think no one knows"
+    cont "about our shop."
+    para "Could you ride a bicycle and"
+    next "advertise for us?"
+    wait
+
+Map07_BikeShopPost:
+    text "Our bicycles are truly the"
+    next "best on the market."
+    para "You can ride them anywhere,"
+    next "even indoors! With our bikes,"
+    cont "it's always the time to use"
+    cont "that!"
+    done
+
+Map07_Trainers:
+Map07_Encounters:
+    db $ff

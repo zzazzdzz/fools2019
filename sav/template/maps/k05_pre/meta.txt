@@ -1,0 +1,61 @@
+[Info]
+    KingdomName = JOYFUL KINGDOM
+    Respawn = MAP_01, 7, 24
+    SaveAllowedImmediately = 0
+    KingdomVersion = FIRST VISIT!
+    RoofGraphics = 3
+
+[ObtainableFlags]
+    EVENT_K5_PRE_NAME_REGISTERED = 142
+    EVENT_TRAINER_K5_PRE_1 = 143
+    EVENT_TRAINER_K5_PRE_2 = 144
+    EVENT_K5_PRE_ROCKETS_DEFEATED = 145
+    EVENT_TRAINER_K5_PRE_3 = 146
+    EVENT_TRAINER_K5_ROCKET_1 = 147
+    EVENT_TRAINER_K5_ROCKET_2 = 148
+    EVENT_TRAINER_K5_ROCKET_3 = 149
+    EVENT_TRAINER_K5_ROCKET_4 = 150
+    EVENT_TRAINER_K5_ROCKET_5 = 151
+    EVENT_TRAINER_K5_ROCKET_6 = 152
+    EVENT_ITEMBALL_K5_PRE_1 = 153
+    EVENT_ITEMBALL_K5_PRE_2 = 154
+    EVENT_ITEMBALL_K5_PRE_3 = 155
+    EVENT_ITEMBALL_K5_PRE_4 = 156
+    EVENT_K5_PRE_ROCKETS_DEFEATED_NEG = 157
+    EVENT_K5_PRE_COMPLETE = 158
+    EVENT_YAHAHA_THIRD = 123
+    EVENT_K5_RADIO = 183
+
+[ObtainableItems]
+    HYPER_POTION = any
+    FULL_HEAL = any
+    GREAT_BALL = any
+    ULTRA_BALL = any
+    SUPER_REPEL = any
+    REVIVE = any
+    $d8 = any
+    $dd = any
+    $e2 = any
+    $ea = any
+    RARE_CANDY = 1x EVENT_ITEMBALL_K5_PRE_1
+    MAX_REVIVE = 1x EVENT_ITEMBALL_K5_PRE_2
+    NUGGET = 1x EVENT_ITEMBALL_K5_PRE_3
+    CARD_KEY = 1x EVENT_ITEMBALL_K5_PRE_4
+
+[ObtainableMons]
+    _RND_40 = any
+    _RND_41 = any
+    _RND_42 = any
+    _RND_43 = any
+    _RND_44 = any
+    _RND_45 = any
+    _RND_46 = any
+    _RND_47 = any
+    _RND_48 = any
+    _RND_49 = any
+    _RND_50 = any
+    _RND_51 = any
+    _RND_52 = any
+    _RND_53 = any
+    _RND_54 = any
+    _RND_55 = any

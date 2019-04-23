@@ -1,0 +1,203 @@
+; Map01
+
+MAP_01_WIDTH equ 15
+MAP_01_HEIGHT equ 15
+
+Map01_DataStruct:
+    dw Map01_Events
+    dw JustPlainRet
+    dw Map01_Blocks
+    dw Map01_Scripts
+    dw Map01_Encounters
+    dw Map01_Trainers
+
+Map01_Events:
+    db 0, 0
+    db 1 ; warps
+    warp_event 9, 3, MAP_05, 1
+    db 0 ; coord events
+    db 1 ; bg events
+    bg_event 11, 21, 0, MapCallScriptInSRAM
+    db 7 ; obj events
+    object_event 0, 10, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 1, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, EVENT_YAHAHA_SECOND
+    object_event 0, 10, SPRITE_JANINE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_ALWAYS_SET
+    object_event 14, 15, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_TRAINER, 1, TrainerHeader_01, -1
+    object_event 9, 9, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 1, TrainerHeader_02, -1
+    object_event 8, 14, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_LEFT, 0, 1, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 16, 21, SPRITE_BUG_CATCHER, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 0, 1, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 21, 4, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 1, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_01, EVENT_ITEMBALL_K4_PRE_1
+    
+Map01_Blocks:
+    incbin "maps/map01.blk"
+
+Map01_Scripts:
+    hybrid_ptr Map01_Sign
+    script_ptr Map01_Yahaha
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    rawtxt_ptr Map01_Trainer01_Encounter
+    rawtxt_ptr Map01_Trainer01_Defeat
+    hybrid_ptr Map01_Trainer01_Encounter
+    rawtxt_ptr Map01_Trainer02_Encounter
+    rawtxt_ptr Map01_Trainer02_Defeat
+    hybrid_ptr Map01_Trainer02_Encounter
+    hybrid_ptr Map01_NPC1
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map01_NPC2
+    unused_ptr
+    unused_ptr
+
+Map01_Sign:
+    text "Seaside Kingdom"
+    next "The Great Lake <B>{augment K04_PRE_3 capitalize}</B>"
+    done
+
+Map01_Yahaha:
+    rel_base Map01_Yahaha
+    checkevent EVENT_YAHAHA_INITIATED
+    iffalse_rel .nope
+    pause 10
+    disappear OBJ_1
+    appear OBJ_2
+    playsound $6D
+    applymovement_rel OBJ_2, .spinMovement
+    setlasttalked 2
+    faceplayer
+    playmusic MUSIC_MT_MOON_SQUARE
+    opentext
+    writetext_vwf Map01_YahahaText
+    waitbutton
+    closetext
+    applymovement_rel OBJ_2, .spinMovement
+    applymovement_rel OBJ_2, .escapeMovement
+    disappear OBJ_2
+    setevent EVENT_YAHAHA_SECOND
+    loadvar wMapMusic, 0
+    playmapmusic
+    end
+.nope
+    opentext
+    writetext_vwf Map01_NormalBallText
+    waitbutton
+    closetext
+    end
+.spinMovement
+	turn_head DOWN
+	turn_head LEFT
+	turn_head UP
+	turn_head RIGHT
+	turn_head DOWN
+	turn_head LEFT
+	turn_head UP
+	turn_head RIGHT
+	turn_head DOWN
+	step_end
+.escapeMovement
+    jump_step DOWN
+    jump_step DOWN
+    jump_step DOWN
+	step_end
+
+Map01_YahahaText:
+    tx_deliria
+    text "yahaha"
+    next "you found me !!"
+    para "u are so good .."
+    next "byeee !"
+    done
+
+Map01_NormalBallText:
+    text "A completely normal Poké"
+    next "Ball. Nothing wrong here."
+    para "It's not like someone's"
+    next "hiding here or anything."
+    done
+
+Map01_NPC1:
+    text "I keep fishing here for"
+    next "quite a bit now, and still"
+    cont "nothing's coming out."
+    para "I think wild Pokémon attack"
+    next "only in the grass, not in"
+    cont "the water."
+    done
+
+Map01_NPC2:
+    text "Hi, traveler! Welcome to"
+    next "Seaside Kingdom!"
+    para "As you can probably tell,"
+    next "there's a lot of water here."
+    cont "I rate it 7.8/10."
+    done
+
+Map01_Trainer01_Encounter:
+    text "For years I've perfected"
+    next "my fishing techniques!"
+    para "I'm using <B>{augment K04_PRE_1}</B> as"
+    next "bait. You wouldn't believe"
+    cont "how effective this is."
+    para "It completely obsoletes"
+    next "<B>{augment K04_PRE_2}</B> in terms of raw"
+    cont "performance!"
+    done
+
+Map01_Trainer01_Defeat:
+    text "Being a great fisher does"
+    next "not a good trainer make."
+    done
+
+Map01_Trainer02_Encounter:
+    text "Have you heard about the"
+    next "Seaside Kingdom Bike Shop?"
+    para "They're lending out bikes"
+    next "for free to advertise their"
+    cont "brand!"
+    done
+
+Map01_Trainer02_Defeat:
+    text "The strength of your"
+    next "Pokémon is impressive!"
+    done
+
+Map01_Trainers:
+    dw NULL
+    dw NULL
+    dw Map01_Trainer01
+    dw Map01_Trainer02
+
+Map01_Trainer01:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -4}, {basic_mon}
+    db {lv_rel -4}, {basic_mon}
+    db -1
+
+Map01_Trainer02:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -6}, {basic_mon}
+    db {lv_rel -6}, {basic_mon}
+    db {lv_rel -5}, {basic_mon}
+    db -1
+
+Map01_Encounters:
+    db {rnd_basic_mon 31}, {lv_rel -5}
+    db {rnd_basic_mon 32}, {lv_rel -7}
+    db {rnd_basic_mon 32}, {lv_rel -6}
+    db {rnd_basic_mon 32}, {lv_rel -5}
+    db {rnd_basic_mon 33}, {lv_rel -7}
+    db {rnd_basic_mon 33}, {lv_rel -6}
+    db {rnd_basic_mon 33}, {lv_rel -5}
+    db {rnd_basic_mon 34}, {lv_rel -7}
+    db {rnd_basic_mon 34}, {lv_rel -6}
+    db {rnd_basic_mon 34}, {lv_rel -5}
+    db {rnd_basic_mon 35}, {lv_rel -8}
+    db {rnd_basic_mon 35}, {lv_rel -7}
+    db {rnd_basic_mon 35}, {lv_rel -6}
+    db {rnd_basic_mon 35}, {lv_rel -6}
+    db {rnd_basic_mon 36}, {lv_rel -6}
+    db {rnd_basic_mon 36}, {lv_rel -5}

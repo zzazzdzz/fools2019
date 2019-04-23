@@ -1,0 +1,188 @@
+; Map02
+
+MAP_02_WIDTH equ 22
+MAP_02_HEIGHT equ 10
+
+Map02_DataStruct:
+    dw Map02_Events
+    dw Map02_InitScript
+    dw Map02_Blocks
+    dw Map02_Scripts
+    dw Map02_Encounters
+    dw Map02_Trainers
+
+Map02_InitScript:
+    ld hl, wBikeFlags
+    set 0, [hl] ; strength boulders pushable
+    ret
+
+Map02_Events:
+    db 0, 0
+    db 1 ; warps
+    warp_event 6, 7, MAP_03, 1
+    db 0 ; coord events
+    db 1 ; bg events
+    bg_event 7, 9, 0, MapCallScriptInSRAM
+    db 8 ; obj events
+    object_event 15, 6, SPRITE_BOULDER, SPRITEMOVEDATA_STRENGTH_BOULDER, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, EVENT_YAHAHA_THIRD
+    object_event 15, 6, SPRITE_JANINE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_ALWAYS_SET
+    object_event 40, 11, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 28, 14, SPRITE_YOUNGSTER, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 24, 10, SPRITE_BOULDER, SPRITEMOVEDATA_STRENGTH_BOULDER, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 11, 13, SPRITE_BOULDER, SPRITEMOVEDATA_STRENGTH_BOULDER, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 20, 12, SPRITE_BOULDER, SPRITEMOVEDATA_STRENGTH_BOULDER, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map02_Blocks:
+    incbin "maps/map02.blk"
+
+Map02_Scripts:
+    hybrid_ptr Map02_GameCornerSign
+    script_ptr Map02_Yahaha
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map02_Trainer01_Encounter
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map02_NPC1
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map02_Boulder
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map02_Boulder
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map02_Boulder
+    unused_ptr
+    unused_ptr
+
+Map02_GameCornerSign:
+    text "Joyful Kingdom Game Corner"
+    next "'Completely legit, we promise'"
+    done
+
+Map02_Yahaha:
+    rel_base Map02_Yahaha
+    checkevent EVENT_YAHAHA_INITIATED
+    iffalse_rel .nope
+    callasm_rel .npcTest
+    iffalse_rel .nope
+    pause 10
+    disappear OBJ_1
+    appear OBJ_2
+    playsound $6D
+    applymovement_rel OBJ_2, .spinMovement
+    setlasttalked 2
+    faceplayer
+    playmusic MUSIC_MT_MOON_SQUARE
+    opentext
+    writetext_vwf Map02_YahahaText
+    waitbutton
+    closetext
+    applymovement_rel OBJ_2, .spinMovement
+    applymovement_rel OBJ_2, .escapeMovement
+    disappear OBJ_2
+    setevent EVENT_YAHAHA_THIRD
+    loadvar wMapMusic, 0
+    playmapmusic
+    end
+.nope
+    opentext
+    writetext_vwf Map02_NormalBoulderText
+    waitbutton
+    closetext
+    end
+.npcTest
+    ld a, b_IsNPCAtCoord
+    rst $10
+    ld de, $1108
+    call IsNPCAtCoord
+    jr nc, .npcTestDone
+    ld de, $1306
+    call IsNPCAtCoord
+    jr nc, .npcTestDone
+    ld de, $1508
+    call IsNPCAtCoord
+.npcTestDone
+    ld a, 0 ; one instance where this is actually useful!
+    adc a
+    ld [wScriptVar], a
+    ret
+
+.spinMovement
+	turn_head DOWN
+	turn_head LEFT
+	turn_head UP
+	turn_head RIGHT
+	turn_head DOWN
+	turn_head LEFT
+	turn_head UP
+	turn_head RIGHT
+	turn_head DOWN
+	step_end
+.escapeMovement
+    jump_step RIGHT
+    jump_step DOWN
+    jump_step DOWN
+    jump_step DOWN
+	step_end
+
+Map02_NormalBoulderText:
+    text "A strange boulder. It seems"
+    next "to be different from the"
+    cont "other ones, but you're not"
+    cont "sure how..."
+    done
+
+Map02_YahahaText:
+    tx_deliria
+    text "yahaha"
+    next "you found me !!"
+    para "u are so good .."
+    next "byeee !"
+    done
+
+Map02_Boulder:
+	text "It's a boulder. It's light"
+    next "enough to be pushable."
+    done
+
+Map02_NPC1:
+    text "Don't worry, I'm not a"
+    next "trainer. I'm just looking"
+    cont "around!"
+    para "There's a lot of boulders"
+    next "around here."
+    para "This is weird... I wonder"
+    next "what's that all about?"
+    done
+
+Map02_Trainer01_Encounter:
+    text "There are a lot of Pokémon"
+    next "here. I found at least"
+    cont "10 different species!"
+    done
+
+Map02_Trainers:
+    db $ff
+
+Map02_Encounters:
+    db {rnd_basic_mon 48}, {lv_rel -5}
+    db {rnd_basic_mon 48}, {lv_rel -4}
+    db {rnd_basic_mon 49}, {lv_rel -4}
+    db {rnd_basic_mon 49}, {lv_rel -3}
+    db {rnd_basic_mon 50}, {lv_rel -6}
+    db {rnd_basic_mon 50}, {lv_rel -5}
+    db {rnd_basic_mon 51}, {lv_rel -5}
+    db {rnd_basic_mon 51}, {lv_rel -4}
+    db {rnd_basic_mon 52}, {lv_rel -6}
+    db {rnd_basic_mon 52}, {lv_rel -6}
+    db {rnd_basic_mon 53}, {lv_rel -5}
+    db {rnd_basic_mon 53}, {lv_rel -5}
+    db {rnd_basic_mon 54}, {lv_rel -3}
+    db {rnd_basic_mon 54}, {lv_rel -6}
+    db {rnd_basic_mon 55}, {lv_rel -5}
+    db {rnd_basic_mon 55}, {lv_rel -4}

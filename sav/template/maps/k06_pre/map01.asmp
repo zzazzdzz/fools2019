@@ -1,0 +1,77 @@
+; Map01
+
+MAP_01_WIDTH equ 10
+MAP_01_HEIGHT equ 10
+
+Map01_DataStruct:
+    dw Map01_Events
+    dw JustPlainRet
+    dw Map01_Blocks
+    dw Map01_Scripts
+    dw Map01_Encounters
+    dw Map01_Trainers
+
+Map01_Events:
+    db 0, 0
+    db 0 ; warps
+    db 0 ; coord events
+    db 0 ; bg events
+    db 3 ; obj events
+    object_event 6, 14, SPRITE_ROCKER, SPRITEMOVEDATA_SPINRANDOM_SLOW, 1, 1, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 14, 12, SPRITE_SCIENTIST, SPRITEMOVEDATA_SPINRANDOM_SLOW, 1, 1, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 9, 5, SPRITE_YOUNGSTER, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 1, 1, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map01_Blocks:
+    incbin "maps/map01.blk"
+
+Map01_Scripts:
+    hybrid_ptr Map01_NPC1
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map01_NPC2
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map01_NPC3
+    unused_ptr
+    unused_ptr
+
+Map01_NPC1:
+    text "This place really reminds me"
+    next "of a certain other region..."
+    para "No. I must be imagining it."
+    next "There's no way."
+    done
+
+Map01_NPC2:
+    text "We, the scientists at the"
+    next "Glitch Research Lab, have"
+    cont "made an amazing discovery."
+    para "By copying map data from"
+    next "different places, it is"
+    cont "possible to create replicas"
+    cont "of other regions."
+    para "That's how this kingdom was"
+    next "created! Genius, isn't it?"
+    para "Although we weren't able to"
+    next "fully replicate the source,"
+    cont "due to memory constraints."
+    para "Research is ongoing in order"
+    next "to find a way to bypass this"
+    cont "problem."
+    done
+
+Map01_NPC3:
+    text "Even though Missingno. has"
+    next "invaded this kingdom a while"
+    cont "back, there are no corrupted"
+    cont "tiles anywhere in sight."
+    para "I think I once saw someone"
+    next "using an item to make them"
+    cont "disappear."
+    para "If only the same person had"
+    next "visited other kingdoms too..."
+    done
+
+Map01_Trainers:
+Map01_Encounters:
+    db $ff

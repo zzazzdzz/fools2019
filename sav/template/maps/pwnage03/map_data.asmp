@@ -1,0 +1,76 @@
+; map array:
+; pointers to map data structs
+
+; map data struct:
+; pointer to event data
+; pointer to onload asm
+; pointer to blocks
+; pointer to script array
+; pointer to wild encounters
+; pointer to textbox array
+
+; script array:
+; pointers to scripts
+
+; wild encounters:
+; rept 16
+;   byte[1] species
+;   byte[1] level
+; all are evenly probable, with 1/256 shiny chance
+
+SECTION "main_sram3", ROM0[$A000]
+
+MapArray:
+    dw Map01_DataStruct
+    dw Map02_DataStruct
+NumberOfMaps:
+    db 2
+
+include "maps/map01.asm"
+include "maps/map02.asm"
+
+include "engine/generic_scripts.asm"
+
+SECTION "mapdata_headers", ROM0[$DB79]
+
+Map01_Header:
+    map_hdr_tileset TILESET_CAVE
+    map_hdr_permission ENVIRONMENT_TOWN
+    map_hdr_subhdrptr Map01_SubHeader
+    map_hdr_music MUSIC_VICTORY_ROAD
+    map_hdr_pals PALETTE_NITE
+    map_hdr_fishgroup 1
+
+Map02_Header:
+    map_hdr_tileset TILESET_CAVE
+    map_hdr_permission ENVIRONMENT_TOWN
+    map_hdr_subhdrptr Map02_SubHeader
+    map_hdr_music MUSIC_VICTORY_ROAD
+    map_hdr_pals PALETTE_NITE
+    map_hdr_fishgroup 1
+
+SECTION "mapdata_subheaders", ROM0[$D289]
+
+Map01_SubHeader:
+    map_subhdr_border $09
+    map_subhdr_dimensions MAP_01_WIDTH, MAP_01_HEIGHT
+    map_subhdr_blocks Map01_Blocks
+    map_subhdr_scripts DummyScriptData
+    map_subhdr_events DummyEventData
+    map_subhdr_connections 0
+
+Map02_SubHeader:
+    map_subhdr_border $09
+    map_subhdr_dimensions MAP_02_WIDTH, MAP_02_HEIGHT
+    map_subhdr_blocks Map02_Blocks
+    map_subhdr_scripts DummyScriptData
+    map_subhdr_events DummyEventData
+    map_subhdr_connections 0
+
+SECTION "mapdata_trainers", ROM0[$D972]
+
+db 0
+
+SECTION "mapdata_utility", ROM0[$DF30]
+
+include "engine/map_utility.asm"

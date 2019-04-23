@@ -1,0 +1,243 @@
+; Map06
+
+MAP_06_WIDTH equ 12
+MAP_06_HEIGHT equ 12
+
+Map06_DataStruct:
+    dw Map06_Events
+    dw Map06_InitScript
+    dw Map06_Blocks
+    dw Map06_Scripts
+    dw Map06_Encounters
+    dw Map06_Trainers
+
+Map06_InitScript:
+	ld b, 1 ; SET_FLAG
+    ld de, EVENT_K3_VISITED_DELIRIA
+	call EventFlagAction
+    ld a, $ff
+    ld [wTrainerCurrentTheme], a
+    ret
+
+Map06_Events:
+    db 0, 0
+    db 1 ; warps
+    warp_event 8, 15, MAP_07, 3
+    db 0 ; coord events
+    db 0 ; bg events
+    db 7 ; obj events
+    object_event 8, 4, SPRITE_NURSE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 15, 6, SPRITE_LASS, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 12, 9, SPRITE_FISHER, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 22, 14, SPRITE_BLACK_BELT, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 10, 16, SPRITE_COOLTRAINER_M, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 18, 11, SPRITE_COOLTRAINER_F, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 17, 18, SPRITE_GRANNY, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map06_Blocks:
+    incbin "maps/map06.blk"
+
+Map06_Scripts:
+    script_ptr Map06_DeliriaHealer
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map06_Delirian01
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map06_Delirian02
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map06_Delirian03
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map06_Delirian04
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map06_Delirian05
+    unused_ptr
+    unused_ptr
+    script_ptr Map06_Delirian06
+    unused_ptr
+    unused_ptr
+
+Map06_DeliriaHealer:
+    rel_base Map06_DeliriaHealer
+    faceplayer
+    opentext
+	writetext_vwf Map06_DeliriaHealerBefore
+    callasm GenericYesNoTextbox
+    iffalse_rel .nope
+    closetext
+    special FadeBlackQuickly
+	special ReloadSpritesNoPalettes
+	special HealParty
+	callasm_rel .ohnos
+	playmusic MUSIC_HEAL
+	pause 45
+    playsound $a7
+    pause 45
+    playsound $85
+    pause 45
+    playsound $83
+    pause 25
+    playsound $5d
+    pause 65
+    playsound SFX_FANFARE_2
+    pause 80
+	special RestartMapMusic
+	special FadeInQuickly
+    opentext
+	writetext_vwf Map06_DeliriaHealerAfter
+    waitbutton
+.nope
+    closetext
+    end
+.ohnos
+	ld hl, wPartyMon1HP
+	ld bc, PARTYMON_STRUCT_LENGTH - 1
+    ld d, 6
+    xor a
+.loop
+    ld [hli], a
+    ld [hl], 1
+    add hl, bc
+    dec d
+    jr nz, .loop
+    ret
+
+Map06_Delirian01:
+    tx_deliria
+    text "heyoaaa"
+    next "here our secret place !"
+    para "it's very nice"
+    next "but is SUPER SECRET!!"
+    para "here we are free .."
+    next "no guard in entrance !"
+    cont "not like Deliria ..."
+    done
+
+Map06_Delirian02:
+    tx_deliria
+    text "uwawawaa"
+    next "spicy green toaster !"
+    done
+
+Map06_DeliriaHealerBefore:
+    tx_deliria
+    text "heyooo"
+    next "I can heal ur pokeman!"
+    para "my healing GOOD !"
+    next "is all FREE !!"
+    para "you want me to heal?"
+    next "please! PLEASE!!"
+    done
+
+Map06_DeliriaHealerAfter:
+    tx_deliria
+    text "o no..."
+    next "my heal is fail..."
+    para "but I try very hard"
+    next "next time my heal"
+    cont "will BETTER!! VERY!!"
+    done
+
+Map06_Delirian03:
+    tx_deliria
+    text "heyo"
+    next "i build house !"
+    para "build one half ..."
+    next "build rest later !"
+    cont "efficiency !"
+    done
+
+Map06_Delirian04:
+    tx_deliria
+    text "i also build house !"
+    next "veryyy VERY BIG !"
+    para "my big family can fit"
+    next "all heres !"
+    done
+
+Map06_Delirian05:
+    tx_deliria
+    text "uwuwuuu"
+    next "found new friend !"
+    para "welcom too ..."
+    next "secret Deliria place !"
+    para "wanna talk with me ?"
+    next "what do you likee ?"
+    para "all in Deliria loooove"
+    next "<B>{augment K03_PRE_4}</B> !"
+    para "and what do you hate?"
+    next "me <B>{augment K03_PRE_5}</B> !"
+    done
+
+Map06_Delirian06:
+    rel_base Map06_Delirian06
+    faceplayer
+    opentext
+    checkevent EVENT_K3_DELIRIA_LEFTOVERS
+    iftrue_rel .done
+    writetext_vwf Map06_Delirian06_Before
+    special PlaceMoneyTopRight
+    callasm GenericYesNoTextbox
+    iffalse_rel .nope
+	checkmoney YOUR_MONEY, 10000
+	ifequal_rel HAVE_LESS, .notEnough
+	takemoney YOUR_MONEY, 10000
+	special PlaceMoneyTopRight
+    waitsfx
+    playsound SFX_TRANSACTION
+    writetext_vwf Map06_Delirian06_After
+    verbosegiveitem LEFTOVERS
+    setevent EVENT_K3_DELIRIA_LEFTOVERS
+.done
+    writetext_vwf Map06_Delirian06_Done
+    waitbutton
+    closetext
+    end
+.notEnough
+    writetext_vwf Map06_Delirian06_NotEnough
+    waitbutton
+.nope
+    closetext
+    end
+
+Map06_Delirian06_Before:
+    tx_deliria
+    text "yaya !"
+    next "i love balls !"
+    para "need mon balls to"
+    next "catch monsters !!"
+    para "can u give me money?"
+    next "will buy sum balls"
+    cont "i need TEN THOUSAND !"
+    done
+
+Map06_Delirian06_After:
+    tx_deliria
+    text "wow !!!!"
+    next "u is a kind person !"
+    para "now i buy a lot of"
+    next "balls to catch poke!"
+    para "reward you for your"
+    next "kindness! yaya!!"
+    wait
+
+Map06_Delirian06_NotEnough:
+    tx_deliria
+    text "nooo.. this is not"
+    next "enough monies !"
+    done
+
+Map06_Delirian06_Done:
+    tx_deliria
+    text "this item is good"
+    next "it restores health !"
+    para "can have it for all"
+    next "ur kindness.. yaya!"
+    done
+
+Map06_Trainers:
+Map06_Encounters:
+    db $ff

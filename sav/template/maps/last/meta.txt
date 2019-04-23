@@ -1,0 +1,13 @@
+[Info]
+    KingdomName = LAST GOODBYE
+    Respawn = MAP_01, 4, 9
+    SaveAllowedImmediately = 1
+    KingdomVersion =  
+    RoofGraphics = 5
+
+[ObtainableFlags]
+
+[ObtainableItems]
+
+[ObtainableMons]
+    CELEBI = any

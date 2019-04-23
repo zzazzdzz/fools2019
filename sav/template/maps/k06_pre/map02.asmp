@@ -1,0 +1,132 @@
+; Map02
+
+MAP_02_WIDTH equ 12
+MAP_02_HEIGHT equ 12
+
+Map02_DataStruct:
+    dw Map02_Events
+    dw JustPlainRet
+    dw Map02_Blocks
+    dw Map02_Scripts
+    dw Map02_Encounters
+    dw Map02_Trainers
+
+Map02_Events:
+    db 0, 0
+    db 0 ; warps
+    db 0 ; coord events
+    db 0 ; bg events
+    db 5 ; obj events
+    object_event 10, 5, SPRITE_YOUNGSTER, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 4, TrainerHeader_01, -1
+    object_event 13, 11, SPRITE_BUG_CATCHER, SPRITEMOVEDATA_SPINCOUNTERCLOCKWISE, 0, 0, -1, -1, 0, OBJECTTYPE_TRAINER, 4, TrainerHeader_02, -1
+    object_event 14, 18, SPRITE_GENTLEMAN, SPRITEMOVEDATA_SPINCLOCKWISE, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 4, TrainerHeader_03, -1
+    object_event 5, 16, SPRITE_GRAMPS, SPRITEMOVEDATA_WALK_UP_DOWN, 1, 1, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 21, 2, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 1, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_01, EVENT_ITEMBALL_K6_PRE_1
+    
+Map02_Blocks:
+    incbin "maps/map02.blk"
+
+Map02_Scripts:
+    rawtxt_ptr Map02_Trainer01_Encounter
+    rawtxt_ptr Map02_Trainer01_Defeat
+    hybrid_ptr Map02_Trainer01_Defeat
+    rawtxt_ptr Map02_Trainer02_Encounter
+    rawtxt_ptr Map02_Trainer02_Defeat
+    hybrid_ptr Map02_Trainer02_Defeat
+    rawtxt_ptr Map02_Trainer03_Encounter
+    rawtxt_ptr Map02_Trainer03_Defeat
+    hybrid_ptr Map02_Trainer03_Defeat
+    hybrid_ptr Map02_NPC1
+    unused_ptr
+    unused_ptr
+
+Map02_Trainer03_Encounter:
+    text "Oh, a new individual!"
+    next "Are you willing to partake"
+    cont "in a small Pokémon skirmish?"
+    done
+
+Map02_Trainer03_Defeat:
+    text "As a man of culture, I have"
+    next "to accept my defeat."
+    done
+
+Map02_NPC1:
+    text "This region is amazing."
+    next "It even has wild encounters!"
+    para "Back in my homeland, there"
+    next "are no wild Pokémon in the"
+    cont "grass at all."
+    para "It might seem unthinkable for"
+    next "you, but that's how it is."
+    done
+
+Map02_Trainer02_Encounter:
+    text "There aren't many bugs out"
+    next "here."
+    done
+
+Map02_Trainer02_Defeat:
+    text "My battle strategy has"
+    next "failed me..."
+    done
+
+Map02_Trainer01_Encounter:
+    text "You may think you're the"
+    next "best trainer ever..."
+    para "But first you must defeat"
+    next "my super awesome"
+    cont "Ratatatatatatata ...tata."
+    done
+
+Map02_Trainer01_Defeat:
+    text "Ah, you're so strong."
+    next "I'd like you to be my friend"
+    cont "that is not my Ratatatata."
+    done
+
+Map02_Trainers:
+    dw Map02_Trainer01
+    dw Map02_Trainer02
+    dw Map02_Trainer03
+
+Map02_Trainer01:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel 0}, RATTATA
+    db {lv_rel -5}, {first_stage_mon}
+    db -1
+
+Map02_Trainer02:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -6}, {first_stage_mon}
+    db {lv_rel -6}, {first_stage_mon}
+    db -1
+
+Map02_Trainer03:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -3}, {basic_mon}
+    db {lv_rel -6}, {first_stage_mon}
+    db {lv_rel -6}, {first_stage_mon}
+    db -1
+
+Map02_Encounters:
+    db {rnd_basic_mon 56}, {lv_rel -5}
+    db {rnd_basic_mon 56}, {lv_rel -3}
+    db {rnd_basic_mon 57}, {lv_rel -5}
+    db {rnd_basic_mon 57}, {lv_rel -3}
+    db {rnd_basic_mon 58}, {lv_rel -5}
+    db {rnd_basic_mon 58}, {lv_rel -3}
+    db {rnd_basic_mon 59}, {lv_rel -5}
+    db {rnd_basic_mon 59}, {lv_rel -3}
+    db {rnd_basic_mon 60}, {lv_rel -5}
+    db {rnd_basic_mon 60}, {lv_rel -3}
+    db {rnd_basic_mon 61}, {lv_rel -5}
+    db {rnd_basic_mon 61}, {lv_rel -3}
+    db {rnd_basic_mon 62}, {lv_rel -5}
+    db {rnd_basic_mon 62}, {lv_rel -3}
+    db {rnd_basic_mon 63}, {lv_rel -5}
+    db {rnd_basic_mon 63}, {lv_rel -3}
+    

@@ -1,0 +1,140 @@
+SECTION "main_sram1", ROM0[$B260]
+
+_Map01_PlayerNameCallText1:
+    text "Hello?"
+    para "Yes, I finally got a hold of"
+    next "you!"
+    para "Do you remember me?"
+    next "It's Willow, the aspiring"
+    cont "Pokémon Professor!"
+    para "I'm glad to hear your quest"
+    next "for saving Glitch Islands is"
+    cont "all going well."
+    para "I know you're busy, but I"
+    next "need your quick help."
+    wait
+
+_Map01_PlayerNameCallText2:
+    text "I'm collecting player names"
+    next "for research purposes."
+    para "You know, players like YOU!"
+    next "The one pressing the buttons!"
+    para "Would you care to register"
+    next "your real name please?"
+    para "Or use a handle if you want."
+    next "Just don't spell it wrong!"
+    wait
+
+_Map01_PlayerNameCall_ThankYou:
+    text "Great! Thank you for your"
+    next "time. I'm sorry if I caused"
+    cont "you any problems."
+    para "I'm sure peace will be"
+    next "restored to all kingdoms of"
+    cont "Glitch Islands soon."
+    cont "Please take care!"
+    wait
+
+_Map01_PlayerNameCall_InvalidCharsText:
+    text "Hmm, it appears your name"
+    next "contains invalid characters."
+    para "Could you please provide a"
+    next "name without any of those"
+    cont "strange decorations?"
+    para "Please, my research won't"
+    next "ever proceed without your"
+    cont "name!"
+    wait
+
+_Map01_NPC1:
+    text "Joyful Kingdom is famous"
+    next "for its Game Corner!"
+    para "People come there from many"
+    next "different regions, just to"
+    cont "have fun together."
+    cont "I find that very charming."
+    done
+
+_Map01_Trainer01_Encounter:
+    text "I've seen a lot of Rockets"
+    next "wandering around here."
+    para "I think there might be some"
+    next "criminal activity going on"
+    cont "in this area."
+    done
+
+_Map03_Rocket:
+    text "Welcome to Joyful Kingdom"
+    next "Game Corner!"
+    para "It's just a place for"
+    next "everyone to play their"
+    cont "favorite games!"
+    cont "Nothing shady!"
+    para "There's no secret switch"
+    next "behind the poster!"
+    done
+
+_Map03_NPC4:
+    text "I activate Sensei's Divining"
+    next "Top, while that's on the"
+    cont "stack I pop my fetch land."
+    cont "Then, cast Brainstorm."
+    para "Storm count is 34, floating"
+    next "17 blue and double red..."
+    para "Hey!"
+    next "Can't you see I'm busy?"
+    done
+
+_Map03_NPC2:
+    text "Playing games is so much fun!"
+    next "It's a nice way to relax"
+    cont "after a long day of work..."
+    para "WTF IS THIS GUY DOING?"
+    next "GG, report my team."
+    cont "I hate this damn game."
+    done
+
+_Map05_OfficerText:
+    text "Hey, I remember you!"
+    next "I've seen you in Tutorial"
+    cont "Kingdom before!"
+    para "I'm from the Glitch Islands"
+    next "Police force!"
+    para "We've received some reports"
+    next "that a secret entrance was"
+    cont "found in the Game Corner."
+    para "It turned out to be a well"
+    next "hidden base of Team Rocket."
+    cont "Who would've thought?"
+    para "Thank you for your help."
+    next "We're taking care of all of"
+    cont "the Rockets around here."
+    para "We need to close this area"
+    next "for investigation."
+    cont "I'll guide you to the exit."
+    done
+
+_Map06_CarterCongradnafio:
+    text "...hey! You're a new face!"
+    next "You want to battle?"
+    para "What? All of my Pokémon are"
+    next "fainted?"
+    para "I don't remember fighting"
+    next "anyone today. All I remember"
+    cont "is that Missingno. invaded"
+    cont "my kingdom and I wanted to"
+    cont "stop him."
+    para "Did you save me perhaps?"
+    next "If so, thank you. I guess."
+    cont "Meh."
+    para "I'm Carter, owner of the"
+    next "Joyful Kingdom Battle House."
+    para "I believe the best way to"
+    next "determine a person's value"
+    cont "is to see how they fight."
+    para "And there's no better place"
+    next "to do that than the Joyful"
+    cont "Kingdom Battle House."
+    para "Come visit me there later."
+    next "I'll see you there!"
+    done

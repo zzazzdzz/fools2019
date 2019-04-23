@@ -1,0 +1,182 @@
+; Map01
+
+MAP_01_WIDTH equ 15
+MAP_01_HEIGHT equ 15
+
+Map01_DataStruct:
+    dw Map01_Events
+    dw Map01_InitScript
+    dw Map01_Blocks
+    dw Map01_Scripts
+    dw Map01_Encounters
+    dw Map01_Trainers
+
+Map01_InitScript:
+    xor a
+    ld [wTrainerCurrentTheme], a
+    ret
+
+Map01_Events:
+    db 0, 0
+    db 2 ; warps
+    warp_event 3, 15, MAP_05, 2
+    warp_event 22, 9, MAP_08, 1
+    db 0 ; coord events
+    db 0 ; bg events
+    db 7 ; obj events
+    object_event 6, 22, SPRITE_SUPER_NERD, SPRITEMOVEDATA_SPINCLOCKWISE, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 3, TrainerHeader_01, -1
+    object_event 8, 10, SPRITE_TEACHER, SPRITEMOVEDATA_WALK_UP_DOWN, 0, 2, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 13, 13, SPRITE_YOUNGSTER, SPRITEMOVEDATA_WALK_UP_DOWN, 0, 2, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 6, 15, SPRITE_NURSE, SPRITEMOVEDATA_STANDING_DOWN, 0, 2, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 25, 18, SPRITE_YOUNGSTER, SPRITEMOVEDATA_WALK_UP_DOWN, 0, 2, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    {if_fun_between 40 50}
+        {*} object_event 20, 20, SPRITE_TWIN, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_SILVER, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    {else}
+        {*} object_event 20, 20, SPRITE_TWIN, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 23, 10, SPRITE_SAGE, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+
+Map01_Blocks:
+    incbin "maps/map01.blk"
+
+Map01_Scripts:
+    rawtxt_ptr Map01_Trainer01_Encounter
+    rawtxt_ptr Map01_Trainer01_Defeat
+    hybrid_ptr Map01_Trainer01_Post
+    hybrid_ptr Map01_GenericA
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map01_GenericB
+    unused_ptr
+    unused_ptr
+    script_ptr Map01_Healer
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map01_GenericC
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map01_Twin
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map01_WorriedExplorer
+    unused_ptr
+    unused_ptr
+
+Map01_Twin:
+    {if_fun_between 40 50}
+        {*} text "Have you ever thought about"
+        {*} next "a world where everything is"
+        {*} cont "exactly the same..."
+        {*} para "Except you don't exist?"
+        {*} next "Everything works perfectly"
+        {*} cont "without you..."
+        {*} para "That thought terrifies me."
+        {*} next "But there is a thought that"
+        {*} cont "could be even more terrifying."
+        {*} para "How about a world where"
+        {*} next "things function perfectly all"
+        {*} cont "without you..."
+        {*} para "But you actually exist?"
+        {*} next "A world where your existence"
+        {*} cont "is absolutely insignificant,"
+        {*} cont "and if you were to disappear,"
+        {*} cont "no one will even notice..."
+        {*} para "Is that just a thought?"
+        {*} next "Or is that reality?"
+    {else}
+        {*} text "IT IS SAID THERE IS A"
+        {*} next "SPIRIT IN THE CAVE"
+        {*} cont "DON'T SERVE THE DEVIL"
+    done
+
+Map01_WorriedExplorer:
+    tx_far 1, _Map01_WorriedExplorer
+
+Map01_GenericA:
+    tx_far 1, _Map01_GenericA
+
+Map01_GenericB:
+    text "THERE WILL COME PIPI IN"
+    next "GUANYUE HILL, AT NIGHT,"
+    cont "BUT NOT ALWAYS."
+    done
+
+Map01_Healer:
+    faceplayer
+    opentext
+	writetext_vwf Map01_HealerPreText
+	waitbutton
+    closetext
+    special FadeBlackQuickly
+	special ReloadSpritesNoPalettes
+	special HealParty
+	playmusic MUSIC_HEAL
+	pause 60
+	special RestartMapMusic
+	special FadeInQuickly
+    opentext
+	writetext_vwf Map01_HealerPostText
+	waitbutton
+    closetext
+    end
+
+Map01_HealerPreText:
+    text "GOOD MORNING"
+    next "THE MONSTER CENTER"
+    para "MONSTER STRENGTH IS"
+    next "RECOVERING, LET YOUR"
+    cont "MONSTER HANE A REST?"
+    cont "THEN GIVE ME IT FIRST!"
+    done
+
+Map01_HealerPostText:
+    text "WAITTING YOU FOR A LONG"
+    next "TIME, THESE MONSTERS YOU"
+    cont "HANDED ME ARE ALL RENEW"
+    cont "COME AGAIN PLEASE!"
+    done
+
+Map01_Trainer01_Encounter:
+    text "i catch as many POKé and"
+    next "will always win!"
+    done
+
+Map01_Trainer01_Defeat:
+    text "Fuck!"
+    done
+
+Map01_Trainer01_Post:
+    text "Mever again will I fight."
+    next "To be defeete will ruin me."
+    done
+
+Map01_GenericC:
+    tx_far 1, _Map01_GenericC
+
+Map01_Trainers:
+    dw Map01_Trainer01
+
+Map01_Trainer01:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -5}, {basic_mon}
+    db {lv_rel -4}, {basic_mon}
+    db {lv_rel -8}, {basic_mon}
+    db -1
+
+Map01_Encounters:
+    db {rnd_basic_mon 19}, {lv_rel -6}
+    db {rnd_basic_mon 19}, {lv_rel -5}
+    db {rnd_basic_mon 19}, {lv_rel -5}
+    db {rnd_basic_mon 19}, {lv_rel -4}
+    db {rnd_basic_mon 20}, {lv_rel -6}
+    db {rnd_basic_mon 20}, {lv_rel -5}
+    db {rnd_basic_mon 20}, {lv_rel -5}
+    db {rnd_basic_mon 20}, {lv_rel -4}
+    db {rnd_basic_mon 21}, {lv_rel -6}
+    db {rnd_basic_mon 21}, {lv_rel -5}
+    db {rnd_basic_mon 21}, {lv_rel -5}
+    db {rnd_basic_mon 21}, {lv_rel -4}
+    db {rnd_basic_mon 22}, {lv_rel -6}
+    db {rnd_basic_mon 22}, {lv_rel -4}
+    db {rnd_basic_mon 23}, {lv_rel -6}
+    db {rnd_basic_mon 23}, {lv_rel -4}

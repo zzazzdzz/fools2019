@@ -1,0 +1,115 @@
+; Map04
+
+MAP_04_WIDTH equ 6
+MAP_04_HEIGHT equ 13
+
+Map04_DataStruct:
+    dw Map04_Events
+    dw JustPlainRet
+    dw Map04_Blocks
+    dw Map04_Scripts
+    dw Map04_Encounters
+    dw Map04_Trainers
+
+Map04_Events:
+    db 0, 0
+    db 1
+    warp_event 6, 5, MAP_07, 1
+    db 0 ; coord events
+    db 1 ; bg events
+    bg_event 7, 7, 0, MapCallScriptInSRAM
+    db 3 ; obj events
+    object_event 4, 16, SPRITE_POKEFAN_F, SPRITEMOVEDATA_SPINCLOCKWISE, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 3, TrainerHeader_02, -1
+    object_event 7, 11, SPRITE_BIKER, SPRITEMOVEDATA_SPINCOUNTERCLOCKWISE, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 3, TrainerHeader_04, -1
+    object_event 2, 21, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 1, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_04, EVENT_ITEMBALL_K2_POST_3
+    
+Map04_Blocks:
+    incbin "maps/map04.blk"
+
+Map04_Scripts:
+    hybrid_ptr Map04_LabSign
+    rawtxt_ptr Map04_Trainer01_Encounter
+    rawtxt_ptr Map04_Trainer01_Defeat
+    hybrid_ptr Map04_Trainer01_Post
+    rawtxt_ptr Map04_Trainer02_Encounter
+    rawtxt_ptr Map04_Trainer02_Defeat
+    hybrid_ptr Map04_Trainer02_Post
+
+Map04_LabSign:
+    text "Verdant Kingdom"
+    next "Glitch Research Laboratory"
+    done
+
+Map04_Trainer01_Encounter:
+    text "Wow, so you're the one who"
+    next "saved our kingdom?"
+    cont "You must be pretty tough!"
+    done
+
+Map04_Trainer01_Defeat:
+    text "Yep, I was definitely right"
+    next "about you!"
+    done
+
+Map04_Trainer01_Post:
+    text "I should really just focus"
+    next "on collecting Pokémon instead"
+    cont "of fighting."
+    para "I already have a total of"
+    next "50 species in my Pokédex!"
+    done
+
+Map04_Trainer02_Encounter:
+    text "Whoa, you don't have a bike?"
+    next "You loser!"
+    done
+
+Map04_Trainer02_Defeat:
+    text "That was just pure luck. Your"
+    next "victory was a fluke."
+    done
+
+Map04_Trainer02_Post:
+    text "You're probably wondering,"
+    next "where did I get such a dank"
+    cont "bike?"
+    para "I just stole one from the"
+    next "bike shop in Seaside Kingdom."
+    done
+
+Map04_Trainers:
+    dw Map04_Trainer01
+    dw Map04_Trainer02
+
+Map04_Trainer01:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -7}, {basic_mon}
+    db {lv_rel -7}, {basic_mon}
+    db {lv_rel -4}, {basic_mon}
+    db -1
+
+Map04_Trainer02:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -5}, {basic_mon}
+    db {lv_rel -2}, {basic_mon}
+    db -1
+
+Map04_Encounters:
+    db {rnd_basic_mon 13}, {lv_rel -7}
+    db {rnd_basic_mon 13}, {lv_rel -5}
+    db {rnd_basic_mon 14}, {lv_rel -7}
+    db {rnd_basic_mon 14}, {lv_rel -5}
+    db {rnd_basic_mon 15}, {lv_rel -7}
+    db {rnd_basic_mon 15}, {lv_rel -5}
+    db {rnd_basic_mon 16}, {lv_rel -7}
+    db {rnd_basic_mon 16}, {lv_rel -6}
+    db {rnd_basic_mon 16}, {lv_rel -5}
+    db {rnd_basic_mon 17}, {lv_rel -7}
+    db {rnd_basic_mon 17}, {lv_rel -6}
+    db {rnd_basic_mon 17}, {lv_rel -5}
+    db {rnd_basic_mon 18}, {lv_rel -6}
+    db {rnd_basic_mon 18}, {lv_rel -5}
+    db {rnd_basic_mon 18}, {lv_rel -4}
+    db {rnd_basic_mon 18}, {lv_rel -3}

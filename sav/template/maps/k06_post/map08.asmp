@@ -1,0 +1,34 @@
+; Map08
+
+MAP_08_WIDTH equ 21
+MAP_08_HEIGHT equ 21
+
+Map08_DataStruct:
+    dw Map08_Events
+    dw JustPlainRet
+    dw Map08_Blocks
+    dw Map08_Scripts
+    dw Map08_Encounters
+    dw Map08_Trainers
+
+Map08_Events:
+    db 0, 0
+    db 1 ; warps
+    warp_event 6, 39, MAP_05, 1
+    db 0 ; coord events
+    db 0 ; bg events
+    db 6 ; obj events
+    object_event 4, 6, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_02, EVENT_ITEMBALL_K6_POST_1
+    object_event 4, 24, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_03, EVENT_ITEMBALL_K6_POST_2
+    object_event 25, 5, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_04, EVENT_ITEMBALL_K6_POST_3
+    object_event 38, 37, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_05, EVENT_ITEMBALL_K6_POST_4
+    object_event 20, 22, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_06, EVENT_ITEMBALL_K6_POST_5
+    object_event 35, 3, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_07, EVENT_ITEMBALL_K6_POST_6
+    
+Map08_Blocks:
+    incbin "maps/map08.blk"
+
+Map08_Scripts:
+Map08_Trainers:
+Map08_Encounters:
+    db $ff

@@ -1,0 +1,126 @@
+; Map03
+
+MAP_03_WIDTH equ 10
+MAP_03_HEIGHT equ 16
+
+Map03_DataStruct:
+    dw Map03_Events
+    dw JustPlainRet
+    dw Map03_Blocks
+    dw Map03_Scripts
+    dw Map03_Encounters
+    dw Map03_Trainers
+
+Map03_Events:
+    db 0, 0
+    db 0 ; warps
+    db 0 ; coord events
+    db 0 ; bg events
+    db 1 ; obj events
+    object_event 11, 5, SPRITE_LASS, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map03_Blocks:
+    incbin "maps/map03.blk"
+
+Map03_Scripts:
+    script_ptr Map03_Danalise
+    rawtxt_ptr Map03_Danalise_Defeated
+    unused_ptr
+
+Map03_Danalise:
+    rel_base Map03_Danalise
+    opentext
+    checkevent EVENT_K4_PRE_COMPLETE
+    iftrue_rel .nope
+    writetext_vwf Map03_Danalise_BeforeBattle
+    waitbutton
+    closetext
+    setlasttalked 1
+    winlosstext MapWriteTextInSRAM, 0
+    loadvar wTrainerCurrentTheme, MUSIC_JOHTO_GYM_LEADER_BATTLE
+	loadtrainer LASS, 250
+    dontrestartmapmusic
+    startandwaitbattle
+    opentext
+    writetext_vwf Map03_Danalise_AfterBattle
+    waitbutton
+    closetext
+    callasm RescuedSequenceTrampoline
+    opentext
+    writetext_vwf Map03_Rescued
+    waitbutton
+    closetext
+    pause 12
+    opentext
+    writetext_vwf Map03_Danalise_Introduce1
+    waitbutton
+    closetext
+    pause 12
+    callasm SwitchToSRA2
+    callasm PostEnding
+    playmapmusic
+    opentext
+    writetext_vwf Map03_Danalise_Introduce2
+    verbosegiveitem $f5
+    setevent EVENT_K4_PRE_COMPLETE
+.nope
+    writetext_vwf Map03_Danalise_Introduce3
+    waitbutton
+    closetext
+    end
+
+Map03_Danalise_BeforeBattle:
+    text "I must... defend this area..."
+    next "To the best of my ability..."
+    para "The world of glitches... will"
+    next "triumph over the humans!"
+    done
+
+Map03_Danalise_Defeated:
+    text "It's not possible..."
+    done
+
+Map03_Danalise_AfterBattle:
+    text "I have failed to protect"
+    next "this area..."
+    cont "Glitch Lord, forgive me..."
+    para "Yet it doesn't matter..."
+    next "You will not win..."
+    para "Human fate is to fall..."
+    next "Glitches... are eternal..."
+    done
+
+Map03_Rescued:
+    text "You have rescued Danalise,"
+    next "the Celestial Sister."
+    para "Missingno. has left the"
+    next "grounds of Seaside Kingdom!"
+    tx_medalfanfare
+    done
+    
+Map03_Danalise_Introduce1:
+    text "... ..."
+    next "...what... happened?"
+    para "My head hurts..."
+    next "It's almost as if I was in a"
+    cont "deep slumber of sorts."
+    done
+
+Map03_Danalise_Introduce2:
+    tx_far 1, _Map03_Danalise_Introduce2
+
+Map03_Danalise_Introduce3:
+    tx_far 1, _Map03_Danalise_Introduce3
+
+Map03_Trainers:
+    dw Map03_Trainer_Danalise
+
+Map03_Trainer_Danalise:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_ITEM_MOVES
+    db {lv_rel -4}, UMBREON, SPELL_TAG, CONFUSE_RAY, FAINT_ATTACK, MOONLIGHT, PSYCHIC_M
+    db {lv_rel -2}, GENGAR, GOLD_BERRY, HYPNOSIS, DREAM_EATER, SHADOW_BALL, NIGHTMARE
+    db -1
+
+Map03_Encounters:
+    db $ff

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+<title>TheZZAZZGlitch's April Fools Event 2019</title>
+<meta name="viewport" content="width=1200">
+
+<link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP" rel="stylesheet">
+
+<script src="bootstrap/jquery-3.1.0.min.js"></script>
+<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">
+<script src="bootstrap/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="pokesprite/pokesprite.min.css">
+<script src="pokesprite/pokesprite.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css">
+
+<link rel='stylesheet' href='style.css' type='text/css'>
+<script src='script.js'></script>
+<script>
+    window.onPingCompleted = function(session){
+        var req = $.post(API_SERVER + "/get_settings/", {
+            "sessid": SESSION['sessid']
+        });
+        req.done(function(x){
+            if (x['success']){
+                $("#rtc-is-turned-on").text(x['rtc'] ? "enabled" : "disabled");
+                if (x['rtc']){
+                    $("#include-rtc-button")[0].disabled = true;
+                }else{
+                    $("#exclude-rtc-button")[0].disabled = true;
+                }
+                $("#message").val(x['message']);
+                $(".f-container").css("display", "block");
+            }else{
+                modalMessageWithRedirect("An error occured: " + x['message'], "index.html");
+            }
+        });
+        req.fail(function(x){
+            modalMessageWithRedirect("Could not connect to the event server. Try again in a few minutes.", "profile.html");
+        });
+    };
+
+    function sendRTCSettings(e, v){
+        loaderStart(e, []);
+        var req = $.post(API_SERVER + "/set_rtc/", {
+            "sessid": SESSION['sessid'],
+            "rtc": +v
+        });
+        req.fail(function(){
+            modalMessage("Could not connect to the event server. Try again in a few minutes.");
+            loaderFinish();
+        });
+        req.done(function(x){
+            if (x['success']){
+                modalMessageWithRedirect("Your preferences were changed successfully.", "settings.html");
+            }else{
+                modalMessage("An error occured: " + x['message']);
+                loaderFinish();
+            }
+        });
+    }
+
+    function sendMessageSettings(e){
+        loaderStart(e, []);
+        var req = $.post(API_SERVER + "/set_message/", {
+            "sessid": SESSION['sessid'],
+            "message": $("#message").val()
+        });
+        req.fail(function(){
+            modalMessage("Could not connect to the event server. Try again in a few minutes.");
+            loaderFinish();
+        });
+        req.done(function(x){
+            if (x['success']){
+                modalMessageWithRedirect("Your message was changed successfully.", "settings.html");
+            }else{
+                modalMessage("An error occured: " + x['message']);
+                loaderFinish();
+            }
+        });
+    }
+</script>
+
+<div id='loader'><img src='img/loading.svg'></div>
+
+<nav class="navbar navbar-inverse navbar-static-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/"><noscript>Please enable JavaScript to play</noscript> Fools2019</a>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar"></div>
+    </div>
+</nav>
+<div class="navbar-spacing"></div>
+
+<div id="content">
+    <div class="f-container panel panel-default hide-by-default">
+        <div class="f-category">
+            RTC settings
+        </div>
+        <div class="f-inside-padded">
+            Some emulators like to append additional information to their SAV files in order to keep track of the Real Time Clock (RTC).<br>
+            While this is certainly useful, some other emulators might not like that extra data.<br><br>
+            By default, the event save files contain RTC data in a bgb+VBA compatible format.<br>
+            But if you're not using any of those emulators, you might want to turn this feature off - otherwise the downloaded save files might not work.<br>
+            Inclusion of RTC data is currently <b id="rtc-is-turned-on">bepis</b>.
+            <br><br>
+            <button class="btn btn-success" onclick="sendRTCSettings(this, true)" id="include-rtc-button">
+                <b>Yes</b>, include RTC data.
+            </button> &nbsp;
+            <button class="btn btn-danger" onclick="sendRTCSettings(this, false)" id="exclude-rtc-button">
+                <b>No</b>, do <b>NOT</b> include RTC data.
+            </button>
+        </div>
+    </div>
+    <div class="f-container panel panel-default hide-by-default">
+        <div class="f-category">
+            Your message
+        </div>
+        <div class="f-inside-padded">
+            Like every year, the best scores will have a chance to appear in a <a href='https://www.youtube.com/watch?v=ro9sH2qHyD8'>result video similar to this one</a>, along with a custom message.<br>
+            You can set this message here, or modify your previous one.
+            <br><br>
+            <input type='text' class='form-control f-form-field' placeholder='Your message (max 150 characters). You can change this later!' maxlength="150" id='message' style='text-align: center'>
+            <br>
+            <button class="btn btn-primary" onclick="sendMessageSettings(this)">
+                Change your message
+            </button>
+        </div>
+    </div>
+</div>

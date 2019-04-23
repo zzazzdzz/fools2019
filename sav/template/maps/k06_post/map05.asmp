@@ -1,0 +1,83 @@
+; Map05
+
+MAP_05_WIDTH equ 12
+MAP_05_HEIGHT equ 5
+
+Map05_DataStruct:
+    dw Map05_Events
+    dw JustPlainRet
+    dw Map05_Blocks
+    dw Map05_Scripts
+    dw Map05_Encounters
+    dw Map05_Trainers
+
+Map05_Events:
+    db 0, 0
+    db 1 ; warps
+    warp_event 6, 5, MAP_08, 1
+    db 0 ; coord events
+    db 0 ; bg events
+    db 1 ; obj events
+    object_event 12, 5, SPRITE_BUG_CATCHER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map05_Blocks:
+    incbin "maps/map05.blk"
+
+Map05_Scripts:
+    script_ptr Map06_Designer
+    unused_ptr
+    unused_ptr
+
+Map06_Designer:
+    rel_base Map06_Designer
+    faceplayer
+    opentext
+    checkevent EVENT_K6_POST_LOST_ITEM
+    iftrue_rel .returned
+    checkitem LOST_ITEM
+    iffalse_rel .before
+    writetext_vwf Map06_Designer_AfterText
+    takeitem LOST_ITEM
+    verbosegiveitem RARE_CANDY
+    setevent EVENT_K6_POST_LOST_ITEM
+    closetext
+    end
+.before
+    writetext_vwf Map06_Designer_BeforeText
+    waitbutton
+    closetext
+    end
+.returned
+    writetext_vwf Map06_Designer_ReturnedText
+    waitbutton
+    closetext
+    end
+
+Map06_Designer_BeforeText:
+    tx_far 1, _Map06_Designer_BeforeText
+
+Map06_Designer_AfterText:
+    tx_far 1, _Map06_Designer_AfterText
+
+Map06_Designer_ReturnedText:
+    tx_far 1, _Map06_Designer_ReturnedText
+    
+Map05_Trainers:
+
+Map05_Encounters:
+    db {rnd_basic_mon 72}, {lv_rel -5}
+    db {rnd_basic_mon 72}, {lv_rel -3}
+    db {rnd_basic_mon 73}, {lv_rel -5}
+    db {rnd_basic_mon 73}, {lv_rel -3}
+    db {rnd_basic_mon 74}, {lv_rel -5}
+    db {rnd_basic_mon 74}, {lv_rel -3}
+    db {rnd_basic_mon 75}, {lv_rel -5}
+    db {rnd_basic_mon 75}, {lv_rel -3}
+    db {rnd_basic_mon 76}, {lv_rel -5}
+    db {rnd_basic_mon 76}, {lv_rel -3}
+    db {rnd_basic_mon 77}, {lv_rel -5}
+    db {rnd_basic_mon 77}, {lv_rel -3}
+    db {rnd_basic_mon 78}, {lv_rel -5}
+    db {rnd_basic_mon 78}, {lv_rel -3}
+    db {rnd_basic_mon 79}, {lv_rel -5}
+    db {rnd_basic_mon 79}, {lv_rel -3}

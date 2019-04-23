@@ -1,0 +1,201 @@
+; Map04
+
+MAP_04_WIDTH equ 10
+MAP_04_HEIGHT equ 24
+
+Map04_DataStruct:
+    dw Map04_Events
+    dw JustPlainRet
+    dw Map04_Blocks
+    dw Map04_Scripts
+    dw Map04_Encounters
+    dw Map04_Trainers
+
+Map04_Events:
+    db 0, 0
+    db 0 ; warps
+    db 0 ; coord events
+    db 0 ; bg events
+    db 7 ; obj events
+    object_event 13, 7, SPRITE_ERIKA, SPRITEMOVEDATA_WALK_UP_DOWN, 2, 2, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 7, 12, SPRITE_POKEFAN_M, SPRITEMOVEDATA_STANDING_RIGHT, 2, 2, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_TRAINER, 4, TrainerHeader_04, -1
+    object_event 12, 18, SPRITE_TEACHER, SPRITEMOVEDATA_SPINCOUNTERCLOCKWISE, 2, 2, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 4, TrainerHeader_05, -1
+    object_event 6, 23, SPRITE_YOUNGSTER, SPRITEMOVEDATA_SPINRANDOM_FAST, 2, 2, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 4, TrainerHeader_06, -1
+    object_event 9, 29, SPRITE_ROCKER, SPRITEMOVEDATA_STANDING_RIGHT, 2, 2, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 4, TrainerHeader_07, -1
+    object_event 8, 37, SPRITE_POKEFAN_F, SPRITEMOVEDATA_SPINRANDOM_FAST, 2, 2, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_TRAINER, 4, TrainerHeader_08, -1
+    object_event 16, 42, SPRITE_TWIN, SPRITEMOVEDATA_WALK_UP_DOWN, 1, 1, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map04_Blocks:
+    incbin "maps/map04.blk"
+
+Map04_Scripts:
+    hybrid_ptr Map04_NPC1
+    unused_ptr
+    unused_ptr
+    rawtxt_ptr Map04_Trainer01_Encounter
+    rawtxt_ptr Map04_Trainer01_Defeat
+    hybrid_ptr Map04_Trainer01_Encounter
+    rawtxt_ptr Map04_Trainer02_Encounter
+    rawtxt_ptr Map04_Trainer02_Defeat
+    hybrid_ptr Map04_Trainer02_Defeat
+    rawtxt_ptr Map04_Trainer03_Encounter
+    rawtxt_ptr Map04_Trainer03_Defeat
+    hybrid_ptr Map04_Trainer03_Encounter
+    rawtxt_ptr Map04_Trainer04_Encounter
+    rawtxt_ptr Map04_Trainer04_Defeat
+    hybrid_ptr Map04_Trainer04_Encounter
+    rawtxt_ptr Map04_Trainer05_Encounter
+    rawtxt_ptr Map04_Trainer05_Defeat
+    hybrid_ptr Map04_Trainer05_Post
+    hybrid_ptr Map04_NPC2
+    unused_ptr
+    unused_ptr
+
+Map04_NPC2:
+    text "An aspiring level designer"
+    next "lives just south from there."
+    para "I haven't seen him in a long"
+    next "time. I'm kind of worried."
+    done
+
+Map04_NPC1:
+    text "Yes! With the Let's Go series"
+    next "being on a Switch, I can now"
+    cont "have three save files!"
+    para "One for my Charmander, one"
+    next "for my Squirtle, and one for"
+    cont "my second Charmander!"
+    done
+
+Map04_Trainer01_Encounter:
+    text "Did you know that Diglett"
+    next "have feet?"
+    cont "I would have never guessed."
+    done
+
+Map04_Trainer01_Defeat:
+    text "My vast Pokémon knowledge"
+    next "did not help me in this"
+    cont "battle at all..."
+    done
+
+Map04_Trainer02_Encounter:
+    text ""
+    tx_deliria
+    text "heyoo"
+    next "i have pokeman !"
+    cont "we battle yes?"
+    done
+
+Map04_Trainer02_Defeat:
+    text ""
+    tx_deliria
+    text "nono.."
+    next "i got defeate .."
+    done
+
+Map04_Trainer03_Encounter:
+    text "Battling Pokémon is so much"
+    next "fun! We don't have any"
+    cont "Pokémon battles where I'm"
+    cont "from, so I'm still pretty"
+    cont "new at this."
+    done
+
+Map04_Trainer03_Defeat:
+    text "On second thought, battling"
+    next "isn't always fun. It only is"
+    cont "if you're winning."
+    done
+
+Map04_Trainer04_Encounter:
+    text "I saw a trainer some time"
+    next "ago, but as soon as I wanted"
+    cont "to walk up to him, he just"
+    cont "teleported away!"
+    cont "What's up with that?"
+    done
+
+Map04_Trainer04_Defeat:
+    text "Heh... maybe I should've"
+    next "teleported away from you."
+    done
+
+Map04_Trainer05_Encounter:
+    text "DON'T YOU SHOW YOUR"
+    next "LOVELY ELF? L"
+    done
+
+Map04_Trainer05_Defeat:
+    text "NO MATTER TO LOSE"
+    done
+
+Map04_Trainer05_Post:
+    text "DO YOU KNOW MONSTER'S"
+    next "BABY? LOVELY"
+    done
+
+Map04_Trainers:
+    dw NULL
+    dw Map04_Trainer01
+    dw Map04_Trainer02
+    dw Map04_Trainer03
+    dw Map04_Trainer04
+    dw Map04_Trainer05
+
+Map04_Trainer01:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -5}, {basic_mon}
+    db {lv_rel -5}, {first_stage_mon}
+    db {lv_rel -5}, {first_stage_mon}
+    db -1
+
+Map04_Trainer02:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -4}, {basic_mon}
+    db {lv_rel -6}, {basic_mon}
+    db {lv_rel -2}, {first_stage_mon}
+    db -1
+
+Map04_Trainer03:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -2}, {basic_mon}
+    db {lv_rel -5}, {first_stage_mon}
+    db {lv_rel -3}, {basic_mon}
+    db -1
+
+Map04_Trainer04:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -2}, {first_stage_mon}
+    db {lv_rel -2}, {first_stage_mon}
+    db -1
+
+Map04_Trainer05:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -4}, {basic_mon}
+    db {lv_rel -4}, {basic_mon}
+    db {lv_rel -2}, {first_stage_mon}
+    db -1
+
+Map04_Encounters:
+    db {rnd_basic_mon 64}, {lv_rel -5}
+    db {rnd_basic_mon 64}, {lv_rel -3}
+    db {rnd_basic_mon 65}, {lv_rel -5}
+    db {rnd_basic_mon 65}, {lv_rel -3}
+    db {rnd_basic_mon 66}, {lv_rel -5}
+    db {rnd_basic_mon 66}, {lv_rel -3}
+    db {rnd_basic_mon 67}, {lv_rel -5}
+    db {rnd_basic_mon 67}, {lv_rel -3}
+    db {rnd_basic_mon 68}, {lv_rel -5}
+    db {rnd_basic_mon 68}, {lv_rel -3}
+    db {rnd_basic_mon 69}, {lv_rel -5}
+    db {rnd_basic_mon 69}, {lv_rel -3}
+    db {rnd_basic_mon 70}, {lv_rel -5}
+    db {rnd_basic_mon 70}, {lv_rel -3}
+    db {rnd_basic_mon 71}, {lv_rel -5}
+    db {rnd_basic_mon 71}, {lv_rel -3}

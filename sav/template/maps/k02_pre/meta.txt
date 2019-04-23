@@ -1,0 +1,37 @@
+[Info]
+    KingdomName = VERDANT KINGDOM
+    Respawn = MAP_01, 16, 11
+    SaveAllowedImmediately = 0
+    KingdomVersion = FIRST VISIT!
+    RoofGraphics = 3
+
+[ObtainableFlags]
+    EVENT_TRAINER_K2_PRE_1 = 82
+    EVENT_TRAINER_K2_PRE_2 = 83
+    EVENT_TRAINER_K2_PRE_3 = 84
+    EVENT_TRAINER_K2_PRE_4 = 85
+    EVENT_ITEMBALL_K2_PRE_1 = 86
+    EVENT_K2_PRE_COMPLETE = 87
+    EVENT_K2_RADIO = 181
+    EVENT_K2_LAPTOP = 184
+
+[ObtainableItems]
+    HEAVY_BALL = 1x EVENT_ITEMBALL_K2_PRE_1
+    SUPER_POTION = any
+    FULL_HEAL = any
+    POKE_BALL = any
+    GREAT_BALL = any
+    REPEL = any
+    $e1 = any
+    $e9 = any
+    $f0 = any
+    $d6 = any
+    $df = any
+
+[ObtainableMons]
+    _RND_9 = any
+    _RND_10 = any
+    _RND_11 = any
+    _RND_12 = any
+    _RND_13 = any
+    _RND_14 = any

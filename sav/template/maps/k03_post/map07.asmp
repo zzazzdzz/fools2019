@@ -1,0 +1,196 @@
+; Map07
+
+MAP_07_WIDTH equ 8
+MAP_07_HEIGHT equ 4
+
+Map07_DataStruct:
+    dw Map07_Events
+    dw JustPlainRet
+    dw Map07_Blocks
+    dw Map07_Scripts
+    dw Map07_Encounters
+    dw Map07_Trainers
+
+Map07_Events:
+    db 0, 0
+    db 4 ; warps
+    warp_event 2, 7, MAP_03, 1
+    warp_event 3, 7, MAP_03, 1
+    warp_event 14, 7, MAP_06, 1
+    warp_event 15, 7, MAP_06, 1
+    db 0 ; coord events
+    db 1 ; bg events
+    bg_event 7, 1, 0, MapCallScriptInSRAM
+    db 2 ; obj events
+    object_event 2, 4, SPRITE_GRAMPS, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 15, 6, SPRITE_KIMONO_GIRL, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map07_Blocks:
+    incbin "maps/map07.blk"
+
+Map07_Scripts:
+    script_ptr   Map07_BootlegRadio             ; bg event 1
+    script_ptr   Map07_MoveRandomizer           ; obj event 1
+    unused_ptr
+    unused_ptr
+    hybrid_ptr   Map07_SpaciousHouse            ; obj event 2
+    unused_ptr
+    unused_ptr
+
+Map07_BootlegRadio:
+    rel_base Map07_BootlegRadio
+    setevent EVENT_K3_RADIO
+    opentext
+    writetext EmptyTextbox
+    playmusic MUSIC_POKEMON_MARCH
+    callasm_rel .asm
+    closetext
+    end
+.asm
+    ld hl, rel_ptr .radioLines
+    call SwitchToSRA2
+    jp PlayRadioChannel
+.radioLines
+    dw BootlegRadioText1
+    dw BootlegRadioText2
+    dw BootlegRadioText3
+    dw BootlegRadioText4
+    dw BootlegRadioText5
+    dw $ff00
+
+Map07_MoveRandomizer:
+    rel_base Map07_MoveRandomizer
+    faceplayer
+    opentext
+    writetext EmptyTextbox
+    callasm SwitchToSRA2
+    callasm_rel .asm
+    iffalse_rel .end
+    closetext
+    special FadeBlackQuickly
+	special ReloadSpritesNoPalettes
+	special HealParty
+	playmusic 0
+    playsound $8D
+    pause 80
+    playsound $8E
+    pause 20
+    special RestartMapMusic
+	special FadeInQuickly    
+    opentext
+    writetext_vwf Map07_MoveRandomizerDoneText
+.end
+    waitbutton
+    closetext
+    end
+.asm
+    ld a, 3
+    ld [wPrintTextVWFSourceBank], a
+    ld hl, Map07_MoveRandomizerIntroText
+    call PrintTextVWF
+    farcall SelectMonFromParty
+    call SwitchToSRA2
+    jr c, .cancel
+    ld hl, Map07_MoveRandomizerConfirmedText
+    call PrintTextVWF
+    farcall PlaceMoneyTopRight
+    call GenericYesNoTextbox
+    ld a, [wScriptVar]
+    and a
+    jr z, .cancel
+    ld de, wMoney
+    ld bc, rel_ptr .cost
+    farcall CompareMoney
+    jr c, .notEnough
+    ld bc, rel_ptr .cost
+	ld de, wMoney
+	farcall TakeMoney
+    farcall PlaceMoneyTopRight
+    ld c, 15
+    call DelayFrames
+	ld de, SFX_TRANSACTION
+	call PlaySFX
+    call WaitSFX
+    ld a, [wCurPartyMon]
+	ld hl, wPartyMon1Moves
+	ld bc, PARTYMON_STRUCT_LENGTH
+	call AddNTimes
+    ld d, h
+    ld e, l
+.randomizeSlot
+    call Random
+    and 3
+    ld h, d
+    ld l, e
+    ld c, a
+    ld b, 0
+    add hl, bc
+    ld a, [hl]
+    and a
+    jr z, .randomizeSlot
+.randomizeMove
+    call Random
+    and a
+    jr z, .randomizeMove
+    cp $FC
+    jr nc, .randomizeMove
+    ld [hl], a
+    ld a, 1
+    ld [wScriptVar], a
+    ret
+.cost
+    db $00, $01, $f4 ; = 500
+.notEnough
+    ld hl, Map07_MoveRandomizerNotEnoughMoneyText
+    jr .done
+.cancel
+    ld hl, Map07_MoveRandomizerCancelText
+.done
+    xor a
+    ld [wScriptVar], a
+    jp PrintTextVWF
+
+Map07_MoveRandomizerIntroText:
+    text "WELCOME, THIS IS TRAINIG"
+    next "HOUSE, LET YOUR ELFS"
+    cont "LEARN GRAET NEW STUNTS"
+    para "HERE TO LEARN YOUR ELF"
+    next "NEW STUNT, BUT IS CHOSE"
+    cont "ALL RANDAMLY. SO BE CARE"
+    cont "OF CHOSING"
+    para "IS STUNT DO YOUWANT TO"
+    next "LEARN TO YOUR ELF?"
+    cont "THEN SHOW ME THE MONSTER"
+    wait
+
+Map07_MoveRandomizerConfirmedText:
+    text "AS IF THE MONSTER CAN"
+    next "LEARN NEW STUNT, THE PAY"
+    cont "IS 500 DOLLARS. OK?"
+    done
+
+Map07_MoveRandomizerDoneText:
+    text "THANK FOR YUOR ELFS, THE"
+    next "NEW STUNT IS LEARNED BY"
+    cont "THE MONSTER. TRY HARD!"
+    done
+
+Map07_MoveRandomizerNotEnoughMoneyText:
+    text "THE MONEY IS NOT ENOUGH"
+    next "PLEASE VISIT AGIAN"
+    done
+
+Map07_MoveRandomizerCancelText:
+    text "PLEASE VISIT AGAIN"
+    next "TRY HARD FOR THE MONSTER!"
+    done
+
+Map07_SpaciousHouse:
+    tx_deliria
+    text "so spacious !"
+    next "family can live here."
+    done
+
+Map07_Trainers:
+Map07_Encounters:
+    db $ff

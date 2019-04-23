@@ -1,0 +1,218 @@
+; Map03
+
+MAP_03_WIDTH equ 10
+MAP_03_HEIGHT equ 16
+
+Map03_DataStruct:
+    dw Map03_Events
+    dw JustPlainRet
+    dw Map03_Blocks
+    dw Map03_Scripts
+    dw Map03_Encounters
+    dw Map03_Trainers
+
+Map03_Events:
+    db 0, 0
+    db 2 ; warps
+    warp_event 16, 5, MAP_08, 1
+    warp_event 16, 6, MAP_08, 1
+    db 0 ; coord events
+    db 3 ; bg events
+    bg_event 3, 6, 0, MapCallScriptInSRAM
+    bg_event 2, 19, 0, MapCallScriptInSRAM
+    bg_event 16, 27, 0, MapCallScriptInSRAM
+    db 3 ; obj events
+    object_event 11, 5, SPRITE_LASS, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 14, 6, SPRITE_SAGE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    {if_fun_between 130 140}
+        {*} object_event 18, 29, SPRITE_SWIMMER_GIRL, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, -1, PAL_NPC_SILVER, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    {else}
+        {*} object_event 200, 200, SPRITE_RED, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map03_Blocks:
+    incbin "maps/map03.blk"
+
+Map03_Scripts:
+    script_ptr Map03_SecretThing
+    script_ptr Map03_SecretThing
+    script_ptr Map03_SecretThing
+    script_ptr Map03_Danalise
+    unused_ptr
+    unused_ptr
+    script_ptr Map03_WorriedExplorer
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map03_WhatInTheWorldIsThat
+    unused_ptr
+    unused_ptr
+
+Map03_WhatInTheWorldIsThat:
+    {if_fun_between 130 140}
+        {*} text "Have you ever wondered if the"
+        {*} next "world around you is real?"
+        {*} para "Like that person you love the"
+        {*} next "most... is that real?"
+        {*} para "That best friend you have..."
+        {*} next "Is that real too?"
+        {*} para "Your achievements, everything"
+        {*} next "that defines you..."
+        {*} cont "Are they real?"
+        {*} para "What if everyone is deceiving"
+        {*} next "you. What if you're even"
+        {*} cont "deceiving yourself?"
+        {*} para "Deceiving yourself..."
+        {*} next "Is that even possible?"
+        {*} para "I think it very well is."
+        {*} next "Welcome to Fidei..."
+    {else}
+        {*} text "redacted"
+    done
+
+Map03_SecretThing:
+    rel_base Map03_SecretThing
+    callasm_rel .prepare
+    opentext
+.checkEvent
+    checkevent 0
+    iftrue_rel .found
+.setEvent
+    setevent 0
+    writetext_vwf Map03_FoundThing
+    playsound SFX_PUSH_BUTTON
+    waitbutton
+    closetext
+    checkevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_2
+    iffalse_rel .fin
+    checkevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_3
+    iffalse_rel .fin
+    checkevent EVENT_TEMPORARY_UNTIL_MAP_RELOAD_4
+    iffalse_rel .fin
+    earthquake 10
+    playsound SFX_STRENGTH
+    changeblock 16, 4, 115
+    setevent EVENT_K4_POST_ANCIENT_PUZZLE_SOLVED
+    reloadmappart
+.fin
+    end
+.found
+    writetext_vwf Map03_NothingHere
+    waitbutton
+    closetext
+    end
+.prepare
+    ld a, [wCurrentScriptID]
+    ld [rel_ptr .checkEvent + 1], a
+    ld [rel_ptr .setEvent + 1], a
+    ret
+
+Map03_NothingHere:
+    text "Nothing here."
+    done
+
+Map03_FoundThing:
+    text "Hey, there's a glowing switch"
+    next "under water?"
+    cont "Let's turn it on!"
+    done
+
+Map03_Danalise:
+    rel_base Map03_Danalise
+    opentext
+    writetext_vwf Map03_Danalise_Encounter
+    callasm_rel .asm
+    iffalse_rel .nope
+    closetext
+    loadvar wMusicFade, 15
+    pause 40
+    setevent EVENT_K4_FUN_VALUE_CHANGED
+    opentext
+    writetext_vwf Map03_Danalise_Chant
+    pause 30
+    playmusic $05
+    playsound SFX_EMBER
+    earthquake 110
+    playsound SFX_EMBER
+    earthquake 110
+    playsound SFX_EMBER
+    earthquake 55
+    closetext
+    pause 30
+    special FadeBlackQuickly
+	special ReloadSpritesNoPalettes
+    playsound $69
+    pause 15
+    special FadeInQuickly
+    pause 15
+    opentext
+    writetext_vwf Map03_Danalise_FunChanged
+    playsound SFX_1ST_PLACE
+    pause 130
+    loadvar wMapMusic, 0
+    playmapmusic
+    writetext_vwf Map03_Danalise_Granted
+    waitbutton
+.nope
+    closetext
+    end
+.asm
+    ld bc, $0204
+    ld hl, GenericNoYesBoxset
+    ld de, $0100
+    call DisplayChoiceMenu
+    ld [wScriptVar], a
+    ret
+
+Map03_Danalise_Encounter:
+    tx_far 1, _Map03_Danalise_Encounter
+
+Map03_Danalise_FunChanged:
+    text "A new Fun Value has been"
+    next "assigned to you!"
+    done
+
+Map03_Danalise_Chant:
+    tx_far 1, _Map03_Danalise_Chant
+
+Map03_Danalise_Granted:
+    text "Please visit me again if you"
+    next "ever need your Fun Value to"
+    cont "change..."
+    done
+
+Map03_WorriedExplorer:
+    rel_base Map03_WorriedExplorer
+    faceplayer
+    opentext
+    writetext_vwf Map03_WorriedExplorerIntro
+    callasm_rel .menu
+    iftrue_rel .ancientTale
+    closetext
+    return
+.ancientTale
+    writetext_vwf Map03_AncientTale
+    waitbutton
+    closetext
+    return
+.menu
+    ld bc, $020e
+    ld hl, Map03_AncientTaleMenu
+    ld de, $0100
+    call DisplayChoiceMenu
+    ld [wScriptVar], a
+    ret
+
+Map03_AncientTaleMenu:
+    ; Good luck!
+    ; Ancient tale?
+    db $86,$ae,$ae,$a3,$7f,$ab,$b4,$a2,$aa,$e7,$4f
+    db $80,$ad,$a2,$a8,$a4,$ad,$b3,$7f,$b3,$a0,$ab,$a4,$e6,$50
+
+Map03_WorriedExplorerIntro:
+    tx_far 1, _Map03_WorriedExplorerIntro
+
+Map03_AncientTale:
+    tx_far 1, _Map03_AncientTale
+
+Map03_Trainers:
+Map03_Encounters:
+    db $ff

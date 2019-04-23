@@ -1,0 +1,320 @@
+; Map03
+
+MAP_03_WIDTH equ 9
+MAP_03_HEIGHT equ 20
+
+Map03_DataStruct:
+    dw Map03_Events
+    dw JustPlainRet
+    dw Map03_Blocks
+    dw Map03_Scripts
+    dw Map03_Encounters
+    dw Map03_Trainers
+
+Map03_Events:
+    db 0, 0
+    db 1 ; warps
+    warp_event 2, 30, MAP_04, 1
+    db 0 ; coord events
+    db 3 ; bg events
+    bg_event 1, 30, 0, MapCallScriptInSRAM
+    bg_event 8, 24, 0, MapCallScriptInSRAM
+    bg_event 13, 13, 0, MapCallScriptInSRAM
+    db 9 ; obj events
+    object_event 9, 12, SPRITE_LASS, SPRITEMOVEDATA_SPINCLOCKWISE, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 5, TrainerHeader_02, -1
+    object_event 11, 24, SPRITE_COOLTRAINER_M, SPRITEMOVEDATA_SPINCOUNTERCLOCKWISE, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 3, TrainerHeader_03, -1
+    object_event 13, 8, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 5, 36, SPRITE_TEACHER, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 2, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 4, 23, SPRITE_SCIENTIST, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 9, 6, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 6, 7, SPRITE_OFFICER, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 9, 32, SPRITE_COOLTRAINER_F, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 14, 20, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+
+Map03_Blocks:
+    incbin "maps/map03.blk"
+
+Map03_Scripts:
+    hybrid_ptr   Map03_SecretPassage                ; bg event 1
+    hybrid_ptr   Map03_Tips01                       ; bg event 2
+    hybrid_ptr   Map03_Tips02                       ; bg event 3
+    rawtxt_ptr   Map03_Trainer01_EncounterText      ; obj event 1
+    rawtxt_ptr   Map03_Trainer01_DefeatText
+    hybrid_ptr   Map03_Trainer01_PostText
+    rawtxt_ptr   Map03_Trainer02_EncounterText      ; obj event 2
+    rawtxt_ptr   Map03_Trainer02_DefeatText
+    hybrid_ptr   Map03_Trainer02_PostText
+    script_ptr   Map03_Trainer03_Script             ; obj event 3
+    rawtxt_ptr   Map03_Trainer03_DefeatText
+    unused_ptr
+    script_ptr   Map03_Healer                       ; obj event 4
+    unused_ptr
+    unused_ptr
+    script_ptr   Map03_Assistant                    ; obj event 5
+    unused_ptr
+    unused_ptr
+    hybrid_ptr   Map03_CorruptedOfficer             ; obj event 6
+    unused_ptr
+    unused_ptr
+    hybrid_ptr   Map03_NormalOfficer                ; obj event 7
+    unused_ptr
+    unused_ptr
+    hybrid_ptr   Map03_FillInText                   ; obj event 8
+    unused_ptr
+    unused_ptr
+    hybrid_ptr   Map03_OldTrainer_DefeatText        ; obj event 9
+    unused_ptr
+    unused_ptr
+
+Map03_SecretPassage:
+    text "Just some normal trees."
+    next "Nothing out of ordinary."
+    done
+
+Map03_Trainers:
+    dw Map03_Trainer01
+    dw Map03_Trainer02
+    dw Map03_Trainer03
+
+Map03_Trainer01:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -5}, {basic_mon}
+    db {lv_rel -5}, {basic_mon}
+    db -1
+Map03_Trainer02:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -7}, {basic_mon}
+    db {lv_rel -7}, {basic_mon}
+    db {lv_rel -7}, {basic_mon}
+    db -1
+Map03_Trainer03:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -9}, {basic_mon}
+    db {lv_rel -6}, {rep_mon}
+    db -1
+
+Map03_Encounters:
+    db {rnd_basic_mon 3}, {lv_rel -10}
+    db {rnd_basic_mon 3}, {lv_rel -9}
+    db {rnd_basic_mon 3}, {lv_rel -8}
+    db {rnd_basic_mon 6}, {lv_rel -7}
+    db {rnd_basic_mon 6}, {lv_rel -6}
+    db {rnd_basic_mon 3}, {lv_rel -5}
+    db {rnd_basic_mon 2}, {lv_rel -5}
+    db {rnd_basic_mon 2}, {lv_rel -4}
+    db {rnd_basic_mon 1}, {lv_rel -8}
+    db {rnd_basic_mon 1}, {lv_rel -7}
+    db {rnd_basic_mon 1}, {lv_rel -6}
+    db {rnd_basic_mon 4}, {lv_rel -6}
+    db {rnd_basic_mon 4}, {lv_rel -5}
+    db {rnd_basic_mon 5}, {lv_rel -9}
+    db {rnd_basic_mon 5}, {lv_rel -8}
+    db {rnd_basic_mon 5}, {lv_rel -7}
+
+Map03_Trainer01_EncounterText:
+    text "Haven't seen you before."
+    next "You must be weak!"
+    done
+
+Map03_Trainer01_DefeatText:
+    text "You're new here, yet you're"
+    next "so incredibly strong?"
+    done
+
+Map03_Trainer01_PostText:
+    text "I really should respect new"
+    next "players more..."
+    done
+
+Map03_OldTrainer_DefeatText:
+    text "Just as I thought. I couldn't"
+    next "stand a chance against your"
+    cont "<B>{augment K01_PRE_5}</B> Pokémon..."
+    done
+
+Map03_Healer:
+    faceplayer
+    opentext
+	writetext_vwf Map03_HealerPreText
+	waitbutton
+    closetext
+    special FadeBlackQuickly
+	special ReloadSpritesNoPalettes
+	special HealParty
+	playmusic MUSIC_HEAL
+	pause 60
+	special RestartMapMusic
+	special FadeInQuickly
+    opentext
+	writetext_vwf Map03_HealerPostText
+	waitbutton
+    closetext
+    end
+
+Map03_Assistant:
+    rel_base Map03_Assistant
+    faceplayer
+    opentext
+    checkitem POKE_BALL
+    iftrue_rel .has
+    checkitem GREAT_BALL
+    iftrue_rel .has
+    checkitem ULTRA_BALL
+    iftrue_rel .has
+	writetext_vwf Map03_AssistantPreText
+    verbosegiveitem POKE_BALL
+    verbosegiveitem GREAT_BALL
+    verbosegiveitem ULTRA_BALL
+.has
+	writetext_vwf Map03_AssistantPostText
+	waitbutton
+    closetext
+    end
+
+Map03_Trainer02_EncounterText:
+    text "Tell me I'm not imagining"
+    next "this..."
+    para "Wild Pokémon in this area"
+    next "seem a lot stronger than"
+    cont "they were a few days ago!"
+    done
+
+Map03_Trainer02_DefeatText:
+    text "I got defeated?"
+    next "Better go back to training."
+    done
+
+Map03_Trainer02_PostText:
+    text "I'm pretty sure Pokémon"
+    next "levels around this area were"
+    cont "a lot lower before."
+    para "Is it possible that wild"
+    next "encounters gradually get"
+    cont "stronger with time?"
+    cont "Or am I just imagining it?"
+    done
+
+Map03_FillInText:
+    text "How do you like spending"
+    next "your free time?"
+    para "I spent the last night with"
+    next "my <B>{augment K01_PRE_6} {augment K01_PRE_7}</B>."
+    para "Together, we're a perfect"
+    next "match."
+    para "Even the biggest <B>{augment K01_PRE_8}</B>"
+    next "won't separate us!"
+    done
+
+Map03_HealerPreText:
+    text "We don't have any Pokémon"
+    next "Centers here, but I can still"
+    cont "use my healing hands."
+    cont "Watch this!"
+    done
+
+Map03_HealerPostText:
+    text "There you go, good as new!"
+    next "Take care!"
+    done
+
+Map03_AssistantPreText:
+    text "Hello. I work as an"
+    next "assistant for Prof. Oak."
+    para "Wow, you seem to have a"
+    next "Pokédex, yet you don't have"
+    cont "any Poké Balls!"
+    para "I think I can help you with"
+    next "this problem."
+    wait
+
+Map03_AssistantPostText:
+    tx_far 1, _Map03_AssistantPostText
+
+Map03_Tips01:
+    text "TRAINER TIPS"
+    para "Parallel universes are not"
+    next "connected to BILL's storage"
+    cont "system."
+    para "Once your party is full, you"
+    next "won't be able to catch any"
+    cont "more until you leave the"
+    cont "universe."
+    cont "Throw your balls wisely!"
+    done
+
+Map03_Tips02:
+    text "Warning from Glitch Island"
+    next "Police!"
+    para "This area is contaminated"
+    next "by corruption."
+    cont "Proceed carefully."
+    done
+
+Map03_CorruptedOfficer:
+    text "There is a high amount of"
+    next "corrupted tiles in the area."
+    para "This doesn't mean anything"
+    next "good. It's all because of"
+    cont "Missingno., the Glitch Lord."
+    para "If we don't act quickly, it"
+    next "might be too late to prevent"
+    cont " TMZ4"
+    cont " TMZ4"
+    cont " TMZ4"
+    cont " TMZ4"
+    done
+
+Map03_NormalOfficer:
+    text "The victims of Missingno.'s"
+    next "corruption tend to behave"
+    cont "weirdly."
+    para "We're not entirely sure what"
+    next "causes this behavior."
+    para "That's why we're conducting"
+    next "a detailed investigation"
+    cont "about this matter."
+    done
+
+Map03_Trainer03_EncounterText:
+    text "Such danger. Much corrupt."
+    next "Can't let pass. Wow!"
+    done
+
+Map03_Trainer03_DefeatText:
+    text "So strong. Much defeated."
+    next "You can pass if you want."
+    done
+
+Map03_Trainer03_PostText:
+    text "I think I can let you"
+    next "pass through, but be very"
+    cont "careful."
+    para "You don't want to become"
+    next "affected by Missingno.'s"
+    cont "corruption."
+    done
+
+Map03_Trainer03_Script:
+    rel_base Map03_Trainer03_Script
+    faceplayer
+    opentext
+    checkevent EVENT_TRAINER_K1_PRE_4
+    iftrue_rel .defeatText
+	playmusic MUSIC_OFFICER_ENCOUNTER
+	writetext_vwf Map03_Trainer03_EncounterText
+	waitbutton
+    closetext
+	setlasttalked 3
+    winlosstext MapWriteTextInSRAM, 0
+	loadtrainer OFFICER, 1
+    startandwaitbattle
+    setevent EVENT_TRAINER_K1_PRE_4
+    opentext
+.defeatText
+	writetext_vwf Map03_Trainer03_PostText
+	waitbutton
+    closetext
+    end

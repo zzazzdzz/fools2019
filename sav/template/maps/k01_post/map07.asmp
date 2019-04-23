@@ -1,0 +1,247 @@
+; Map07
+
+MAP_07_WIDTH equ 6
+MAP_07_HEIGHT equ 10
+
+Map07_DataStruct:
+    dw Map07_Events
+    dw JustPlainRet
+    dw Map07_Blocks
+    dw Map07_Scripts
+    dw Map07_Encounters
+    dw Map07_Trainers
+
+Map07_Events:
+    db 0, 0
+    db 0 ; warps
+    db 0 ; coord events
+    db 8 ; bg events
+    bg_event 6, 10, 0, MapCallScriptInSRAM
+    bg_event 7, 10, 0, MapCallScriptInSRAM
+    bg_event 8, 10, 0, MapCallScriptInSRAM
+    bg_event 8, 11, 0, MapCallScriptInSRAM
+    bg_event 8, 12, 0, MapCallScriptInSRAM
+    bg_event 7, 12, 0, MapCallScriptInSRAM
+    bg_event 6, 12, 0, MapCallScriptInSRAM
+    bg_event 6, 11, 0, MapCallScriptInSRAM
+    db 2 ; obj events
+    object_event 3, 3, SPRITE_ROCKER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 4, TrainerHeader_05, -1
+    object_event 5, 10, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+
+Map07_Blocks:
+    incbin "maps/map07.blk"
+
+Map07_Scripts:
+    script_ptr   Map07_LightsOut                 ; bg event 1
+    script_ptr   Map07_LightsOut                 ; bg event 2
+    script_ptr   Map07_LightsOut                 ; bg event 3
+    script_ptr   Map07_LightsOut                 ; bg event 4
+    script_ptr   Map07_LightsOut                 ; bg event 5
+    script_ptr   Map07_LightsOut                 ; bg event 6
+    script_ptr   Map07_LightsOut                 ; bg event 7
+    script_ptr   Map07_LightsOut                 ; bg event 8
+    rawtxt_ptr   Map07_Trainer01_EncounterText   ; obj event 1
+    rawtxt_ptr   Map07_Trainer01_DefeatText
+    hybrid_ptr   Map07_Trainer01_PostText
+    script_ptr   Map07_Officer                   ; obj event 2
+    unused_ptr
+    unused_ptr
+
+Map07_Trainers:
+    dw Map07_Trainer01
+
+Map07_Trainer01:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -3}, {basic_mon}
+    db {lv_rel -6}, {basic_mon}
+    db {lv_rel -7}, {basic_mon}
+    db -1
+
+Map07_Encounters:
+    db {rnd_basic_mon 6}, {lv_rel -10}
+    db {rnd_basic_mon 6}, {lv_rel -9}
+    db {rnd_basic_mon 6}, {lv_rel -8}
+    db {rnd_basic_mon 6}, {lv_rel -7}
+    db {rnd_basic_mon 6}, {lv_rel -6}
+    db {rnd_basic_mon 7}, {lv_rel -8}
+    db {rnd_basic_mon 7}, {lv_rel -7}
+    db {rnd_basic_mon 7}, {lv_rel -6}
+    db {rnd_basic_mon 7}, {lv_rel -5}
+    db {rnd_basic_mon 8}, {lv_rel -8}
+    db {rnd_basic_mon 8}, {lv_rel -7}
+    db {rnd_basic_mon 8}, {lv_rel -6}
+    db {rnd_basic_mon 8}, {lv_rel -5}
+    db {rnd_basic_mon 8}, {lv_rel -4}
+    db {rnd_basic_mon 8}, {lv_rel -3}
+    db METAPOD, {lv_rel 0}
+
+Map07_LightsOut:
+    rel_base Map07_LightsOut
+    opentext
+    writetext_vwf Map07_LightsOutText
+    callasm_rel .menu
+    iftrue_rel .toggle
+    closetext
+    return
+.toggle
+    closetext
+    callasm_sra3 Map07_PerformLightsOut
+    reloadmappart
+	playsound SFX_ENTER_DOOR
+    return
+.menu
+    ld bc, $020d
+    ld hl, Map07_LightsOutMenu
+    ld de, $0101
+    call DisplayChoiceMenu
+    xor 1
+    ld [wScriptVar], a
+    ret
+
+Map07_PerformLightsOut:
+    ld hl, Map07_LightsOutCoords
+    ld a, [wCurrentScriptID]
+    dec a
+    add a
+    ld c, a
+    ld b, 0
+    add hl, bc
+    ld c, 3
+.loop
+    ld a, [hli]
+    ld e, a
+    ld a, [hli]
+    ld d, a
+    call Map07_ToggleMapBlockAtDE
+    dec c
+    jr nz, .loop
+    ld a, [wCurrentScriptID]
+    and 1
+    ret nz
+    ld de, $C843
+    jp Map07_ToggleMapBlockAtDE
+
+Map07_ToggleMapBlockAtDE:
+    ld a, [de]
+    ld b, $02
+    cp $7B
+    jr z, .nope
+    ld b, $7B
+.nope
+    ld a, b
+    ld [de], a
+    ret
+
+map_coord_ptr: MACRO
+    dw wOverworldMapBlocks + (MAP_07_WIDTH + 6) * ((\2) + 3) + 3 + (\1)
+ENDM
+
+Map07_LightsOutCoords:
+    map_coord_ptr 3, 2
+    map_coord_ptr 3, 1
+    map_coord_ptr 4, 1
+    map_coord_ptr 5, 1
+    map_coord_ptr 5, 2
+    map_coord_ptr 5, 3
+    map_coord_ptr 4, 3
+    map_coord_ptr 3, 3
+    map_coord_ptr 3, 2
+    map_coord_ptr 3, 1
+
+Map07_LightsOutText:
+    text "An ordinary tree... wait!"
+    next "Is that a secret switch?"
+    done
+
+Map07_LightsOutMenu:
+    ; Push it!
+    ; Leave it be.
+    db $8f,$b4,$b2,$a7,$7f,$a8,$b3,$e7,$4f
+    db $8b,$a4,$a0,$b5,$a4,$7f,$a8,$b3,$7f,$a1,$a4,$e8,$50
+
+Map07_Officer:
+    rel_base Map07_Officer
+    faceplayer
+    opentext
+    checkevent EVENT_K1_POST_CORRUPTION_CLEANSED
+    iftrue_rel .received
+    callasm_rel .test
+    iftrue_rel .cleansed
+    writetext_vwf Map07_OfficerText
+    waitbutton
+    closetext
+    return
+.cleansed
+    writetext_vwf Map07_OfficerDoneText
+    waitbutton
+    setevent EVENT_K1_POST_CORRUPTION_CLEANSED
+    verbosegiveitem GOLD_BERRY, 1
+.received
+    writetext_vwf Map07_OfficerThanksText
+    waitbutton
+    closetext
+    return
+.test
+    ld hl, $c800
+    ld c, $80
+.loop
+    ld a, [hli]
+    cp $7B
+    jr z, .failed
+    dec c
+    jr nz, .loop
+.ok
+    ld a, 1
+    ld [wScriptVar], a
+    ret
+.failed
+    xor a
+    ld [wScriptVar], a
+    ret
+
+Map07_Trainer01_EncounterText:
+    text "They still haven't built"
+    next "a Pokémon Mart in Tutorial"
+    cont "Kingdom! I'm a little bit"
+    cont "disappointed..."
+    done
+
+Map07_Trainer01_DefeatText:
+    text "If only I could buy some"
+    next "items, I'd have a better"
+    cont "chance against you!"
+    done
+
+Map07_Trainer01_PostText:
+    text "I heard there are Pokémon"
+    next "Marts in other kingdoms."
+    para "But which kingdom should"
+    next "I go to first? Each mart"
+    cont "sells different goods!"
+    done
+
+Map07_OfficerText:
+    tx_far 1, _Map07_OfficerText
+
+Map07_OfficerDoneText:
+    text "The corruption is gone, and"
+    next "the revitalization project"
+    cont "can continue!"
+    para "You just keep saving everyone"
+    next "over and over again!"
+    cont "My deepest thanks!"
+    para "I think a proper prize is in"
+    next "order for you."
+    done
+
+Map07_OfficerThanksText:
+    text "Did you know that Pokémon"
+    next "can hold items for additional"
+    cont "in-battle benefits?"
+    para "Gold Berry will automatically"
+    next "heal a Pokémon in battle if"
+    cont "its HP drops low."
+    para "It's good to have during any"
+    next "tough battles!"
+    done

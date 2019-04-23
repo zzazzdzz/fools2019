@@ -1,0 +1,116 @@
+; Map01
+
+MAP_01_WIDTH equ 10
+MAP_01_HEIGHT equ 17
+
+Map01_DataStruct:
+    dw Map01_Events
+    dw JustPlainRet
+    dw Map01_Blocks
+    dw Map01_Scripts
+    dw Map01_Encounters
+    dw Map01_Trainers
+
+Map01_Events:
+    db 0, 0
+    db 1 ; warps
+    warp_event 10, 7, MAP_02, 1
+    db 0 ; coord events
+    db 0 ; bg events
+    db 0 ; obj events
+    
+Map01_Blocks:
+    incbin "maps/map01.blk"
+
+Map01_Scripts:
+    hybrid_ptr Map01_Heyv1
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map01_Shad
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map01_Wazz
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map01_Danalise
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map01_Willow
+    unused_ptr
+    unused_ptr
+
+Map01_Heyv3:
+    text "Certainly. I'm turning"
+    next "on the Glitch Core."
+    done
+
+Map01_Heyv2:
+    text "OK, I understand."
+    next "Please come back once you're"
+    cont "fully prepared."
+    done
+
+Map01_Sign:
+    text "Central Kingdom Highlands"
+    next "Southern Entrance"
+    done
+
+Map01_Willow:
+    text "When I first met you in"
+    next "Tutorial Kingdom, I would"
+    cont "have never guessed that"
+    cont "you'd go this far."
+    para "Thanks to you, all kingdoms"
+    next "are now free."
+    para "There's only one thing left"
+    next "to do. Let's finish the job!"
+    done
+
+Map01_Heyv1:
+    text "Welcome back! Guess what?"
+    next "The Glorious Glitch Core is"
+    cont "charged and ready to go!"
+    para "I already used it to remove"
+    next "corrupted tiles from the"
+    cont "entrance here."
+    para "But I must warn you - you're"
+    next "definitely going to face"
+    cont "very tough challenges ahead."
+    para "Once you go in, there will be"
+    next "no turning back."
+    done
+
+Map01_Shad:
+    text "Together with Heyv and Wazz,"
+    next "I was successfully able to"
+    cont "charge up the Glorious Glitch"
+    cont "Core."
+    para "We cleared the entrance for"
+    next "you. I leave you the rest."
+    done
+
+Map01_Wazz:
+    text "This is a big moment. The"
+    next "biggest moment in the history"
+    cont "of Glitch Islands."
+    para "I wish you best of luck. I can"
+    next "only do that much."
+    done
+
+Map01_Danalise:
+    text "So, this day has come."
+    next "The day of judgement."
+    para "Many sacrifices had to be"
+    next "made in order to get to this"
+    cont "point."
+    para "Laylah and Ephemei did"
+    next "everything they could to help"
+    cont "achieve this ultimate goal."
+    para "The goal of freeing Glitch"
+    next "Islands..."
+    cont "The rest is in your hands!"
+    done
+
+Map01_Trainers:
+Map01_Encounters:
+    db $ff

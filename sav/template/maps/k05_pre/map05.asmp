@@ -1,0 +1,108 @@
+; Map05
+
+MAP_05_WIDTH equ 8
+MAP_05_HEIGHT equ 8
+
+Map05_DataStruct:
+    dw Map05_Events
+    dw JustPlainRet
+    dw Map05_Blocks
+    dw Map05_Scripts
+    dw Map05_Encounters
+    dw Map05_Trainers
+
+Map05_Events:
+    db 0, 0
+    db 1 ; warps
+    warp_event 13, 12, MAP_04, 8
+    db 0 ; coord events
+    db 2 ; bg events
+    bg_event 2, 6, 0, MapCallScriptInSRAM
+    bg_event 3, 6, 0, MapCallScriptInSRAM
+    db 1 ; obj events
+    object_event 8, 7, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_ALWAYS_SET
+    
+Map05_Blocks:
+    incbin "maps/map05.blk"
+
+Map05_Scripts:
+    script_ptr Map05_OperateMachine
+    hybrid_ptr Map05_KeyboardPlease
+
+Map05_KeyboardPlease:
+    text "It's some sort of a control"
+    next "system..."
+    para "Maybe you can use the"
+    next "keyboard to operate it?"
+    done
+
+Map05_OperateMachine:
+    rel_base Map05_OperateMachine
+    opentext
+    checkitem CARD_KEY
+    iffalse_rel .nope
+    writetext_vwf Map05_OperateMachineHasKey
+    playmusic 0
+    playsound SFX_PUSH_BUTTON
+    pause 30
+    closetext
+    playsound SFX_ENTER_DOOR
+    pause 10
+    playmusic MUSIC_CLAIR
+    appear OBJ_1
+    applymovement_rel OBJ_1, .movement1
+    applymovement_rel OBJ_PLAYER, .movement2
+    opentext
+    writetext_vwf Map05_OfficerText
+    waitbutton
+    closetext
+    setevent EVENT_K5_PRE_ROCKETS_DEFEATED
+    clearevent EVENT_K5_PRE_ROCKETS_DEFEATED_NEG
+    pause 10
+    disappear OBJ_1
+    callasm_rel .copyWarpScript
+    jump $c020
+.nope
+    writetext_vwf Map05_OperateMachineNoKey
+    waitbutton
+    closetext
+    end
+.warpScript
+    callasm CopyMapDataToRAM
+	warp MAP_02, 6, 9
+    endall
+.copyWarpScript
+    ld hl, rel_ptr .warpScript
+    ld bc, 16
+    ld de, $c020
+    jp CopyBytes
+.movement1
+    step LEFT
+    step LEFT
+    step LEFT
+    step LEFT
+    step LEFT
+    step_end
+.movement2
+    turn_step RIGHT
+    step_end
+
+Map05_OperateMachineHasKey:
+    text "It's the control system for"
+    next "the <B>{augment K05_PRE_6 capitalize concat tron}</B>."
+    para "You inserted the Card Key"
+    next "and disabled the machine!"
+    done
+
+Map05_OperateMachineNoKey:
+    text "It's the control system for"
+    next "the <B>{augment K05_PRE_6 capitalize concat tron}</B>."
+    cont "A Card Key is required."
+    done
+
+Map05_OfficerText:
+    tx_far 1, _Map05_OfficerText
+
+Map05_Trainers:
+Map05_Encounters:
+    db $ff

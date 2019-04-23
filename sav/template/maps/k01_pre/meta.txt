@@ -1,0 +1,35 @@
+[Info]
+    KingdomName = TUTORIAL KINGDOM
+    Respawn = MAP_01, 14, 10
+    SaveAllowedImmediately = 0
+    KingdomVersion = FIRST VISIT!
+    RoofGraphics = 1
+
+[ObtainableFlags]
+    EVENT_MEET_GUIDE = 64
+    EVENT_DESOLATED_CABIN = 65
+    EVENT_TRAINER_K1_PRE_1 = 66
+    EVENT_ITEMBALL_K1_PRE_1 = 67
+    EVENT_TRAINER_K1_PRE_2 = 68
+    EVENT_TRAINER_K1_PRE_3 = 69
+    EVENT_TRAINER_K1_PRE_4 = 70
+    EVENT_TUTORIAL_WILLOW = 71
+    EVENT_K1_PRE_COMPLETE = 72
+    EVENT_K1_RADIO = 180
+
+[ObtainableItems]
+    SUPER_POTION = 1x EVENT_ITEMBALL_K1_PRE_1
+    POKE_BALL = 3x always
+    GREAT_BALL = 3x always
+    ULTRA_BALL = 3x always
+    BERRY = 1x always
+
+[ObtainableMons]
+    _RND_1 = any
+    _RND_2 = any
+    _RND_3 = any
+    _RND_4 = any
+    _RND_5 = any
+    CYNDAQUIL = 1
+    TOTODILE = 1
+    CHIKORITA = 1

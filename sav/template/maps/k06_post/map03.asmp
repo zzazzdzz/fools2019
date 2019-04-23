@@ -1,0 +1,127 @@
+; Map03
+
+MAP_03_WIDTH equ 12
+MAP_03_HEIGHT equ 12
+
+Map03_DataStruct:
+    dw Map03_Events
+    dw JustPlainRet
+    dw Map03_Blocks
+    dw Map03_Scripts
+    dw Map03_Encounters
+    dw Map03_Trainers
+
+Map03_Events:
+    db 0, 0
+    db 3 ; warps
+    warp_event 13, 15, MAP_07, 1
+    warp_event 20, 15, MAP_06, 1
+    warp_event 15, 5, MAP_06, 3
+    db 0 ; coord events
+    db 1 ; bg events
+    bg_event 6, 12, 0, MapCallScriptInSRAM
+    db 3 ; obj events
+    object_event 18, 2, SPRITE_ROCK, SPRITEMOVEDATA_STILL, 0, 1, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, EVENT_YAHAHA_FIFTH
+    object_event 18, 2, SPRITE_JANINE, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_ALWAYS_SET
+    object_event 6, 11, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_DOWN, 2, 2, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+
+Map03_Yahaha:
+    rel_base Map03_Yahaha
+    checkevent EVENT_YAHAHA_INITIATED
+    iffalse_rel .nope
+    pause 10
+    disappear OBJ_1
+    appear OBJ_2
+    playsound $6D
+    applymovement_rel OBJ_2, .spinMovement
+    setlasttalked 2
+    faceplayer
+    playmusic MUSIC_MT_MOON_SQUARE
+    opentext
+    writetext_vwf Map03_YahahaText
+    waitbutton
+    closetext
+    applymovement_rel OBJ_2, .spinMovement
+    applymovement_rel OBJ_2, .escapeMovement
+    disappear OBJ_2
+    setevent EVENT_YAHAHA_FIFTH
+    loadvar wMapMusic, 0
+    playmapmusic
+    end
+.nope
+    opentext
+    writetext_vwf Map03_NormalRockText
+    waitbutton
+    closetext
+    end
+.spinMovement
+	turn_head DOWN
+	turn_head LEFT
+	turn_head UP
+	turn_head RIGHT
+	turn_head DOWN
+	turn_head LEFT
+	turn_head UP
+	turn_head RIGHT
+	turn_head DOWN
+	step_end
+.escapeMovement
+    jump_step RIGHT
+    big_step DOWN
+    big_step DOWN
+    big_step DOWN
+    big_step DOWN
+    big_step DOWN
+    big_step DOWN
+    big_step DOWN
+	step_end
+
+Map03_YahahaText:
+    tx_deliria
+    text "yahaha"
+    next "you found me !!"
+    para "u are so good .."
+    next "byeee !"
+    done
+
+Map03_NormalRockText:
+    text "A completely normal rock."
+    next "Nothing wrong here."
+    done
+
+Map03_Lettuce:
+    text "The inscription on this"
+    next "pillar says... ''lettuce''?"
+    para "I don't understand."
+    next "Why is this here? And why"
+    cont "such a strange message?"
+    para "I guess we still don't know"
+    next "much about our ancestors."
+    done
+
+Map03_NeverGiveUp:
+    tx_braille
+    text "NEVER  GIVE  UP"
+    done
+
+Map03_Blocks:
+    incbin "maps/map03.blk"
+
+Map03_Scripts:
+    hybrid_ptr Map03_NeverGiveUp
+    script_ptr Map03_Yahaha
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map03_Lettuce
+    unused_ptr
+    unused_ptr
+
+Map03_NPC1:
+    text ""
+
+Map03_Trainers:
+Map03_Encounters:
+    db $ff

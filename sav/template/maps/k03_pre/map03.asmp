@@ -1,0 +1,358 @@
+; Map03
+
+MAP_03_WIDTH equ 12
+MAP_03_HEIGHT equ 14
+
+Map03_DataStruct:
+    dw Map03_Events
+    dw JustPlainRet
+    dw Map03_Blocks
+    dw Map03_Scripts
+    dw Map03_Encounters
+    dw Map03_Trainers
+
+Map03_Events:
+    db 0, 0
+    db 1 ; warps
+    warp_event 19, 3, MAP_07, 2
+    db 2 ; coord events
+    coord_event 4, 5, $ff, MapCallScriptInSRAM
+    coord_event 5, 5, $ff, MapCallScriptInSRAM
+    db 0 ; bg events
+    db 10 ; obj events
+    object_event 5, 8, SPRITE_TEACHER, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, ObjectEvent, EVENT_K3_PRE_GIRL_SAVED
+    object_event 6, 7, SPRITE_N64, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 13, 2, SPRITE_ROCKET, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_TRAINER, 4, TrainerHeader_04, -1
+    object_event 10, 8, SPRITE_ROCKET, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 16, 14, SPRITE_ROCKET_GIRL, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 3, TrainerHeader_05, -1
+    object_event 17, 9, SPRITE_ROCKET_GIRL, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 4, TrainerHeader_06, -1
+    object_event 22, 12, SPRITE_ROCKET, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_TRAINER, 1, TrainerHeader_07, -1
+    object_event 16, 19, SPRITE_ROCKET, SPRITEMOVEDATA_STANDING_RIGHT, 0, 0, -1, -1, 0, OBJECTTYPE_TRAINER, 3, TrainerHeader_08, -1
+    object_event 20, 24, SPRITE_ROCKET, SPRITEMOVEDATA_STANDING_UP, 0, 0, -1, -1, 0, OBJECTTYPE_TRAINER, 1, TrainerHeader_09, -1
+    object_event 5, 18, SPRITE_ROCKET_GIRL, SPRITEMOVEDATA_SPINRANDOM_FAST, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map03_Blocks:
+    incbin "maps/map03.blk"
+
+Map03_Scripts:
+    unused_ptr
+    unused_ptr
+    unused_ptr
+    script_ptr Map03_N64
+    unused_ptr
+    unused_ptr
+    rawtxt_ptr Map03_Rocket01_Encounter
+    rawtxt_ptr Map03_Rocket01_Defeat
+    hybrid_ptr Map03_Rocket01_Encounter
+    hybrid_ptr Map03_Rocket02
+    unused_ptr
+    unused_ptr
+    rawtxt_ptr Map03_Rocket02_Encounter
+    rawtxt_ptr Map03_Rocket02_Defeat
+    hybrid_ptr Map03_Rocket02_Encounter
+    rawtxt_ptr Map03_Rocket03_Encounter
+    rawtxt_ptr Map03_Rocket03_Defeat
+    hybrid_ptr Map03_Rocket03_Encounter
+    rawtxt_ptr Map03_Rocket04_Encounter
+    rawtxt_ptr Map03_Rocket04_Defeat
+    hybrid_ptr Map03_Rocket04_Defeat
+    rawtxt_ptr Map03_Rocket05_Encounter
+    rawtxt_ptr Map03_Rocket05_Defeat
+    hybrid_ptr Map03_Rocket05_Encounter
+    rawtxt_ptr Map03_Rocket06_Encounter
+    rawtxt_ptr Map03_Rocket06_Defeat
+    hybrid_ptr Map03_Rocket06_Defeat
+    hybrid_ptr Map03_Rocket07
+    unused_ptr
+    unused_ptr
+    script_ptr Map03_SaveMe
+    script_ptr Map03_SaveMe
+
+Map03_Rocket01_Encounter:
+    text "The GBZ80 assembly language"
+    next "is a powerful destruction"
+    cont "tool. Don't you agree?"
+    done
+
+Map03_Rocket01_Defeat:
+    text "Assertion 'cannot be defeated'"
+    next "has failed!"
+    done
+
+Map03_Rocket02_Encounter:
+    text "Hey, hey! What do you call a"
+    next "series of FDIV instructions"
+    cont "on a Pentium processor?"
+    cont "A random number generator!"
+    done
+
+Map03_Rocket02_Defeat:
+    text "How is it possible? I had a"
+    next "99.99997428502 percent"
+    cont "chance of winning!"
+    done
+
+Map03_Rocket03_Encounter:
+    text "My brain has received the"
+    next "'trainer in front of me'"
+    cont "interrupt. Now I must service"
+    cont "it by battling you!"
+    done
+
+Map03_Rocket03_Defeat:
+    text "Battling sucks. I'll better"
+    next "write 0 to my brain's IME."
+    done
+
+Map03_Rocket04_Encounter:
+    text "WE ARE FROM BLACK-SOCIETY"
+    next "LIKE TO DO SOMETHING"
+    cont "CRIMINAL. ARE YOU FEARED?"
+    done
+
+Map03_Rocket04_Defeat:
+    text "I TELL YOU THE PASSWARD"
+    next "OF THE MACHINE, IT IS"
+    cont "'<B>{augment K03_PRE_1 upper} {augment K03_PRE_2 upper}</B>'."
+    para "BUT THEN THE TWO PASSWARD"
+    next "MUST BE RIGHT, OR THERE"
+    cont "IS NOTHING INTERESTING"
+    done
+
+Map03_Rocket05_Encounter:
+    text "I suggested to my boss that"
+    next "we could develop our new"
+    cont "corruption spreading program"
+    cont "with GBDK and test with VBA."
+    para "Then I got demoted from my"
+    next "executive position."
+    cont "Not sure why."
+    done
+
+Map03_Rocket05_Defeat:
+    text "I got defeated?"
+    next "Does not compute!"
+    done
+
+Map03_Rocket06_Encounter:
+    text "Our corruption-spreading"
+    next "machine is working great!"
+    para "With its advanced password"
+    next "protection, there is no way"
+    cont "for anyone to disable it!"
+    done
+
+Map03_Rocket06_Defeat:
+    text "Fine, I'll tell you! The"
+    next "password is '<B>{augment K03_PRE_3 upper}</B>'."
+    para "But it's useless, since you"
+    next "need two passwords to"
+    cont "operate the device!"
+    done
+
+Map03_Rocket02:
+    tx_far 1, _Map03_Rocket02
+
+Map03_Rocket07:
+    text "What? How did you get in"
+    next "here? Isn't the entrance"
+    cont "blocked?"
+    para "Please leave, there's"
+    next "nothing to see here."
+    para "It's not like we're hiding"
+    next "a corrupted person from you"
+    cont "for use in our experiments!"
+    done
+
+Map03_N64:
+    rel_base Map03_N64
+    opentext
+    checkevent EVENT_TRAINER_K3_PRE_9
+    iffalse_rel .nope
+    checkevent EVENT_TRAINER_K3_PRE_7
+    iffalse_rel .nope
+    writetext_vwf Map03_N64_AfterText
+    waitbutton
+    closetext
+    changeblock 4, 6, $01
+    reloadmappart
+	playsound SFX_STRENGTH
+    checkevent EVENT_K3_PRE_GIRL_SAVED
+    iftrue_rel .end
+    pause 30
+    applymovement_rel OBJ_1, .movement1
+    opentext
+    writetext_vwf Map03_GirlSavedText
+    waitbutton
+    closetext
+    applymovement_rel OBJ_1, .movement2
+    disappear OBJ_1
+.end
+    end
+.nope
+    writetext_vwf Map03_N64_BeforeText
+    waitbutton
+    closetext
+    end
+.movement1
+    big_step UP
+    big_step UP
+    big_step DOWN
+    big_step UP
+    big_step DOWN
+    big_step UP
+    big_step DOWN
+    turn_step RIGHT
+    step_end
+.movement2
+    big_step UP
+    big_step UP
+    big_step UP
+    big_step UP
+    big_step LEFT
+    big_step LEFT
+    big_step LEFT
+    big_step LEFT
+    step_end
+
+Map03_N64_BeforeText:
+    text "It's a specially modified"
+    next "Nintendo 64 console."
+    para "It's running a corruption-"
+    next "spreading program with the"
+    cont "Pokémon Stadium ACE exploit."
+    para "The control panel seems to"
+    next "be password protected."
+    done
+
+Map03_N64_AfterText:
+    text "It's a specially modified"
+    next "Nintendo 64 console."
+    para "You entered the two"
+    next "passwords."
+    para "'<B>{augment K03_PRE_1 upper} {augment K03_PRE_2 upper}</B>'..."
+    next "'<B>{augment K03_PRE_3 upper}</B>'..."
+    para "The corruption spreading"
+    next "program has been disabled!"
+    cont "Entering revert mode."
+    done
+
+Map03_GirlSavedText:
+    text "Is the machine turned off?"
+    next "Yes! Thank you!"
+    para "Now the plans of these"
+    next "criminals will not progress"
+    cont "for a while."
+    para "I'm off to inform the"
+    next "Glitch Islands Police about"
+    cont "all of this!"
+    done
+
+Map03_SaveMe:
+    rel_base Map03_SaveMe
+    checkevent EVENT_K3_PRE_GIRL_EVENT
+    iftrue_rel .end
+    setevent EVENT_K3_PRE_GIRL_EVENT
+	showemote 0, OBJ_1, 10
+    applymovement_rel OBJ_1, .movement
+    opentext
+    writetext_vwf Map03_SaveMeText
+    waitbutton
+    closetext
+.end
+    end
+.movement
+    big_step LEFT
+    big_step RIGHT
+    big_step LEFT
+    big_step RIGHT
+    big_step LEFT
+    big_step RIGHT
+    big_step LEFT
+    big_step RIGHT
+    turn_step UP
+    step_end
+
+Map03_SaveMeText:
+    text "Hey! Over there!"
+    next "Please help me!"
+    para "I am surrounded by corrupted"
+    next "tiles and cannot escape!"
+    para "Some criminal group is using"
+    next "these strange devices to"
+    cont "spread corruption all over"
+    cont "Glitch Islands!"
+    para "You need to disable this"
+    next "machine somehow. Please!"
+    done
+
+Map03_Trainers:
+    dw NULL
+    dw NULL
+    dw Map03_Trainer01
+    dw NULL
+    dw Map03_Trainer02
+    dw Map03_Trainer03
+    dw Map03_Trainer04
+    dw Map03_Trainer05
+    dw Map03_Trainer06
+
+Map03_Trainer01:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -6}, {basic_mon}
+    db {lv_rel -6}, {basic_mon}
+    db -1
+
+Map03_Trainer02:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -7}, {basic_mon}
+    db {lv_rel -8}, {basic_mon}
+    db {lv_rel -3}, {basic_mon}
+    db -1
+
+Map03_Trainer03:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -5}, {basic_mon}
+    db {lv_rel -7}, {basic_mon}
+    db -1
+
+Map03_Trainer04:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -8}, {basic_mon}
+    db {lv_rel -3}, {basic_mon}
+    db -1
+
+Map03_Trainer05:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -3}, {basic_mon}
+    db -1
+
+Map03_Trainer06:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_ITEM
+    db {lv_rel -6}, {basic_mon}, BERRY
+    db {lv_rel -6}, {basic_mon}, GOLD_BERRY
+    db -1
+
+Map03_Encounters:
+    db {rnd_basic_mon 23}, {lv_rel -7}
+    db {rnd_basic_mon 23}, {lv_rel -6}
+    db {rnd_basic_mon 23}, {lv_rel -5}
+    db {rnd_basic_mon 23}, {lv_rel -4}
+    db {rnd_basic_mon 24}, {lv_rel -7}
+    db {rnd_basic_mon 24}, {lv_rel -6}
+    db {rnd_basic_mon 24}, {lv_rel -5}
+    db {rnd_basic_mon 24}, {lv_rel -4}
+    db {rnd_basic_mon 25}, {lv_rel -7}
+    db {rnd_basic_mon 25}, {lv_rel -6}
+    db {rnd_basic_mon 25}, {lv_rel -5}
+    db {rnd_basic_mon 25}, {lv_rel -4}
+    db {rnd_basic_mon 26}, {lv_rel -7}
+    db {rnd_basic_mon 26}, {lv_rel -6}
+    db {rnd_basic_mon 26}, {lv_rel -5}
+    db {rnd_basic_mon 26}, {lv_rel -4}

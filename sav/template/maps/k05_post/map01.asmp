@@ -1,0 +1,94 @@
+; Map01
+
+MAP_01_WIDTH equ 16
+MAP_01_HEIGHT equ 16
+
+Map01_DataStruct:
+    dw Map01_Events
+    dw JustPlainRet
+    dw Map01_Blocks
+    dw Map01_Scripts
+    dw Map01_Encounters
+    dw Map01_Trainers
+
+Map01_Events:
+    db 0, 0
+    db 2 ; warps
+    warp_event 25, 7, MAP_08, 2
+    warp_event 5, 7, MAP_07, 1
+    db 0 ; coord events
+    db 0 ; bg events
+    db 3 ; obj events
+    object_event 13, 24, SPRITE_COOLTRAINER_F, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 4, TrainerHeader_01, -1
+    object_event 9, 11, SPRITE_SUPER_NERD, SPRITEMOVEDATA_SPINCLOCKWISE, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 4, TrainerHeader_02, -1
+    object_event 19, 8, SPRITE_TEACHER, SPRITEMOVEDATA_WALK_LEFT_RIGHT, 2, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+
+Map01_Blocks:
+    incbin "maps/map01.blk"
+
+Map01_Scripts:
+    rawtxt_ptr Map01_Trainer01_Encounter
+    rawtxt_ptr Map01_Trainer01_Defeat
+    hybrid_ptr Map01_Trainer01_Defeat
+    rawtxt_ptr Map01_Trainer02_Encounter
+    rawtxt_ptr Map01_Trainer02_Defeat
+    hybrid_ptr Map01_Trainer02_Encounter
+    hybrid_ptr Map01_NPC1
+    unused_ptr
+    unused_ptr
+
+Map01_NPC1:
+    tx_far 1, _Map01_NPC1
+
+Map01_Trainer02_Encounter:
+    text "Shoutouts to SimpleFlips!"
+    done
+
+Map01_Trainer02_Defeat:
+    text "i got souped"
+    done
+
+Map01_Trainer01_Encounter:
+    tx_far 1, _Map01_Trainer01_Encounter
+
+Map01_Trainer01_Defeat:
+    text "Why are you fighting me?"
+    next "Go fight Team Rocket!"
+    done
+
+Map01_Trainers:
+    dw Map01_Trainer01
+    dw Map01_Trainer02
+
+Map01_Trainer01:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -5}, {basic_mon}
+    db {lv_rel -3}, {basic_mon}
+    db {lv_rel -3}, {first_stage_mon}
+    db -1
+
+Map01_Trainer02:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -5}, {basic_mon}
+    db {lv_rel -3}, {basic_mon}
+    db -1
+
+Map01_Encounters:
+    db {rnd_basic_mon 40}, {lv_rel -5}
+    db {rnd_basic_mon 40}, {lv_rel -4}
+    db {rnd_basic_mon 41}, {lv_rel -4}
+    db {rnd_basic_mon 41}, {lv_rel -3}
+    db {rnd_basic_mon 42}, {lv_rel -6}
+    db {rnd_basic_mon 42}, {lv_rel -5}
+    db {rnd_basic_mon 43}, {lv_rel -5}
+    db {rnd_basic_mon 43}, {lv_rel -4}
+    db {rnd_basic_mon 44}, {lv_rel -6}
+    db {rnd_basic_mon 44}, {lv_rel -6}
+    db {rnd_basic_mon 45}, {lv_rel -5}
+    db {rnd_basic_mon 45}, {lv_rel -5}
+    db {rnd_basic_mon 46}, {lv_rel -3}
+    db {rnd_basic_mon 46}, {lv_rel -6}
+    db {rnd_basic_mon 47}, {lv_rel -5}
+    db {rnd_basic_mon 47}, {lv_rel -4}

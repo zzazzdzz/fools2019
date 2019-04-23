@@ -1,0 +1,99 @@
+; Map04
+
+MAP_04_WIDTH equ 7
+MAP_04_HEIGHT equ 5
+
+Map04_DataStruct:
+    dw Map04_Events
+    dw JustPlainRet
+    dw Map04_Blocks
+    dw Map04_Scripts
+    dw Map04_Encounters
+    dw Map04_Trainers
+
+Map04_Events:
+    db 0, 0
+    db 0 ; warps
+    db 0 ; coord events
+    db 0 ; bg events
+    db 1 ; obj events
+    object_event 3, 3, SPRITE_FALKNER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map04_Blocks:
+    incbin "maps/map04.blk"
+
+Map04_Scripts:
+    script_ptr Map04_Heyaduo
+    hybrid_ptr Map04_HeyaduoDefeated
+    unused_ptr
+
+Map04_Heyaduo:
+    rel_base Map04_Heyaduo
+    checkevent EVENT_K3_PRE_COMPLETE
+    iftrue_rel .done
+    opentext
+    writetext_vwf Map04_HeyaduoIntroText
+    waitbutton
+    closetext
+	setlasttalked 1
+    winlosstext MapWriteTextInSRAM, 0
+    loadvar wTrainerCurrentTheme, MUSIC_JOHTO_GYM_LEADER_BATTLE
+	loadtrainer FALKNER, 1
+    dontrestartmapmusic
+    startandwaitbattle
+    opentext
+    writetext_vwf Map04_HeyaduoAfterText1
+    waitbutton
+    closetext
+    callasm RescuedSequenceTrampoline
+    opentext
+    writetext_vwf Map04_Rescued
+    waitbutton
+    closetext
+    callasm SwitchToSRA2
+    callasm PostEnding
+    pause 20
+    playmapmusic
+    setevent EVENT_K3_PRE_COMPLETE
+.done
+    opentext
+    writetext_vwf Map04_HeyaduoAfterText2
+    waitbutton
+    closetext
+    end
+
+Map04_HeyaduoIntroText:
+    tx_far 1, _Map04_HeyaduoIntroText
+
+Map04_HeyaduoAfterText1:
+    tx_far 1, _Map04_HeyaduoAfterText1
+
+Map04_HeyaduoAfterText2:
+    tx_far 1, _Map04_HeyaduoAfterText2
+
+Map04_HeyaduoDefeated:
+    text "MY IMPORTANT ELF BECOME..."
+    next "I SEE, TAKE THIS THE"
+    cont "SUCCESSOR OF ELF, WBKUJI"
+    done
+
+Map04_Rescued:
+    text "You have rescued Heyaduo,"
+    next "Header of Guixiang Gymnasium."
+    para "Missingno. has left the"
+    next "grounds of Bootleg Kingdom! "
+    tx_medalfanfare
+    done
+
+Map04_Trainers:
+    dw Map04_TrainerHeyaduo
+
+Map04_TrainerHeyaduo:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_ITEM_MOVES
+    db {lv_rel -3}, MURKROW, NO_ITEM, PURSUIT, SHADOW_BALL, MUD_SLAP, NO_MOVE
+    db {lv_rel -1}, NOCTOWL, LEFTOVERS, SHADOW_BALL, SKY_ATTACK, CONFUSION, ATTRACT
+    db -1
+
+Map04_Encounters:
+    db $ff

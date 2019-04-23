@@ -1,0 +1,52 @@
+[Info]
+    KingdomName = VERDANT KINGDOM
+    Respawn = MAP_01, 16, 11
+    SaveAllowedImmediately = 1
+    KingdomVersion = REVISITED!
+    RoofGraphics = 3
+
+[ObtainableFlags]
+    EVENT_TRAINER_K2_PRE_1 = 82
+    EVENT_TRAINER_K2_PRE_2 = 83
+    EVENT_TRAINER_K2_PRE_3 = 84
+    EVENT_TRAINER_K2_PRE_4 = 85
+    EVENT_ITEMBALL_K2_PRE_1 = 86
+    EVENT_K2_POST_ANCIENT_PUZZLE_SOLVED = 88
+    EVENT_ITEMBALL_K2_POST_1 = 89
+    EVENT_ITEMBALL_K2_POST_2 = 90
+    EVENT_TRAINER_K2_POST_1 = 91
+    EVENT_TRAINER_K2_POST_2 = 92
+    EVENT_SPOKE_TO_HEYV = 93
+    EVENT_RECEIVED_CUT = 94
+    EVENT_K2_RADIO = 181
+    EVENT_K2_LAPTOP = 184
+    EVENT_ITEMBALL_K2_POST_3 = 95
+
+[ObtainableItems]
+    HEAVY_BALL = 1x EVENT_ITEMBALL_K2_PRE_1
+    SUPER_POTION = any
+    FULL_HEAL = any
+    POKE_BALL = any
+    GREAT_BALL = any
+    REPEL = any
+    $e1 = any
+    $e9 = any
+    $f0 = any
+    $d6 = any
+    $df = any
+    RARE_CANDY = 1x EVENT_ITEMBALL_K2_POST_1
+    EXP_SHARE = 1x EVENT_ITEMBALL_K2_POST_2
+    $f3 = 1x EVENT_RECEIVED_CUT
+    PEARL = 1x EVENT_ITEMBALL_K2_POST_3
+
+[ObtainableMons]
+    _RND_9 = any
+    _RND_10 = any
+    _RND_11 = any
+    _RND_12 = any
+    _RND_13 = any
+    _RND_14 = any
+    _RND_15 = any
+    _RND_16 = any
+    _RND_17 = any
+    _RND_18 = any

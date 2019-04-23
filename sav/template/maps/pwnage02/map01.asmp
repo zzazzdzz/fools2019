@@ -1,0 +1,52 @@
+; Map01
+
+MAP_01_WIDTH equ 3
+MAP_01_HEIGHT equ 2
+
+Map01_DataStruct:
+    dw Map01_Events
+    dw JustPlainRet
+    dw Map01_Blocks
+    dw Map01_Scripts
+    dw Map01_Encounters
+    dw Map01_Trainers
+
+Map01_Events:
+    db 0, 0
+    db 0
+    db 0 ; coord events
+    db 1 ; bg events
+    bg_event 3, 0, 0, MapCallScriptInSRAM
+    db 0 ; obj events
+    
+Map01_Blocks:
+    incbin "maps/map01.blk"
+
+Map01_Scripts:
+    hybrid_ptr Map01_WelcomeSign
+
+Map01_WelcomeSign:
+    text "Welcome to Pwnage Kingdom!"
+    next "The place for hackers to"
+    cont "demonstrate their skill!"
+    para "Challenge 02"
+    next "''The Unreferenced''"
+    para "This save file contains"
+    next "exactly two maps."
+    para "You're currently standing"
+    next "in one of them, but the"
+    cont "other one is inaccessible."
+    para "Or is it? Perhaps there is"
+    next "a way to access it?"
+    para "That's your job. Enter the"
+    next "lost, hidden second map to"
+    cont "proceed."
+    para "Note: Forcing a game save"
+    next "without accessing the hidden"
+    cont "map will not complete the"
+    cont "challenge!"
+    done
+
+Map01_Trainers:
+Map01_Encounters:
+    db $ff

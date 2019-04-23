@@ -1,0 +1,259 @@
+; Map02
+
+MAP_02_WIDTH equ 12
+MAP_02_HEIGHT equ 16
+
+Map02_DataStruct:
+    dw Map02_Events
+    dw JustPlainRet
+    dw Map02_Blocks
+    dw Map02_Scripts
+    dw Map02_Encounters
+    dw Map02_Trainers
+
+Map02_Events:
+    db 0, 0
+    db 1 ; warps
+    warp_event 5, 9, MAP_06, 1
+    db 3 ; coord events
+    coord_event 11, 24, $ff, MapCallScriptInSRAM
+    coord_event 10, 24, $ff, MapCallScriptInSRAM
+    coord_event 9, 24, $ff, MapCallScriptInSRAM
+    db 2 ; bg events
+    bg_event 19, 13, 0, MapCallScriptInSRAM
+    bg_event 13, 5, 0, MapCallScriptInSRAM
+    db 7 ; obj events
+    object_event 15, 14, SPRITE_POKEFAN_M, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 16, 14, SPRITE_LASS, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 17, 14, SPRITE_YOUNGSTER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 9, 24, SPRITE_GYM_GUY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 13, 12, SPRITE_TWIN, SPRITEMOVEDATA_WALK_UP_DOWN, 0, 1, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 10, 4, SPRITE_YOUNGSTER, SPRITEMOVEDATA_STANDING_DOWN, 0, 1, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_TRAINER, 5, TrainerHeader_01, -1
+    object_event 7, 15, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 1, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_01, EVENT_ITEMBALL_K1_PRE_1
+
+Map02_Blocks:
+    incbin "maps/map02.blk"
+
+Map02_Scripts:
+    hybrid_ptr   Map02_SpecialEncountersSign      ; bg event 1
+    hybrid_ptr   Map02_TrainerBattlesSign         ; bg event 2
+    hybrid_ptr   Map02_SubstitutionsText1         ; obj event 1
+    unused_ptr
+    unused_ptr
+    hybrid_ptr   Map02_SubstitutionsText2         ; obj event 2
+    unused_ptr
+    unused_ptr
+    hybrid_ptr   Map02_SubstitutionsText3         ; obj event 3
+    unused_ptr
+    unused_ptr
+    hybrid_ptr   Map02_GuideText                  ; obj event 4
+    unused_ptr
+    unused_ptr
+    hybrid_ptr   Map02_TallGrassText              ; obj event 5
+    unused_ptr
+    unused_ptr
+    rawtxt_ptr   Map02_Trainer01_EncounterText    ; obj event 6
+    rawtxt_ptr   Map02_Trainer01_DefeatText
+    hybrid_ptr   Map02_Trainer01_PostText
+    unused_ptr                                    ; obj event 7
+    unused_ptr
+    unused_ptr
+    script_ptr   Map02_GuideScript                ; coord event 1
+    script_ptr   Map02_JumpOnGuideScript          ; coord event 2
+    script_ptr   Map02_JumpOnGuideScript          ; coord event 3
+
+Map02_SpecialEncountersSign:
+    tx_far 1, _Map02_SpecialEncountersSign
+
+Map02_TrainerBattlesSign:
+    text "When trainer eyes meet, it's"
+    next "time to battle!"
+    para "There are no Pokémon Centers"
+    next "in parallel universes, so"
+    cont "healing is very limited."
+    done
+
+Map02_SubstitutionsText1:
+    text "Whenever someone visits and"
+    next "leaves a universe, they cause"
+    cont "small disturbances in the"
+    cont "time-space continuum."
+    para "These disturbances lead to"
+    next "slight changes in our world."
+    cont "We call them 'augmentations'."
+    para "When a string of character"
+    next "dialogue has been affected"
+    cont "by an augmentation, it will"
+    cont "be written in <B>bold face</B>."
+    done
+
+Map02_SubstitutionsText2:
+    text "There's one thing I truly"
+    next "hate, and that's <B>{augment K01_PRE_1}</B>!"
+    para "Just thinking about <B>{augment K01_PRE_1}</B>"
+    next "makes me feel <B>{augment K01_PRE_2}</B>."
+    para "I think my friend <B>{augment K01_PRE_3 capitalize}</B>"
+    next "can relate to this."
+    done
+
+Map02_SubstitutionsText3:
+    text "My name is <B>{augment K01_PRE_3 capitalize}</B>, and"
+    next "I absolutely hate <B>{augment K01_PRE_1}</B>!"
+    para "<B>{augment K01_PRE_4 capitalize}</B> is just so much"
+    next "better I think. You agree?"
+    done
+
+Map02_GuideText:
+    text "Hi. I haven't seen you around"
+    next "here before."
+    para "How did you even get into"
+    next "that garden? I'm pretty sure"
+    cont "it was abandoned long ago."
+    para "Anyways, call me Willow."
+    next "It's a pleasure to meet you."
+    para "In the future I aspire to be"
+    next "a great Pokémon Professor."
+    para "The Glitch Islands are in"
+    next "quite a bit of trouble now."
+    para "Missingno., the Glitch Lord,"
+    next "has captured and possessed"
+    cont "many of our people."
+    para "I'm hoping to meet someone"
+    next "who's strong enough to defeat"
+    cont "him."
+    para "Maybe one day, someone will"
+    next "oppose Missingno. and help"
+    cont "rescue my friends."
+    para "Ah, yes, of course you can"
+    next "pass through. Although be"
+    cont "warned, Glitch Islands are"
+    cont "not particularly safe for"
+    cont "exploration right now..."
+    cont "Have a pleasant journey!"
+    tx_flagaction EVENT_MEET_GUIDE
+    tx_flagaction EVENT_TUTORIAL_WILLOW
+    done
+
+Map02_TallGrassText:
+    text "If you're not willing to"
+    next "fight, stay away from"
+    cont "grassy areas!"
+    para "Pokémon can attack in the"
+    next "tall grass."
+    cont "You have to be prepared!"
+    done
+
+Map02_Trainer01_EncounterText:
+    text "I like bicycles! It feels"
+    next "good when I run over bumps."
+    cont "Let's battle!"
+    done
+
+Map02_Trainer01_DefeatText:
+    text "No! But my Pokémon had so"
+    next "many attacks!"
+    done
+
+Map02_Trainer01_PostText:
+    text "I have a very nice scarf. It"
+    next "keeps me warm in the winter."
+    done
+
+Map02_GuideScript:
+    rel_base Map02_GuideScript
+    checkevent EVENT_MEET_GUIDE
+    iftrue_rel .end
+	showemote 0, OBJ_4, 15
+    applymovement_rel OBJ_4, .movement
+    applymovement_rel OBJ_PLAYER, .movement2
+    opentext
+	writetext_vwf Map02_GuideText
+	waitbutton
+	closetext
+.end
+    return
+.movement
+    step RIGHT
+    step_end
+.movement2
+    turn_head LEFT
+    step_end
+
+Map02_JumpOnGuideScript:
+    rel_base Map02_JumpOnGuideScript
+    callasm_rel .comparator
+    iftrue_rel .jumpedOnGuide
+    return
+.jumpedOnGuide
+    opentext
+	writetext_vwf Map02_JumpOnGuideText
+	waitbutton
+	closetext
+    applymovement_rel OBJ_PLAYER, .movement
+    return
+.movement
+    step DOWN
+    step_end
+.comparator
+    xor a
+    ld [wScriptVar], a
+    ld hl, wObject1StandingMapY
+    ld bc, wObject2StandingMapY - wObject1StandingMapY
+.findObj
+    ld a, [hl]
+    cp $1c
+    jr z, .found
+    add hl, bc
+    jr .findObj
+.found
+    ld a, [wPlayerStandingMapX]
+    ld b, a
+    dec hl
+    ld a, [hl]
+    cp b
+    ret nz
+    ld a, 1
+    ld [wScriptVar], a
+    ret
+
+Map02_JumpOnGuideText:
+    text "Ow, ow, ow!"
+    next "That really hurt!"
+    para "Please refrain from jumping"
+    next "on top of my head."
+    para "I know it's a fun glitch, but"
+    next "think about the NPCs you're"
+    cont "hurting along the way."
+    done
+
+Map02_Trainers:
+    dw JustPlainRet
+    dw JustPlainRet
+    dw JustPlainRet
+    dw JustPlainRet
+    dw JustPlainRet
+    dw Map02_Trainer01
+
+Map02_Trainer01:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -3}, {basic_mon}
+    db -1
+
+Map02_Encounters:
+    db {rnd_basic_mon 1}, {lv_rel -10}
+    db {rnd_basic_mon 1}, {lv_rel -9}
+    db {rnd_basic_mon 1}, {lv_rel -8}
+    db {rnd_basic_mon 1}, {lv_rel -7}
+    db {rnd_basic_mon 1}, {lv_rel -6}
+    db {rnd_basic_mon 1}, {lv_rel -5}
+    db {rnd_basic_mon 2}, {lv_rel -10}
+    db {rnd_basic_mon 2}, {lv_rel -9}
+    db {rnd_basic_mon 2}, {lv_rel -8}
+    db {rnd_basic_mon 2}, {lv_rel -7}
+    db {rnd_basic_mon 2}, {lv_rel -6}
+    db {rnd_basic_mon 2}, {lv_rel -5}
+    db {rnd_basic_mon 3}, {lv_rel -5}
+    db {rnd_basic_mon 3}, {lv_rel -4}
+    db {rnd_basic_mon 3}, {lv_rel -3}
+    db {rnd_basic_mon 4}, {lv_rel -6}

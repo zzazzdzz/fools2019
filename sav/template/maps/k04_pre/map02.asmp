@@ -1,0 +1,136 @@
+; Map02
+
+MAP_02_WIDTH equ 24
+MAP_02_HEIGHT equ 10
+
+Map02_DataStruct:
+    dw Map02_Events
+    dw JustPlainRet
+    dw Map02_Blocks
+    dw Map02_Scripts
+    dw Map02_Encounters
+    dw Map02_Trainers
+
+Map02_Events:
+    db 0, 0
+    db 2 ; warps
+    warp_event 16, 9, MAP_06, 1
+    warp_event 25, 5, MAP_07, 1
+    db 0 ; coord events
+    db 2 ; bg events
+    bg_event 17, 11, 0, MapCallScriptInSRAM
+    bg_event 24, 6, 0, MapCallScriptInSRAM
+    db 5 ; obj events
+    object_event 10, 12, SPRITE_SUPER_NERD, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_TRAINER, 4, TrainerHeader_03, -1
+    object_event 15, 14, SPRITE_TEACHER, SPRITEMOVEDATA_SPINCLOCKWISE, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_TRAINER, 3, TrainerHeader_04, -1
+    object_event 27, 12, SPRITE_YOUNGSTER, SPRITEMOVEDATA_SPINCOUNTERCLOCKWISE, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_TRAINER, 3, TrainerHeader_05, -1
+    object_event 39, 2, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 1, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_02, EVENT_ITEMBALL_K4_PRE_2
+    object_event 3, 6, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 1, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_03, EVENT_ITEMBALL_K4_PRE_3
+    
+Map02_Blocks:
+    incbin "maps/map02.blk"
+
+Map02_Scripts:
+    hybrid_ptr Map02_StockExchangeSign
+    hybrid_ptr Map02_BikeShopSign
+    rawtxt_ptr Map02_Trainer01_Encounter
+    rawtxt_ptr Map02_Trainer01_Defeat
+    hybrid_ptr Map02_Trainer01_Encounter
+    rawtxt_ptr Map02_Trainer02_Encounter
+    rawtxt_ptr Map02_Trainer02_Defeat
+    hybrid_ptr Map02_Trainer02_Encounter
+    rawtxt_ptr Map02_Trainer03_Encounter
+    rawtxt_ptr Map02_Trainer03_Defeat
+    hybrid_ptr Map02_Trainer03_Encounter
+
+Map02_Trainer01_Encounter:
+    text "Cleansing the corruption?"
+    next "Why would you want to do"
+    cont "that?"
+    para "Those '9' tiles look really"
+    next "aesthetic. You want to get"
+    cont "rid of them?"
+    done
+
+Map02_Trainer01_Defeat:
+    text "You clearly don't understand"
+    next "the beauty of glitches."
+    done
+
+Map02_Trainer02_Encounter:
+    text "Battling trainers near the"
+    next "Stock Exchange Building is"
+    cont "earning me a lot of money!"
+    para "Only rich people come to buy"
+    next "and sell stocks!"
+    done
+
+Map02_Trainer02_Defeat:
+    text "Unless someone defeats me."
+    next "Then I have to pay too..."
+    done
+
+Map02_Trainer03_Encounter:
+    text "I should visit this new"
+    next "Bike Shop that just opened."
+    para "Overworld movement is just"
+    next "so much faster with a bike!"
+    done
+
+Map02_Trainer03_Defeat:
+    text "I would have won if I had"
+    next "a bicycle!"
+    done
+
+Map02_Trainers:
+    dw Map02_Trainer01
+    dw Map02_Trainer02
+    dw Map02_Trainer03
+
+Map02_Trainer01:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -4}, {basic_mon}
+    db {lv_rel -3}, {basic_mon}
+    db -1
+
+Map02_Trainer02:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -7}, {basic_mon}
+    db {lv_rel -5}, {first_stage_mon}
+    db -1
+
+Map02_Trainer03:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_NORMAL
+    db {lv_rel -3}, {first_stage_mon}
+    db -1
+
+Map02_Encounters:
+    db {rnd_basic_mon 32}, {lv_rel -6}
+    db {rnd_basic_mon 32}, {lv_rel -5}
+    db {rnd_basic_mon 32}, {lv_rel -5}
+    db {rnd_basic_mon 32}, {lv_rel -4}
+    db {rnd_basic_mon 33}, {lv_rel -7}
+    db {rnd_basic_mon 33}, {lv_rel -6}
+    db {rnd_basic_mon 36}, {lv_rel -5}
+    db {rnd_basic_mon 36}, {lv_rel -6}
+    db {rnd_basic_mon 37}, {lv_rel -6}
+    db {rnd_basic_mon 37}, {lv_rel -5}
+    db {rnd_basic_mon 37}, {lv_rel -5}
+    db {rnd_basic_mon 38}, {lv_rel -7}
+    db {rnd_basic_mon 38}, {lv_rel -6}
+    db {rnd_basic_mon 38}, {lv_rel -6}
+    db {rnd_basic_mon 39}, {lv_rel -6}
+    db {rnd_basic_mon 39}, {lv_rel -5}
+
+Map02_StockExchangeSign:
+    text "Seaside Stock Exchange"
+    next "''Many monies is in pocket!''"
+    done
+
+Map02_BikeShopSign:
+    text "Seaside Kingdom Bike Shop"
+    next "''Slide freely everywhere!''"
+    done

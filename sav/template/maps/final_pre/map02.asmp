@@ -1,0 +1,62 @@
+; Map02
+
+MAP_02_WIDTH equ 16
+MAP_02_HEIGHT equ 24
+
+Map02_DataStruct:
+    dw Map02_Events
+    dw Map02_InitScript
+    dw Map02_Blocks
+    dw Map02_Scripts
+    dw Map02_Encounters
+    dw Map02_Trainers
+
+Map02_InitScript:
+    ld hl, wBikeFlags
+    set 0, [hl] ; strength boulders pushable
+    ret
+
+Map02_Events:
+    db 0, 0
+    db 6 ; warps
+    warp_event 5, 45, MAP_01, 1
+    warp_event 21, 31, MAP_03, 1
+    warp_event 15, 25, MAP_03, 3
+    warp_event 9, 15, MAP_03, 2
+    warp_event 23, 15, MAP_03, 4
+    warp_event 25, 5, MAP_04, 1
+    db 0 ; coord events
+    db 0 ; bg events
+    db 6 ; obj events
+    object_event 17, 38, SPRITE_BOULDER, SPRITEMOVEDATA_STRENGTH_BOULDER, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 17, 34, SPRITE_BOULDER, SPRITEMOVEDATA_STRENGTH_BOULDER, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 5, 34, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_01, EVENT_ITEMBALL_FINAL_1
+    object_event 24, 23, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_02, EVENT_ITEMBALL_FINAL_2
+    object_event 26, 17, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_03, EVENT_ITEMBALL_FINAL_3
+    object_event 6, 8, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_04, EVENT_ITEMBALL_FINAL_4
+
+Map02_Blocks:
+    incbin "maps/map02.blk"
+
+Map02_Scripts:
+    hybrid_ptr Map02_Boulder
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map02_Boulder
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map02_Boulder
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map02_Boulder
+    unused_ptr
+    unused_ptr
+
+Map02_Boulder:
+	text "It's a boulder. It's light"
+    next "enough to be pushable."
+    done
+
+Map02_Trainers:
+Map02_Encounters:
+    db $ff

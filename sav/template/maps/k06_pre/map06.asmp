@@ -1,0 +1,337 @@
+; Map06
+
+MAP_06_WIDTH equ 11
+MAP_06_HEIGHT equ 4
+
+Map06_DataStruct:
+    dw Map06_Events
+    dw JustPlainRet
+    dw Map06_Blocks
+    dw Map06_Scripts
+    dw Map06_Encounters
+    dw Map06_Trainers
+
+Map06_Events:
+    db 0, 0
+    db 4 ; warps
+	warp_event 2, 7, MAP_03, 2
+	warp_event 3, 7, MAP_03, 2
+	warp_event 16, 7, MAP_03, 3
+	warp_event 17, 7, MAP_03, 3
+    db 0 ; coord events
+    db 2 ; bg events
+    bg_event 3, 0, 0, MapCallScriptInSRAM
+    bg_event 7, 1, 0, MapCallScriptInSRAM
+    db 4 ; obj events
+    object_event 2, 4, SPRITE_TWIN, SPRITEMOVEDATA_STANDING_RIGHT, 1, 1, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 3, 3, SPRITE_PAPER, SPRITEMOVEDATA_STILL, 1, 1, -1, -1, PAL_NPC_BROWN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 17, 4, SPRITE_LASS, SPRITEMOVEDATA_STANDING_RIGHT, 1, 1, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 16, 1, SPRITE_KIMONO_GIRL, SPRITEMOVEDATA_STANDING_DOWN, 1, 1, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map06_Blocks:
+    incbin "maps/map06.blk"
+
+Map06_Scripts:
+    hybrid_ptr Map03_TownMap
+    hybrid_ptr Map03_Computer
+    script_ptr Map03_TrainQuestion
+    unused_ptr
+    unused_ptr
+    script_ptr Map03_SecretPaper
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map03_Florist
+    unused_ptr
+    unused_ptr
+    script_ptr Map03_Dealer
+    unused_ptr
+    unused_ptr
+
+Map03_Florist:
+    text "This house was sold a while"
+    next "back. I think it was first"
+    cont "owned by a game studio."
+    para "But they weren't able to"
+    next "put out their product fast"
+    cont "enough, and were forced to"
+    cont "pack up their stuff."
+    para "I'm the new owner, and I'm"
+    next "opening a flower shop here!"
+    done
+
+Map03_Dealer:
+    rel_base Map03_Dealer
+    faceplayer
+    opentext
+    showmart_rel .mart
+    closetext
+    end
+.mart
+    db 5
+    db POKE_BALL
+    db GREAT_BALL
+    db HYPER_POTION
+    db FULL_HEAL
+    db REVIVE
+    db $ff
+
+Map03_TownMap:
+    text "It's a Kanto town map. The"
+    next "S.S. Anne is marked there"
+    cont "for some weird reason."
+    done
+
+Map03_Computer:
+    text "A computer. There's a news"
+    next "site opened."
+    para "''Glitchland - Local citizen"
+    next "stuck inside an unused map''."
+    done
+
+Map03_SecretPaper:
+    rel_base Map03_SecretPaper
+    checkevent EVENT_K5_PRE_MATH_HOMEWORK
+    iffalse_rel .nope
+    opentext
+    writetext_vwf Map03_Looky
+    callasm SwitchToSRA3
+    callasm Map03_DrawSecretMap
+    waitbutton
+    closetext
+    end
+.nope
+    showemote 0, OBJ_1, 15
+    applymovement_rel OBJ_1, .movement1
+    opentext
+    writetext_vwf Map03_NoLooky
+    waitbutton
+    closetext
+    applymovement_rel OBJ_1, .movement2
+    end
+.movement1
+    turn_step UP
+    step_end
+.movement2
+    turn_step RIGHT
+    step_end
+
+Map03_NoLooky:
+    text "Hey! No looky!"
+    next "This is private stuff!"
+    done
+
+Map03_Looky:
+    text "There is a strange drawing"
+    next "on this paper..."
+    done
+
+Map03_DrawSecretMap:
+    ld de, .tileset
+	ld hl, $8800
+	ld bc, $0107
+	call Request1bpp
+    coord hl, 3, 4
+    ld bc, $060c
+    call TextBox
+	call UpdateSprites
+	call ApplyTilemap
+    coord hl, 4, 5
+    ld de, .tilemap
+    ld bc, SwitchToSRA3
+    push bc
+    ld bc, PutStringFromSRAMBank
+    push bc
+    ld bc, $0380
+    push bc
+    ld bc, $0618
+    push bc
+    ld bc, SwitchToSRA2
+    push bc
+    ret
+.tilemap
+    db $7f, $80, $81,$85,$82, $80, $81,$85,$82, $80, $7f,$80, $4f
+    db $81, $85, $83,$80,$86, $7f, $86,$80,$86, $7f, $7f,$80, $4f
+    db $86, $80, $7f,$7f,$86, $80, $86,$7f,$86, $80, $7f,$80, $4f
+    db $86, $7f, $7f,$80,$86, $7f, $86,$80,$84, $85, $82,$80, $4f
+    db $86, $80, $7f,$7f,$86, $80, $86,$7f,$7f, $80, $86,$80, $4f
+    db $83, $7f, $7f,$80,$84, $85, $83,$80,$7f, $7f, $84,$85, $50
+.tileset
+    db %00000000
+    db %00000000
+    db %00011000
+    db %00111100
+    db %00111100
+    db %00011000
+    db %00000000
+    db %00000000
+    ; ---
+    db %00000000
+    db %00000000
+    db %00000000
+    db %00001111
+    db %00011111
+    db %00011000
+    db %00011000
+    db %00011000
+    ; ---
+    db %00000000
+    db %00000000
+    db %00000000
+    db %11110000
+    db %11111000
+    db %00011000
+    db %00011000
+    db %00011000
+    ; ---
+    db %00011000
+    db %00011000
+    db %00011000
+    db %11111000
+    db %11110000
+    db %00000000
+    db %00000000
+    db %00000000
+    ; ---
+    db %00011000
+    db %00011000
+    db %00011000
+    db %00011111
+    db %00001111
+    db %00000000
+    db %00000000
+    db %00000000
+    ; ---
+    db %00000000
+    db %00000000
+    db %00000000
+    db %11111111
+    db %11111111
+    db %00000000
+    db %00000000
+    db %00000000
+    ; ---
+    db %00011000
+    db %00011000
+    db %00011000
+    db %00011000
+    db %00011000
+    db %00011000
+    db %00011000
+    db %00011000
+
+Map03_TrainQuestion:
+    rel_base Map03_TrainQuestion
+    faceplayer
+    opentext
+    checkevent EVENT_K5_PRE_MATH_HOMEWORK
+    iftrue_rel .ok
+    writetext_vwf Map03_HomeworkHelpText
+    callasm GenericYesNoTextbox
+    iffalse_rel .nope
+    writetext_vwf Map03_TrainQuestionText
+    callasm_rel .menu1
+    writetext_vwf Map03_TrainQuestionText2
+    callasm_rel .menu2
+    ifequal_rel $32, .ok
+    writetext_vwf Map03_WrongAnswerText
+    waitbutton
+.nope
+    closetext
+    end
+.ok
+    setevent EVENT_K5_PRE_MATH_HOMEWORK
+    writetext_vwf Map03_CorrectAnswerText
+    waitbutton
+    closetext
+    end
+
+.menu1
+    ld bc, $0808
+    ld hl, Map03_HomeworkMenu1
+    ld de, $0000
+    call DisplayChoiceMenu
+    swap a
+    ld [wScriptVar], a
+    ret
+.menu2
+    ld bc, $0808
+    ld hl, Map03_HomeworkMenu2
+    ld de, $0000
+    call DisplayChoiceMenu
+    ld hl, wScriptVar
+    or [hl]
+    ld [hl], a
+    ret
+
+Map03_HomeworkMenu1:
+    db $f9,$e8,$fc,$7f,$a7,$b1,$b2,$4f
+    db $fa,$e8,$f8,$7f,$a7,$b1,$b2,$4f
+    db $fb,$e8,$f7,$7f,$a7,$b1,$b2,$4f
+    db $fb,$e8,$ff,$7f,$a7,$b1,$b2,$4f ; !
+    db $fc,$e8,$f9,$7f,$a7,$b1,$b2,$4f
+    db $fc,$e8,$ff,$7f,$a7,$b1,$b2,$4f
+    db $fd,$e8,$fb,$7f,$a7,$b1,$b2,$4f
+    db $fe,$e8,$f7,$7f,$a7,$b1,$b2,$50
+
+Map03_HomeworkMenu2:
+    db $f6,$e8,$fe,$7f,$a7,$b1,$b2,$4f
+    db $f7,$e8,$f8,$7f,$a7,$b1,$b2,$4f
+    db $f7,$e8,$fb,$7f,$a7,$b1,$b2,$4f ;!
+    db $f8,$e8,$f9,$7f,$a7,$b1,$b2,$4f
+    db $f8,$e8,$fc,$7f,$a7,$b1,$b2,$4f
+    db $f9,$e8,$f7,$7f,$a7,$b1,$b2,$4f
+    db $f9,$e8,$fa,$7f,$a7,$b1,$b2,$4f
+    db $f9,$e8,$ff,$7f,$a7,$b1,$b2,$50
+
+Map03_HomeworkHelpText:
+    text "This is so hard!"
+    next "Could you perhaps help me"
+    cont "with my math homework?"
+    para "If you do, I'll share"
+    next "something interesting with"
+    cont "you! How about it?"
+    done
+
+Map03_TrainQuestionText:
+    text "Hmm, so let's see..."
+    para "Two trains, train A and train"
+    next "B, are riding on a closed,"
+    cont "circle-shaped track with a"
+    cont "150 mile diameter."
+    para "Assuming train A travels at"
+    next "60 mph, train B travels at"
+    cont "100 mph and they started at"
+    cont "maximum distance from each"
+    cont "other, how long until they"
+    cont "collide? Give both answers."
+    para "So, what is the first"
+    next "answer?"
+    done
+
+Map03_TrainQuestionText2:
+    text "OK, and what's the second"
+    next "answer?"
+    done
+
+Map03_WrongAnswerText:
+    text "Let me see... No, that"
+    next "doesn't seem right."
+    done
+
+Map03_CorrectAnswerText:
+    text "Let me see... Ah yes, that"
+    next "makes sense! I think that"
+    cont "is the correct answer!"
+    cont "Thank you!"
+    para "By the way, I found this"
+    next "really strange paper"
+    cont "outside. It looks like a"
+    cont "map of some sort."
+    para "I can't make anything out"
+    next "of it. You can take a look"
+    cont "at it if you want."
+    done
+
+Map06_Trainers:
+Map06_Encounters:
+    db $ff

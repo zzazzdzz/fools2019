@@ -1,0 +1,34 @@
+; Map03
+
+MAP_03_WIDTH equ 20
+MAP_03_HEIGHT equ 20
+
+Map03_DataStruct:
+    dw Map03_Events
+    dw JustPlainRet
+    dw Map03_Blocks
+    dw Map03_Scripts
+    dw Map03_Encounters
+    dw Map03_Trainers
+
+Map03_Events:
+    db 0, 0
+    db 4 ; warps
+    warp_event 9, 29, MAP_02, 2
+    warp_event 15, 5, MAP_02, 4
+    warp_event 27, 31, MAP_02, 3
+    warp_event 25, 11, MAP_02, 5
+    db 0 ; coord events
+    db 0 ; bg events
+    db 3 ; obj events
+    object_event 32, 32, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_05, EVENT_ITEMBALL_FINAL_5
+    object_event 7, 13, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_06, EVENT_ITEMBALL_FINAL_6
+    object_event 9, 24, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_07, EVENT_ITEMBALL_FINAL_7
+    
+Map03_Blocks:
+    incbin "maps/map03.blk"
+
+Map03_Scripts:
+Map03_Trainers:
+Map03_Encounters:
+    db $ff

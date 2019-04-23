@@ -1,0 +1,506 @@
+; Map06
+
+MAP_06_WIDTH equ 5
+MAP_06_HEIGHT equ 4
+
+Map06_DataStruct:
+    dw Map06_Events
+    dw JustPlainRet
+    dw Map06_Blocks
+    dw Map06_Scripts
+    dw Map06_Encounters
+    dw Map06_Trainers
+
+Map06_Events:
+    db 0, 0
+    db 2 ; warps
+    warp_event 5, 7, MAP_02, 1
+    warp_event 6, 7, MAP_02, 1
+    db 2 ; coord events
+    coord_event 5, 7, $ff, MapCallScriptInSRAM
+    coord_event 6, 7, $ff, MapCallScriptInSRAM
+    db 2 ; bg events
+    bg_event 1, 4, 0, MapCallScriptInSRAM
+    bg_event 3, 4, 0, MapCallScriptInSRAM
+    db 4 ; obj events
+    object_event 1, 3, SPRITE_LINK_RECEPTIONIST, SPRITEMOVEDATA_STANDING_DOWN, 0, 1, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 8, 3, SPRITE_POKEFAN_M, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 1, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 9, 5, SPRITE_SUPER_NERD, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 1, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 5, 3, SPRITE_LASS, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 1, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    
+Map06_Blocks:
+    incbin "maps/map06.blk"
+
+Map06_Scripts:
+    script_ptr Map06_StockExchange
+    script_ptr Map06_WaitingComputer
+    script_ptr Map06_StockExchange
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map06_NPC2
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map06_NPC3
+    unused_ptr
+    unused_ptr
+    hybrid_ptr Map06_NPC1
+    unused_ptr
+    unused_ptr
+    script_ptr Map06_CheckStocksInPortfolio
+    script_ptr Map06_CheckStocksInPortfolio
+
+Map06_Trainers:
+Map06_Encounters:
+    db $ff
+
+Map06_StockExchange:
+    rel_base Map06_StockExchange
+    opentext
+    writetext_vwf Map06_WelcomeToStockMarket
+    callasm_rel Map06_StockExchange_BuyOrSell
+    closetext
+    end
+
+Map06_StockExchange_BuyOrSell:
+    ld bc, $0305
+    ld hl, Map06_StockExchange_BuySellMenu
+    ld de, $0102
+    call DisplayChoiceMenu
+    and a
+    jr z, Map06_StockExchange_Buy
+    dec a
+    jr z, Map06_StockExchange_Sell
+    ret
+
+Map06_StockExchange_Buy:
+    push af
+    call SwitchToSRA3
+    pop af
+    call Map06_WriteStockPricesToMenu
+    call SwitchToSRA2
+    ld hl, Map06_WantToBuyText
+    call PrintTextVWF
+    call PreserveMenu
+.next
+    farcall PlaceMoneyTopRight
+    ld bc, $0512
+    ld hl, Map06_StockExchange_Companies
+    ld de, $01FF
+    ld a, 1
+    ld [sMenuClearOnExit], a
+    call DisplayChoiceMenuNoBackup
+    ld [sMenuStartingCursorPosition], a
+    cp $ff
+    jr z, .quit
+    push af
+    call SwitchToSRA3
+    pop af
+    call Map06_BuyStock
+    call SwitchToSRA2
+    jr .next
+.quit
+    xor a
+    ld [sMenuStartingCursorPosition], a
+    call CleanseMenu
+    ld hl, Map06_AnythingElseText
+    call PrintTextVWF
+    jr Map06_StockExchange_BuyOrSell
+
+Map06_StockExchange_Sell:
+    push af
+    call SwitchToSRA3
+    pop af
+    call Map06_WriteStockLotsToMenu
+    call SwitchToSRA2
+    ld hl, Map06_WantToSellText
+    call PrintTextVWF
+    call PreserveMenu
+.next
+    farcall PlaceMoneyTopRight
+    ld bc, $0512
+    ld hl, Map06_StockExchange_Companies
+    ld de, $01FF
+    ld a, 1
+    ld [sMenuClearOnExit], a
+    call DisplayChoiceMenuNoBackup
+    ld [sMenuStartingCursorPosition], a
+    cp $ff
+    jr z, .quit
+    push af
+    call SwitchToSRA3
+    pop af
+    call Map06_SellStock
+    call Map06_WriteStockLotsToMenu
+    call SwitchToSRA2
+    jr .next
+.quit
+    xor a
+    ld [sMenuStartingCursorPosition], a
+    call CleanseMenu
+    ld hl, Map06_AnythingElseText
+    call PrintTextVWF
+    jp rel_ptr Map06_StockExchange_BuyOrSell
+
+Map06_BuyStock:
+    push af
+    ld hl, Map06_StockExchange_Prices
+    ld bc, 3
+    call AddNTimes
+    ld de, wMoney
+    ld b, h
+    ld c, l
+    farcall CompareMoney
+    jr c, .notEnough
+	pop af
+    push hl
+    ld h, $c9
+    ld l, a
+    ld a, [hl]
+    cp 250
+    jr z, .notEnough
+    inc [hl]
+    pop hl
+    farcall TakeMoney
+    ld a, $22
+    ld [wCurSFX], a
+    ld de, SFX_TRANSACTION
+    call PlaySFX
+    ret
+.notEnough
+    pop af
+    ret
+
+Map06_SellStock:
+    push af
+    ld hl, Map06_StockExchange_Prices
+    ld bc, 3
+    call AddNTimes
+    pop af
+    push hl
+    ld h, $c9
+    ld l, a
+    ld a, [hl]
+    and a
+    jr z, .noShares
+    dec [hl]
+    pop hl
+    ld de, wMoney
+    ld b, h
+    ld c, l
+    farcall GiveMoney
+    ld a, $22
+    ld [wCurSFX], a
+    ld de, SFX_TRANSACTION
+    call PlaySFX
+    ret
+.noShares
+    pop hl
+    ret
+
+Map06_WriteStockPricesToMenu:
+    ld hl, $c908
+    ld a, [hl]
+    and a
+    jr nz, .skipInit
+    dec a
+    ld [hli], a
+    ld de, wMoney
+    ld a, [de]
+    ld [hli], a
+    inc de
+    ld a, [de]
+    ld [hli], a
+    inc de
+    ld a, [de]
+    ld [hl], a
+.skipInit
+    ld de, Map06_StockExchange_Prices
+    ld hl, Map06_StockExchange_Company1Price
+    ld a, 5
+.print
+    push af
+    ld bc, $2303
+    push de
+    push hl
+    call PrintNum
+    pop hl
+    pop de
+    inc de
+    inc de
+    inc de
+    ld bc, Map06_StockExchange_Company2Price - Map06_StockExchange_Company1Price
+    add hl, bc
+    pop af
+    dec a
+    jr nz, .print
+    ret
+
+Map06_WriteStockLotsToMenu:
+    ld de, $c900
+    ld hl, Map06_StockExchange_Company1Price
+    ld a, 5
+.print
+    push af
+    ld bc, $8103
+    push de
+    push hl
+    ld [hl], $f1
+    inc hl
+    call PrintNum
+    pop hl
+    pop de
+    inc de
+    ld bc, Map06_StockExchange_Company2Price - Map06_StockExchange_Company1Price
+    add hl, bc
+    pop af
+    dec a
+    jr nz, .print
+    ret
+
+Map06_ChangeStockPrices:
+    ld a, 5
+    ld de, Map06_StockExchange_Prices
+.next
+    push af
+    push de
+    call Random
+    ld b, a
+    and $7f
+    ld [.moneyBufLow], a
+    bit 7, b
+    ld bc, .moneyBuf
+    jr z, .subFromPrice
+.addToPrice
+    farcall GiveMoney
+    jr .cont
+.subFromPrice
+    farcall TakeMoney
+.cont
+    pop de
+    inc de
+    ld a, [de]
+    cp 3
+    jr nz, .notTooHigh
+    ld a, 2
+    ld [de], a
+.notTooHigh
+    and a
+    jr nz, .notTooLow
+    ld a, 1
+    ld [de], a
+.notTooLow
+    inc de
+    inc de
+    pop af
+    dec a
+    jr nz, .next
+    ret
+.moneyBuf
+    db 0, 0
+.moneyBufLow
+    db 0
+
+Map06_CheckStocksInPortfolio:
+    rel_base Map06_CheckStocksInPortfolio
+    copybytetovar $c900
+    iftrue_rel .stillHasStocks
+    copybytetovar $c901
+    iftrue_rel .stillHasStocks
+    copybytetovar $c902
+    iftrue_rel .stillHasStocks
+    copybytetovar $c903
+    iftrue_rel .stillHasStocks
+    copybytetovar $c904
+    iftrue_rel .stillHasStocks
+    callasm_rel .asm
+    end
+.stillHasStocks
+    opentext
+    writetext_vwf Map06_StillHasStocksText
+    waitbutton
+    closetext
+    applymovement_rel OBJ_PLAYER, .movement
+    end
+.movement
+    step UP
+    step_end
+.asm
+    ld a, [$c908]
+    and a
+    ret z
+    xor a
+    ld hl, $c90d
+    ld [hli], a
+    ld [hli], a
+    ld [hl], a
+    ld de, $c90d
+    ld bc, wMoney
+    farcall GiveMoney
+    ld de, $c90d
+    ld bc, $c909
+    farcall TakeMoney
+    ld de, $c90d
+    ld bc, rel_ptr .threshold
+    farcall CompareMoney
+    ret c
+    ld b, b
+    ld b, 1 ; SET_FLAG
+    ld de, EVENT_K4_STOCK_MARKET_PROFIT
+	jp EventFlagAction
+.threshold
+    db $00, $27, $10
+
+Map06_StillHasStocksText:
+    text "You still have shares in"
+    next "your portfolio."
+    cont "Sell them before leaving!"
+    para "If you want to pass the time"
+    next "and wait for prices to"
+    cont "change, use the PC next to"
+    cont "the counter."
+    done
+
+Map06_WaitingComputer:
+    rel_base Map06_WaitingComputer
+    opentext
+    writetext_vwf Map06_WaitingComputer_Text
+    callasm_rel .asm
+    iftrue_rel .nope
+    closetext
+    special FadeBlackQuickly
+	special ReloadSpritesNoPalettes
+	special HealParty
+	playmusic 0
+    playsound SFX_SING
+	pause 120
+	special RestartMapMusic
+	special FadeInQuickly
+    callasm SwitchToSRA3
+    callasm Map06_ChangeStockPrices
+    callasm SwitchToSRA2
+    opentext
+    writetext_vwf Map06_Waited_Text
+    waitbutton
+.nope
+    closetext
+    end
+.asm
+    ld bc, $020f
+    ld hl, Map06_StockExchange_WaitMenu
+    ld de, $0101
+    call DisplayChoiceMenu
+    ld [wScriptVar], a
+    ret
+
+Map06_WaitingComputer_Text:
+    text "This computer has a lot of"
+    next "games installed!"
+    para "You could probably pass the"
+    next "time here, while waiting for"
+    cont "stock prices to change..."
+    done
+
+Map06_Waited_Text:
+    text "A lot of time has passed."
+    next "Stock prices have probably"
+    cont "changed in the meantime!"
+    done
+
+Map06_StockExchange_WaitMenu:
+    db $87,$a0,$b5,$a4,$7f,$b2,$ae,$ac,$a4,$7f,$a5,$b4,$ad,$e7,$4f
+    db $96,$a7,$a0,$b3,$a4,$b5,$a4,$b1,$50
+
+Map06_StockExchange_BuySellMenu:
+    db $81,$b4,$b8,$4f
+    db $92,$a4,$ab,$ab,$4f
+    db $8c,$a4,$a7,$50
+
+Map06_StockExchange_Companies:
+    db {augment K04_PRE_STOCK_1 capitalize concat corp rpad 13 poke_charset}
+Map06_StockExchange_Company1Price:
+    db $7f,$7f,$7f,$7f
+    db $4f
+    db {augment K04_PRE_STOCK_2 capitalize concat tech rpad 13 poke_charset}
+Map06_StockExchange_Company2Price:
+    db $7f,$7f,$7f,$7f
+    db $4f
+    db {augment K04_PRE_STOCK_3 capitalize concat _Inc. rpad 13 poke_charset}
+Map06_StockExchange_Company3Price:
+    db $7f,$7f,$7f,$7f
+    db $4f
+    db {augment K04_PRE_STOCK_4 capitalize concat _LLC rpad 13 poke_charset}
+Map06_StockExchange_Company4Price:
+    db $7f,$7f,$7f,$7f
+    db $4f
+    db {augment K04_PRE_STOCK_5 capitalize rpad 13 poke_charset}
+Map06_StockExchange_Company5Price:
+    db $7f,$7f,$7f,$7f
+    db $50
+
+Map06_StockExchange_Prices:
+    db 0
+    bigdw {rnd 150 700}
+    db 0
+    bigdw {rnd 150 700}
+    db 0
+    bigdw {rnd 150 700}
+    db 0
+    bigdw {rnd 150 700}
+    db 0
+    bigdw {rnd 150 700}
+
+Map06_WelcomeToStockMarket:
+    text "Welcome to Seaside Kingdom"
+    next "Stock Exchange!"
+    para "Here you can buy and sell"
+    next "shares of several Glitch"
+    cont "Islands companies."
+    para "Do you want to buy?"
+    next "Or do you want to sell?"
+    done
+
+Map06_WantToBuyText:
+    text "Oh, so you want to buy?"
+    next "Certainly. Which company?"
+    done
+
+Map06_WantToSellText:
+    text "Want to sell? No problem."
+    next "Which shares to sell?"
+    done
+
+Map06_AnythingElseText:
+    text "Anything else that I can"
+    next "do for you?"
+    done
+
+Map06_NPC1:
+    text "You wanna hear about my"
+    next "investment strategy?"
+    para "Putting all of my eggs in"
+    next "one basket!"
+    para "I'm glad I have the luxury"
+    next "of going back in time with"
+    cont "my magic savestate button"
+    cont "if anything goes wrong!"
+    para "It probably works with"
+    next "real life stock market too!"
+    done
+
+Map06_NPC2:
+    text "Hey! Here's a small"
+    next "investment tip for you!"
+    para "When the price is low, it"
+    next "has nowhere to go but up."
+    para "And when the price is high,"
+    next "it is surely going to fall."
+    para "Invest in small, cheap"
+    next "stocks for maximum profit!"
+    done
+
+Map06_NPC3:
+    text "I put all of my money in"
+    next "<B>{augment K04_PRE_STOCK_1 capitalize concat corp}</B>!"
+    para "It just seemed like a right"
+    next "thing to do."
+    done

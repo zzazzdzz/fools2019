@@ -1,0 +1,98 @@
+; Map01
+
+MAP_01_WIDTH equ 10
+MAP_01_HEIGHT equ 8
+
+Map01_DataStruct:
+    dw Map01_Events
+    dw JustPlainRet
+    dw Map01_Blocks
+    dw Map01_Scripts
+    dw Map01_Encounters
+    dw Map01_Trainers
+
+Map01_Events:
+    db 0, 0
+    db 0
+    db 0 ; coord events
+    db 1 ; bg events
+    bg_event 13, 5, 0, MapCallScriptInSRAM
+    db 3 ; obj events
+    object_event 10, 5, SPRITE_GYM_GUY, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 12, 8, SPRITE_FISHER, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, -1
+    object_event 3, 8, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 1, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_01, EVENT_ITEMBALL_K1_POST_1
+    
+Map01_Blocks:
+    incbin "maps/map01.blk"
+
+Map01_Scripts:
+    hybrid_ptr   Map01_SignpostText         ; bg event 1
+    hybrid_ptr   Map01_GuideLakeGardens     ; obj event 1
+    unused_ptr
+    unused_ptr
+    script_ptr   Map01_MetapodGuy           ; obj event 2
+    unused_ptr
+    unused_ptr
+    ; obj event 3 (itemball, unused)
+
+Map01_SignpostText:
+    text "A brand new signpost..."
+    para "Tutorial Kingdom Lake"
+    next "Gardens. Now open!"
+    done
+
+Map01_GuideLakeGardens:
+    tx_far 1, _Map01_GuideLakeGardens
+
+Map01_MetapodGuy:
+    rel_base Map01_MetapodGuy
+    faceplayer
+    opentext
+    checkevent EVENT_SHOWED_METAPOD
+    iftrue_rel .showed
+    writetext_vwf Map01_MetapodGuyPreText
+    waitbutton
+    loadvar wScriptVar, METAPOD
+    callasm SwitchToSRA2
+    callasm HasMonInParty
+    iftrue_rel .has
+    closetext
+    return
+.has
+    writetext_vwf Map01_HasMetapodText
+    waitbutton
+    verbosegiveitem RARE_CANDY
+    closetext
+    setevent EVENT_SHOWED_METAPOD
+    return
+.showed
+    writetext_vwf Map01_ShowedMetapodText
+    waitbutton
+    closetext
+    return
+
+Map01_MetapodGuyPreText:
+    tx_far 1, _Map01_MetapodGuyPreText
+
+Map01_HasMetapodText:
+    text "Oh, that one... was it..."
+    next "Metapod?"
+    para "It really doesn't look like"
+    next "an aquatic Pokémon species."
+    para "It's as if it's a glitch of"
+    next "some kind. Like it wasn't ever"
+    cont "intended to live in water..."
+    para "Anyways, thanks for your help."
+    next "Have this as a token of my"
+    cont "gratitude."
+    done
+
+Map01_ShowedMetapodText:
+    text "Interesting... so Metapod"
+    next "doesn't look like an aquatic"
+    cont "Pokémon..."
+    done
+
+Map01_Trainers:
+Map01_Encounters:
+    db $ff

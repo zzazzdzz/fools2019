@@ -1,0 +1,31 @@
+; Map08
+
+MAP_08_WIDTH equ 4
+MAP_08_HEIGHT equ 3
+
+Map08_DataStruct:
+    dw Map08_Events
+    dw JustPlainRet
+    dw Map08_Blocks
+    dw Map08_Scripts
+    dw Map08_Encounters
+    dw Map08_Trainers
+
+Map08_Events:
+    db 0, 0
+    db 2
+    warp_event 3, 5, MAP_03, 2
+    warp_event 4, 5, MAP_03, 2
+    db 0 ; coord events
+    db 0 ; bg events
+    db 2 ; obj events
+    object_event 3, 2, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 1, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_04, EVENT_ITEMBALL_K4_POST_1
+    object_event 4, 2, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 1, -1, -1, 0, OBJECTTYPE_ITEMBALL, 0, ItemHeader_05, EVENT_ITEMBALL_K4_POST_2
+    
+Map08_Blocks:
+    incbin "maps/map08.blk"
+
+Map08_Scripts:
+Map08_Trainers:
+Map08_Encounters:
+    db $ff

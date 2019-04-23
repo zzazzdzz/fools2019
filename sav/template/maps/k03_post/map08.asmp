@@ -1,0 +1,298 @@
+; Map08
+
+MAP_08_WIDTH equ 20
+MAP_08_HEIGHT equ 15
+
+Map08_DataStruct:
+    dw Map08_Events
+    dw JustPlainRet
+    dw Map08_Blocks
+    dw Map08_Scripts
+    dw Map08_Encounters
+    dw Map08_Trainers
+
+Map08_Events:
+    db 0, 0
+    db 1 ; warps
+    warp_event 5, 27, MAP_01, 2
+    db 0 ; coord events
+    db 5 ; bg events
+    bg_event 32, 4, 0, MapCallScriptInSRAM
+    bg_event 35, 4, 0, MapCallScriptInSRAM
+    bg_event 32, 7, 0, MapCallScriptInSRAM
+    bg_event 35, 7, 0, MapCallScriptInSRAM
+    bg_event 36, 11, 0, MapCallScriptInSRAM
+    db 9 ; obj events
+    object_event 200, 200, SPRITE_RED, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, ObjectEvent, -1
+    object_event 11, 17, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, EVENT_ITEMBALL_K3_POST_2
+    object_event 10, 12, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, EVENT_ITEMBALL_K3_POST_3
+    object_event 37, 26, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, EVENT_ITEMBALL_K3_POST_4
+    object_event 14, 27, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, EVENT_ITEMBALL_K3_POST_5
+    object_event 16, 11, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, EVENT_ITEMBALL_K3_POST_6
+    object_event 35, 21, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, EVENT_ITEMBALL_K3_POST_7
+    object_event 16, 6, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, EVENT_ITEMBALL_K3_POST_8
+    object_event 18, 7, SPRITE_POKE_BALL, SPRITEMOVEDATA_STILL, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, MapCallScriptInSRAM, EVENT_ITEMBALL_K3_POST_9
+    
+Map08_Blocks:
+    incbin "maps/map08.blk"
+
+Map08_Scripts:
+    script_ptr Map08_BraillePiece
+    script_ptr Map08_BraillePiece
+    script_ptr Map08_BraillePiece
+    script_ptr Map08_BraillePiece
+    script_ptr Map08_BrailleFinalPiece
+    hybrid_ptr Map08_DotDotDot
+    hybrid_ptr Map08_DotDotDot
+    unused_ptr
+    script_ptr GlobalItemballScript
+    unused_ptr
+    unused_ptr
+    script_ptr GlobalItemballScript
+    unused_ptr
+    unused_ptr
+    script_ptr GlobalItemballScript
+    unused_ptr
+    unused_ptr
+    script_ptr GlobalItemballScript
+    unused_ptr
+    unused_ptr
+    script_ptr GlobalItemballScript
+    unused_ptr
+    unused_ptr
+    script_ptr GlobalItemballScript
+    unused_ptr
+    unused_ptr
+    script_ptr GlobalItemballScript
+    unused_ptr
+    unused_ptr
+    script_ptr GlobalItemballScript
+    unused_ptr
+    unused_ptr
+
+sBraillePuzzleStatus:
+    db 0
+
+BraillePuzzle:
+    ld a, [sBraillePuzzleStatus]
+    add a
+    ld c, a
+    ld b, 0
+    ld hl, .steps
+    add hl, bc
+    ld a, [hli]
+    ld c, [hl]
+    ld b, a
+    call .test
+    jr nz, .firstFail
+.next
+    ld hl, sBraillePuzzleStatus
+    inc [hl]
+    ret
+.firstFail
+    xor a
+    ld [sBraillePuzzleStatus], a
+    ld bc, $030C
+    call .test
+    jr z, .next
+    ret
+.test
+    ld a, [wCurrentScriptID]
+    cp b
+    ret nz
+    ld a, [wPlayerFacing]
+    and %11111100
+    cp c
+    ret
+.steps
+    db $03, $0C
+    db $03, $08
+    db $01, $00
+    db $04, $04
+    db $04, $04
+    db $02, $08
+    db $00, $00
+
+Map08_BraillePiece:
+    rel_base Map08_BraillePiece
+    opentext
+    writetext EmptyTextbox
+    callasm_rel .asm
+    waitbutton
+    closetext
+    end
+.asm
+    ld a, 3
+    ld [wPrintTextVWFSourceBank], a
+    ld a, [wCurrentScriptID]
+    dec a
+    ld hl, rel_ptr .table
+    call TextboxTable
+    call SwitchToSRA3
+    jp BraillePuzzle
+.table
+    dw Map08_Braille1
+    dw Map08_Braille2
+    dw Map08_Braille3
+    dw Map08_Braille4
+
+Map08_BrailleFinalPiece:
+    rel_base Map08_BrailleFinalPiece
+    opentext
+    checkevent EVENT_K3_LAYLAH_BLESSING
+    iftrue_rel .rock
+    callasm SwitchToSRA3
+    copybytetovar sBraillePuzzleStatus
+    ifequal_rel 6, .final
+.rock
+    writetext_vwf Map08_SuspiciousRockText
+    waitbutton
+    closetext
+    end
+.final
+    loadvar wMusicFade, 10
+    writetext_vwf Map08_BrailleFinalChallenge
+    setlasttalked 1
+    winlosstext MapWriteTextInSRAM, 0
+    loadvar wTrainerCurrentTheme, MUSIC_KANTO_GYM_LEADER_BATTLE
+    loadvar wRivalName, $E6
+    loadvar wRivalName+1, $50
+	loadtrainer RIVAL1, 1
+    dontrestartmapmusic
+    startandwaitbattle
+    opentext
+    writetext_vwf Map08_BrailleFinalChallengeCleared
+    closetext
+    playsound SFX_EMBER
+    earthquake 110
+    playsound SFX_EMBER
+    earthquake 110
+    pause 30
+    special FadeBlackQuickly
+    playsound SFX_GAME_FREAK_PRESENTS
+    pause 10
+    special FadeInQuickly
+    pause 10
+    opentext
+    writetext_vwf Map08_BlessingText
+    playsound SFX_1ST_PLACE
+    pause 130
+    playmapmusic
+    playmusic MUSIC_DARK_CAVE
+    setevent EVENT_K3_LAYLAH_BLESSING
+    writetext_vwf Map08_BlessingTextItem
+    giveitem SACRED_ASH
+    callasm SwitchToSRA2
+    callasm VerboseBagFuckTrampoline
+    closetext
+    end
+
+Map08_SuspiciousRockText:
+    text "This is a rock."
+    next "What an interesting rock!"
+    para "The humor in this hack has"
+    next "really hit rock bottom."
+    done
+
+Map08_BrailleFinalChallenge:
+    text "A voice echoes from far,"
+    next "far away..."
+    tx_delayframes 120
+    tx_paranowait
+    text "I am Laylah, the Divine"
+    next "Spirit of Bootleg Kingdom..."
+    tx_delayframes 120
+    tx_paranowait
+    text "The Dark Lord's power has"
+    next "sealed me away in this cave..."
+    tx_delayframes 120
+    tx_paranowait
+    text "If you can release me, I will"
+    next "bestow upon you a blessing."
+    tx_delayframes 120
+    tx_paranowait
+    text "Let this trial be a test of"
+    next "your strength."
+    tx_delayframes 120
+    done
+
+Map08_BrailleFinalChallengeCleared:
+    text "Through this battle, you"
+    next "have proved your strength."
+    tx_delayframes 120
+    tx_paranowait
+    text "I will now bestow my"
+    next "blessing upon you..."
+    tx_delayframes 120
+    done
+
+Map08_BlessingText:
+    text "You have received the"
+    next "Blessing of Laylah."
+    para "Natural regeneration speed"
+    next "of augmentation tokens has"
+    cont "been doubled!"
+    done
+
+Map08_BlessingTextItem:
+    text "What? There's also an item"
+    next "underneath this rock?"
+    wait
+
+Map08_Braille1:
+    tx_braille
+    text "SECOND HERE"
+    next "TALK FROM TOP"
+    done
+
+Map08_Braille2:
+    tx_braille
+    text "FOURTH HERE TALK FROM"
+    next "RIGHT AND GO ALL DOWN"
+    done
+
+Map08_Braille3:
+    tx_braille
+    text "FIRST HERE TALK FROM"
+    next "LEFT THEN FROM RIGHT"
+    done
+
+Map08_Braille4:
+    tx_braille
+    text "THIRD FROM HERE TALK"
+    next "FROM BOTTOM TWICE"
+    done
+
+Map08_DotDotDot:
+    text "... ..."
+    next "... ..."
+    done
+
+Map08_Trainers:
+    dw Map08_Laylah
+
+Map08_Laylah:
+    trainer_name ""
+    trainer_roster TRAINERTYPE_MOVES
+    db {lv_rel -5}, MOLTRES, FLAMETHROWER, FIRE_BLAST, SWIFT, NO_MOVE
+    db {lv_rel -5}, ZAPDOS, THUNDER, ZAP_CANNON, SWIFT, NO_MOVE
+    db {lv_rel -5}, ARTICUNO, ICE_BEAM, BLIZZARD, SWIFT, NO_MOVE
+    db -1
+
+Map08_Encounters:
+    db {rnd_basic_mon 27}, {lv_rel -6}
+    db {rnd_basic_mon 27}, {lv_rel -5}
+    db {rnd_basic_mon 27}, {lv_rel -4}
+    db {rnd_basic_mon 28}, {lv_rel -6}
+    db {rnd_basic_mon 28}, {lv_rel -5}
+    db {rnd_basic_mon 28}, {lv_rel -5}
+    db {rnd_basic_mon 28}, {lv_rel -4}
+    db {rnd_basic_mon 29}, {lv_rel -5}
+    db {rnd_basic_mon 29}, {lv_rel -5}
+    db {rnd_basic_mon 29}, {lv_rel -4}
+    db {rnd_basic_mon 29}, {lv_rel -4}
+    db {rnd_basic_mon 30}, {lv_rel -6}
+    db {rnd_basic_mon 30}, {lv_rel -5}
+    db {rnd_basic_mon 30}, {lv_rel -4}
+    db {rnd_basic_mon 31}, {lv_rel -5}
+    db {rnd_basic_mon 31}, {lv_rel -3}
