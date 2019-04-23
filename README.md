@@ -9,7 +9,7 @@ Note: Everything here is kept for historical record. Any bugs and issues will no
 - *server/* - the backend server, responsible for compiling save files and handling all of the usual event stuff (users, achievements, keeping track of progress).
 - *site/* - the event site, just like it was on the 1st of April; along with the HTML5 game client.
 - *wordnet/* - [WordNet](https://wordnet.princeton.edu/) databases, for use in the augmentation system.
-- *extras/* - some other useful things, like configuration files and DDL database dumps.
+- *extras/* - some other useful things.
 - *docs/* - just the [project site](https://zzazzdzz.github.io/fools2019/), nothing useful here.
 
 # Setup instructions
