@@ -47,7 +47,7 @@ DMAHijackingCallback:
     call DMAHijackingBlackoutCheck
     ; preserve ROM bank, RAM bank and farcall variables
     ldh a, [hROMBank]
-	ldh [hROMBankBackup], a
+    ldh [hROMBankBackup], a
     ldh a, [hBuffer]
     ld [sHBufferBackup], a
     ld a, [wFarCallBCBuffer]
@@ -58,7 +58,7 @@ DMAHijackingCallback:
     ld [sRAMBankBackup], a
     ; switch to WRA1
     ld a, 1
-	ldh [rSVBK], a
+    ldh [rSVBK], a
     ; read the original return address
     ld hl, sp + -70
     ld de, DMAHijackingCallbackSMC1 + 1
@@ -106,7 +106,7 @@ DMAHijackingCallback:
     ; restore everything now
     ld [wDMAHookExecutionCounter], a
     ldh a, [hROMBankBackup]
-	rst $10
+    rst $10
     ld a, [sHBufferBackup]
     ld [hBuffer], a
     ld a, [sBCBufferBackup]
@@ -114,7 +114,7 @@ DMAHijackingCallback:
     ld a, [sBCBufferBackup+1]
     ld [wFarCallBCBuffer+1], a
     ld a, [sRAMBankBackup]
-	ldh [rSVBK], a
+    ldh [rSVBK], a
     ; jump to the original return address, also make sure all registers are
     ; preserved
     pop hl
@@ -273,7 +273,7 @@ DMAHijacking_TrainerBattle:
 .nameFinished
     prepare_sram_call 3, $57B8 ; ReadTrainerParty.got_trainer
     ld a, b_ReadTrainerParty
-	rst $10
+    rst $10
     pop hl
     call CallInSRAMBank
     ld hl, wOTPartySpecies
@@ -285,7 +285,7 @@ DMAHijacking_TrainerBattle:
     push hl
     ld [wNamedObjectIndexBuffer], a
     push de
-	call GetPokemonName
+    call GetPokemonName
     pop de
     ld hl, wStringBuffer1
     ld bc, $B ; NAME_LENGTH

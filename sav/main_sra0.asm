@@ -156,7 +156,7 @@ UnmissingnedAnimation:
     add hl, de
     ld [hl], 7
     call IncAllTiles
-	call ApplyTilemap
+    call ApplyTilemap
     pop bc
     pop hl
     inc c
@@ -171,7 +171,7 @@ UnmissingnedAnimation:
     call z, PlaySFX
     push bc
     call IncAllTiles
-	call ApplyTilemap
+    call ApplyTilemap
     pop bc
     dec c
     jr nz, .waitLoop
@@ -197,7 +197,7 @@ UnmissingnedAnimation:
     add hl, de
     ld [hl], c
     call IncAllTiles
-	call ApplyTilemap
+    call ApplyTilemap
     pop bc
     pop hl
     jr .animThirdPart
@@ -214,9 +214,9 @@ VerboseBagFuck:
     ld a, b_CurItemName
     rst $10
     call CurItemName
-	ld de, wStringBuffer1
-	ld a, 1
-	call CopyConvertedText
+    ld de, wStringBuffer1
+    ld a, 1
+    call CopyConvertedText
     ld hl, BagFuckReceivedText
     call PrintText
     farcall Script_specialsound
@@ -226,7 +226,7 @@ VerboseBagFuck:
     call CallInSRAMBank
     farcall CheckItemPocket
     ld a, [wItemAttributeParamBuffer]
-	dec a
+    dec a
     and 3
     add a
     ld c, a
@@ -234,10 +234,10 @@ VerboseBagFuck:
     ld hl, BagFuckPocketNames
     add hl, bc
     ld a, [hli]
-	ld d, [hl]
-	ld e, a
-	ld hl, wStringBuffer3
-	call CopyName2
+    ld d, [hl]
+    ld e, a
+    ld hl, wStringBuffer3
+    call CopyName2
     prepare_sram_call 0, PrintText
     ld hl, BagFuckItemPocketText
     call CallInSRAMBank
@@ -266,10 +266,10 @@ BagFuckItemPocketText:
     db $85,$94,$82,$8a,$58
 
 BagFuckPocketNames:
-	dw BagFuckItemPocketName
-	dw NULL
-	dw BagFuckBallPocketName
-	dw BagFuckTMPocketName
+    dw BagFuckItemPocketName
+    dw NULL
+    dw BagFuckBallPocketName
+    dw BagFuckTMPocketName
 
 BagFuckItemPocketName:
     db $81,$80,$86,$7f,$7f,$7f,$7f,$50
@@ -284,26 +284,26 @@ PlayerNamingScreen:
     call DisableSpriteUpdates
     ld hl, ReturnToMapWithSpeechTextbox
     push hl
-	ld de, wStringBuffer1
-	ld hl, wNamingScreenDestinationPointer
-	ld [hl], e
-	inc hl
-	ld [hl], d
-	ld a, 1
+    ld de, wStringBuffer1
+    ld hl, wNamingScreenDestinationPointer
+    ld [hl], e
+    inc hl
+    ld [hl], d
+    ld a, 1
     ld [wNamingScreenType], a ; PLAYER
-	ld hl, wOptions
-	ld a, [hl]
-	push af
-	set 4, [hl]
-	ldh a, [hMapAnims]
-	push af
-	xor a
-	ldh [hMapAnims], a
-	ldh a, [hInMenu]
-	push af
-	ld a, $1
-	ldh [hInMenu], a
-	call $56f8
+    ld hl, wOptions
+    ld a, [hl]
+    push af
+    set 4, [hl]
+    ldh a, [hMapAnims]
+    push af
+    xor a
+    ldh [hMapAnims], a
+    ldh a, [hInMenu]
+    push af
+    ld a, $1
+    ldh [hInMenu], a
+    call $56f8
     ld a, 10
     ld [wNamingScreenMaxNameLength], a
     ld hl, wStringBuffer1+7

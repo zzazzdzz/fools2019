@@ -137,15 +137,15 @@ TextCommandF0:
 TextCommandF1:
     push hl
     call RotateBlocks
-	call LoadBlinkingCursor
-	call Text_WaitBGMap
+    call LoadBlinkingCursor
+    call Text_WaitBGMap
     prepare_sram_call 2, ButtonSound
-	call CallInSRAMBank
+    call CallInSRAMBank
     call UnloadBlinkingCursor
     call TextScroll
-	call TextScroll
+    call TextScroll
     call ClearWorkingBlocks
-	ld a, SCREEN_WIDTH * 2
+    ld a, SCREEN_WIDTH * 2
     ld [sCurrentTilemapIndex], a
     xor a
     ld [sCurrentXPosition], a
@@ -156,7 +156,7 @@ TextCommandF2:
     push hl
     call RotateBlocks
     call ClearWorkingBlocks
-	ld a, SCREEN_WIDTH * 2
+    ld a, SCREEN_WIDTH * 2
     ld [sCurrentTilemapIndex], a
     xor a
     ld [sCurrentXPosition], a
@@ -166,10 +166,10 @@ TextCommandF2:
 TextCommandF3:
     push hl
     call RotateBlocks
-	call LoadBlinkingCursor
-	call Text_WaitBGMap
+    call LoadBlinkingCursor
+    call Text_WaitBGMap
     prepare_sram_call 2, ButtonSound
-	call CallInSRAMBank
+    call CallInSRAMBank
     call UnloadBlinkingCursor
 TextCommandParagraph:
     call ClearWorkingBlocks
@@ -188,10 +188,10 @@ TextCommandParagraph:
 TextCommandF4:
     push hl
     call RotateBlocks
-	call LoadBlinkingCursor
-	call Text_WaitBGMap
+    call LoadBlinkingCursor
+    call Text_WaitBGMap
     prepare_sram_call 2, ButtonSound
-	call CallInSRAMBank
+    call CallInSRAMBank
     call UnloadBlinkingCursor
     pop hl
     jp PrintTextVWFCommandProcessor
@@ -268,10 +268,10 @@ FacePlayer:
 TextCommandFD:
     call GetTextByte
     push hl
-	ld b, 1 ; SET_FLAG
+    ld b, 1 ; SET_FLAG
     ld e, a
     ld d, 0
-	call EventFlagAction
+    call EventFlagAction
     pop hl
     jp PrintTextVWFCommandProcessor
 

@@ -55,9 +55,9 @@ CallbackObjectsProc:
 CallbackTilesProc:
     call HandleRoofGraphics
     ld hl, wOverworldMapBlocks
-	ld bc, wOverworldMapBlocksEnd - wOverworldMapBlocks
-	xor a
-	call ByteFill
+    ld bc, wOverworldMapBlocksEnd - wOverworldMapBlocks
+    xor a
+    call ByteFill
     prepare_sram_call 3, ChangeMap
     call CallInSRAMBank
     prepare_sram_call 3, FillMapConnections
@@ -70,7 +70,7 @@ HandleRoofGraphics:
     cp TILESET_JOHTO
     ret nz
     ld a, b_Roofs
-	rst $10
+    rst $10
     ld a, [sCurrentRoofTileset]
     ld hl, Roofs
     ld bc, $0090

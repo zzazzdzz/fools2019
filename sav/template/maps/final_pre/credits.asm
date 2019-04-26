@@ -18,9 +18,9 @@ StartCredits:
     call HideSprites
     call ClearScreen
     call WaitBGMap
-	ld b, 8
-	call GetSGBLayout
-	call SetPalettes
+    ld b, 8
+    call GetSGBLayout
+    call SetPalettes
     ld c, 80
     call DelayFrames
     ld de, MUSIC_MYSTICALMAN_ENCOUNTER
@@ -71,13 +71,13 @@ StartCredits:
     jr nz, .showMons
 .dex
     ld hl, wPokedexSeen
-	ld b, wEndPokedexSeen - wPokedexSeen
-	call CountSetBits
-	ld [wd002], a
-	ld hl, wPokedexCaught
-	ld b, wEndPokedexCaught - wPokedexCaught
-	call CountSetBits
-	ld [wd003], a
+    ld b, wEndPokedexSeen - wPokedexSeen
+    call CountSetBits
+    ld [wd002], a
+    ld hl, wPokedexCaught
+    ld b, wEndPokedexCaught - wPokedexCaught
+    call CountSetBits
+    ld [wd003], a
     ld hl, CreditsDexTextSeen
     ld de, wd002
     ld bc, $0103
@@ -113,9 +113,9 @@ CreditsFinalRoutine:
     ld [wPrintTextVWFSourceBank], a
     call SwitchToSRA2
     call WaitBGMap
-	ld b, 8
-	call GetSGBLayout
-	call SetPalettes
+    ld b, 8
+    call GetSGBLayout
+    call SetPalettes
     ld hl, CreditsEndTextbox
     call PrintTextVWF
     call WaitButton
@@ -149,21 +149,21 @@ FillWithNine:
 
 PresentSinglePartyMon:
     push de
-	ld d, [hl]
+    ld d, [hl]
     ld bc, wPartyMon1DVs - wPartyMon1
     add hl, bc
-	ld a, [hli]
-	ld [wTempMonDVs], a
-	ld a, [hl]
-	ld [wTempMonDVs + 1], a
+    ld a, [hli]
+    ld [wTempMonDVs], a
+    ld a, [hl]
+    ld [wTempMonDVs + 1], a
     ld bc, wPartyMon1Level - (wPartyMon1DVs + 1)
     add hl, bc
     push hl
     ld a, d
     call $c900
-	ld b, $1c
-	call GetSGBLayout
-	call SetPalettes
+    ld b, $1c
+    call GetSGBLayout
+    call SetPalettes
     call AnimateFrontPicTilemapEntry
     ld c, 5
     call DelayFrames
@@ -291,7 +291,7 @@ AnimateFrontPicTilemapEntry:
 LoadFrontPicRoutine:
     ld [wCurSpecies], a
     ld [wCurPartySpecies], a
-	ld a, b_GetMonFrontpic
+    ld a, b_GetMonFrontpic
     rst $10
     push hl
     ld de, vTiles2
@@ -302,13 +302,13 @@ LoadFrontPicRoutine:
 AnimateFrontPicRoutine:
     ld de, vTiles2
     farcall GetAnimatedFrontpic
-	ld a, b_AnimateFrontpic
+    ld a, b_AnimateFrontpic
     rst $10
     ld de, 1
     coord hl, 12, 6
     call AnimateFrontpic
     ld a, 1
-	ldh [hBGMapMode], a
+    ldh [hBGMapMode], a
     jp SwitchToSRA3
 
 SingleCreditsParagraph:

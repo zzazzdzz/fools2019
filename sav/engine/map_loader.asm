@@ -67,9 +67,9 @@ ProcessLastTalkedBGEvents:
     ld e, [hl]
     ld d, a
     ld hl, wCurMapBGEventsPointer
-	ld a, [hli]
-	ld h, [hl]
-	ld l, a
+    ld a, [hli]
+    ld h, [hl]
+    ld l, a
     ld b, 1
     ld a, [wCurMapBGEventCount]
     inc a
@@ -105,9 +105,9 @@ ProcessLastTalkedCoordEvents:
     ld e, [hl]
     ld d, a
     ld hl, wCurMapCoordEventsPointer
-	ld a, [hli]
-	ld h, [hl]
-	ld l, a
+    ld a, [hli]
+    ld h, [hl]
+    ld l, a
     inc hl
     ld a, [wCurMapObjectEventCount]
     ld b, a

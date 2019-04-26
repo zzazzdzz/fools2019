@@ -82,7 +82,7 @@ map_subhdr_events equs "dw"
 map_subhdr_connections equs "db"
 
 map_callback: MACRO
-	db \1
+    db \1
     dw \2
 ENDM
 
@@ -109,7 +109,7 @@ rawtxt_ptr equs "textbox_ptr"
 writetext_vwf: MACRO
     loadvar wSpecificTextboxPointer+0, \1 & $ff
     loadvar wSpecificTextboxPointer+1, (\1 / 256) & $ff
-	writetext MapWriteTextInSRAM
+    writetext MapWriteTextInSRAM
 ENDM
 
 rel_base: MACRO

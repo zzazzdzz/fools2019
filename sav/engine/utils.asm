@@ -82,7 +82,7 @@ CompareBCToDE:
 TextboxTable:
     ld c, a
     ld b, 0
-	add hl, bc
+    add hl, bc
     add hl, bc
     ld a, [hli]
     ld h, [hl]
@@ -155,12 +155,12 @@ PlayRadioChannel:
     push hl
     ld hl, wOptions
     ld a, [hl]
-	push af
-	set 4, [hl]
+    push af
+    set 4, [hl]
     ld a, b_NextRadioLine
     rst $10
     xor a
-	ld [wRadioTextDelay], a
+    ld [wRadioTextDelay], a
     ld [wNumRadioLinesPrinted], a
     pop af
     pop hl
@@ -179,9 +179,9 @@ PlayRadioChannel:
     call NextRadioLine
     ld c, 100
 .delayLoop
-	call JoyTextDelay
-	ldh a, [hJoyPressed]
-	and %00000010
+    call JoyTextDelay
+    ldh a, [hJoyPressed]
+    and %00000010
     pop hl
     jr nz, .exitNoCrash
     push hl
@@ -206,7 +206,7 @@ PlayRadioChannel:
 .waitForExit
     call DelayFrame
     ldh a, [hJoypadDown]
-	and %00000010
+    and %00000010
     jr z, .waitForExit
     jr .exitNoCrash
 
@@ -267,7 +267,7 @@ PrepareStartBattle_Copy:
     jp CopyBytes
 .script
     callasm BackupCurrentScript
-	startbattle
+    startbattle
 .reloadType
     reloadmapafterbattle
     callasm SwitchToSRA2
@@ -343,18 +343,18 @@ PostEnding:
 
 DisplayMart:
     ld a, 1
-	ld [wMartPointerBank], a
-	xor a
+    ld [wMartPointerBank], a
+    xor a
     ld [wEngineBuffer1], a
-	ld [wEngineBuffer5], a
-	ld [wBargainShopFlags], a
-	ld [wFacingDirection], a
+    ld [wEngineBuffer5], a
+    ld [wBargainShopFlags], a
+    ld [wFacingDirection], a
     ld hl, wCurMart
-	ld bc, wCurMartEnd - wCurMart
-	call ByteFill
+    ld bc, wCurMartEnd - wCurMart
+    call ByteFill
     ld a, b_StandardMart
     rst $10
-	jp StandardMart
+    jp StandardMart
 
 ; Obtain the player facing that is the reverse of the current one, return in A.
 ; Only used in the anticheat routine to calculate where to push the player.

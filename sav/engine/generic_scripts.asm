@@ -6,9 +6,9 @@
 GenericTextboxScript:
     faceplayer
     opentext
-	writetext MapWriteTextInSRAM
-	waitbutton
-	closetext
+    writetext MapWriteTextInSRAM
+    waitbutton
+    closetext
     return
 
 ; A generic Yes/No textbox.

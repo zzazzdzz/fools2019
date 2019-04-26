@@ -26,8 +26,8 @@ GenericYesNoTextbox:
     ld de, $0101
     call DisplayChoiceMenu
     xor 1
-	ld [wScriptVar], a
-	ret
+    ld [wScriptVar], a
+    ret
 
 ; Creates a choice menu.
 ; BC -> textbox dimensions
@@ -65,7 +65,7 @@ DisplayChoiceMenuNoBackup:
 PreserveMenu:
     prepare_sram_call 0, CopyBytes
     ld de, sScratch
-	coord hl, 0, 0
+    coord hl, 0, 0
     ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
     call CallInSRAMBank
     ld de, sScratch + SCREEN_WIDTH * SCREEN_HEIGHT
@@ -79,15 +79,15 @@ PreserveMenu:
 CleanseMenu:
     prepare_sram_call 0, CopyBytes
     ld hl, sScratch
-	coord de, 0, 0
+    coord de, 0, 0
     ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
     call CallInSRAMBank
     ld de, wAttrMap
     ld hl, sScratch + SCREEN_WIDTH * SCREEN_HEIGHT
     ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
     call CallInSRAMBank
-	call UpdateSprites
-	jp ApplyTilemap
+    call UpdateSprites
+    jp ApplyTilemap
 
 ; Draw the menu textbox aligned to the bottom right side of the screen,
 ; according to dimensions in BC.
@@ -112,8 +112,8 @@ DrawChoiceMenuTextbox:
     pop bc
     push hl
     call TextBox
-	call UpdateSprites
-	call ApplyTilemap
+    call UpdateSprites
+    call ApplyTilemap
     pop hl
     ld de, SCREEN_WIDTH + 2
     add hl, de

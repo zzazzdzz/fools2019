@@ -44,7 +44,7 @@ SavePrompt:
     jr z, .leave
 .justSave
     farcall FadeOutPalettes
-	farcall LoadMapPalettes
+    farcall LoadMapPalettes
     jp Save
 .saveNotAllowed
     ld hl, SaveNotPossibleText
@@ -152,8 +152,8 @@ Save:
     call UpdateSprites
     call DMAHijackingBailOut
     ld b, 8
-	call GetSGBLayout
-	call SetPalettes
+    call GetSGBLayout
+    call SetPalettes
     ld hl, wMusicFadeID
     ld [hl], 0
     dec hl
@@ -162,15 +162,15 @@ Save:
     ld c, 50
     call DelayFrames
     ld a, 3
-	ld [wOptions], a
+    ld [wOptions], a
     ld a, b_Text_SavingDontTurnOffThePower
     rst $10
-	ld hl, Text_SavingDontTurnOffThePower
-	call PrintText
+    ld hl, Text_SavingDontTurnOffThePower
+    call PrintText
     ld de, SaveProgressTiles
-	ld hl, $8C00
-	ld bc, $0104
-	call Request1bpp
+    ld hl, $8C00
+    ld bc, $0104
+    call Request1bpp
     call DelayFrame
     ld de, SaveVMInstructions
     di
@@ -241,9 +241,9 @@ Save_OpcodeDone:
     ld [sSaveDataFinalized], a
     call NormalSpeed
     xor a
-	ldh [rIF], a
-	ld a, %1111 ; enable VBlank, LCDStat, Timer, Serial
-	ldh [rIE], a
+    ldh [rIF], a
+    ld a, %1111 ; enable VBlank, LCDStat, Timer, Serial
+    ldh [rIE], a
     ei
     call DelayFrame
     ld de, SFX_SAVE
