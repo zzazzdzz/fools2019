@@ -16,7 +16,7 @@ Note: Everything here is kept for historical record. Any bugs and issues will no
 
 ## First, get the save compiler going
 
-You'll need [RGBDS v0.3.3](https://github.com/rednex/rgbds/releases) to compile save files. Newer versions might work, but are untested - you should just stick to v0.3.3 to avoid dealing with hard to detect bugs. You should also have Python 3 installed. The compilation system uses the [rgbbin](https://github.com/zzazzdzz/rgbbin) library, but to make your and everyone's life easier, this is already included.
+You'll need [RGBDS v0.3.3](https://github.com/rednex/rgbds/releases) to compile save files. Newer versions might work, but are untested - you should just stick to v0.3.3 to avoid dealing with hard to detect bugs. You should also have at least Python3.5 with the *urllib3* and *wsgiserver* modules installed (Download them with `pip3 install urllib3 wsgiserver` if you need). The compilation system uses the [rgbbin](https://github.com/zzazzdzz/rgbbin) library, but to make your and everyone's life easier, this is already included.
 
 After that comes configuration. Open *server/config.py* and make sure to change the following:
 
@@ -25,11 +25,11 @@ After that comes configuration. Open *server/config.py* and make sure to change 
 
 This is the minimal amount of changes required to get things working, but if you want to run fools2019 in a production environment, you should probably look through some other settings too.
 
-Time to test it! Run `python3 compiler.py`. This will try to compile a test save file. If you don't see any errors and a *fools.sav* file appears in your *sav/* directory, then you know it worked. You can also play around and try compiling different save files, by changing the test session defined in *mocksession.py*.
+Time to test it! Place yourself on the *server/* directory and then run `python3 main.py`. If it loads without any problems, close it (By just CTRL+C it :D) and execute `python3 compiler.py`. This will try to compile a test save file. If you don't see any errors and a *fools.sav* file appears in your *sav/* directory, then you know it worked. You can also play around and try compiling different save files, by changing the test session defined in *mocksession.py*.
 
 ## Then, run the backend server
 
-The server requires the *wsgiserver* module. Install it with `pip3 install wsgiserver`. You can then run `python3 main.py` in the *server/* directory, which will start the backend on 127.0.0.1:12710. You can try going to http://127.0.0.1:12710/ping/0 to see it working.
+Run `python3 main.py` in the *server/* directory: it will start the backend on 127.0.0.1:12710. You can try going to http://127.0.0.1:12710/ping/0 to see it working.
 
 If you only want to run fools2019 on localhost, that should be enough. However, if you want to set up a public server, you'll need to keep some things in mind. First, go through the *config.py* file and set reasonable values for all of the settings - most importantly, make sure to change your cryptographic secrets from the default "X". Next, the backend only listens on localhost by default, and you need to make it world-reachable. The recommended way is to set up whatever web server you want as a reverse proxy - the official event site used [nginx](http://nginx.org/). Last, make sure that the event server process is managed in some way (runs in background, it will be restarted if it dies, it does not run with root privileges, etc.) - for that, the official event site used [supervisor](http://supervisord.org/). An example supervisor script to run fools2019 is included in *extras/*.
 
